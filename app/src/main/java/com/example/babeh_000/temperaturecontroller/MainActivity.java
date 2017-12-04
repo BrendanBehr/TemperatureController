@@ -31,13 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
     private final static String TAG = MainActivity.class.getSimpleName();
 
-    private static TextView mCapsenseValue;
-    private static Button start_button;
-    private static Button search_button;
-    private static Button connect_button;
-    private static Button discover_button;
-    private static Button disconnect_button;
-    private static Button set_button;
+    private static TextView mDesiredTemperature;
+    private static TextView mActualTemperature;
+    private static Button mSetTemperatureButton;
 
     private static boolean mConnectState;
     private static boolean mServiceConnected;
@@ -71,12 +67,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mCapsenseValue = (TextView) findViewById(R.id.capsense_value);
+        mDesiredTemperature = (TextView) findViewById(R.id.desired_temperature);
+        mActualTemperature = (TextView) findViewById(R.id.actual_temperature);
 
-        start_button = (Button) findViewById(R.id.start_button);
-        search_button = (Button) findViewById(R.id.search_button);
-        connect_button = (Button) findViewById(R.id.connect_button);
-        discover_button = (Button) findViewById(R.id.discoverSvc_button);
+        mSetTemperatureButton = (Button) findViewById(R.id.SetTemeratureBtn);
 
         mServiceConnected = false;
         mConnectState = false;

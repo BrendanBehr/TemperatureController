@@ -59,18 +59,18 @@ public class CapSenseTemperatureControllerService extends Service {
     private static String mCapSenseValue = "-1";
 
     //Actions used during broadcasts to the main activity
-//    public final static String ACTION_BLESCAN_CALLBACK =
-//            "com.example.babeh_000.temperaturecontroller.ACTION_BLESCAN_CALLBACK";
+    public final static String ACTION_BLESCAN_CALLBACK =
+            "com.example.babeh_000.temperaturecontroller.ACTION_BLESCAN_CALLBACK";
     public final static String ACTION_CONNECTED =
             "com.example.babeh_000.temperaturecontroller.ACTION_CONNECTED";
     public final static String ACTION_DISCONNECTED =
             "com.example.babeh_000.temperaturecontroller.ACTION_DISCONNECTED";
     public final static String ACTION_DATA_AVAILABLE =
             "com.example.babeh_000.temperaturecontroller.ACTION_DATA_AVAILABLE";
-//    public final static String ACTION_SERVICES_DISCOVERED =
-//            "com.example.babeh_000.temperaturecontroller.ACTION_SERVICES_DISCOVERED";
-//    public final static String ACTION_DATA_RECEIVED =
-//            "com.example.babeh_000.temperaturecontroller.ACTION_DATA_RECEIVED";
+    public final static String ACTION_SERVICES_DISCOVERED =
+            "com.example.babeh_000.temperaturecontroller.ACTION_SERVICES_DISCOVERED";
+    public final static String ACTION_DATA_RECEIVED =
+            "com.example.babeh_000.temperaturecontroller.ACTION_DATA_RECEIVED";
 
 
     public CapSenseTemperatureControllerService() {
@@ -241,7 +241,7 @@ public class CapSenseTemperatureControllerService extends Service {
             mCapsenseCharacteristic = mService.getCharacteristic(UUID.fromString(capsenseCharachteristicUUID));
             mCapSenseCccd = mCapsenseCharacteristic.getDescriptor(UUID.fromString(CccdUUID));
             readTemperatureControllerCharacteristic();
-//            broadcastUpdate(ACTION_SERVICES_DISCOVERED);
+            broadcastUpdate(ACTION_SERVICES_DISCOVERED);
         }
 
         @Override
