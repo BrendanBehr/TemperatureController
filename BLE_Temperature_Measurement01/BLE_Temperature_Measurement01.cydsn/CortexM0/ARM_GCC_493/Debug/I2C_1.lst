@@ -1,0 +1,1625 @@
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 34, 0
+  11              		.eabi_attribute 18, 4
+  12              		.code	16
+  13              		.file	"I2C_1.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.global	I2C_1_initVar
+  18              		.bss
+  19              		.type	I2C_1_initVar, %object
+  20              		.size	I2C_1_initVar, 1
+  21              	I2C_1_initVar:
+  22 0000 00       		.space	1
+  23              		.global	I2C_1_customIntrHandler
+  24 0001 000000   		.align	2
+  25              		.type	I2C_1_customIntrHandler, %object
+  26              		.size	I2C_1_customIntrHandler, 4
+  27              	I2C_1_customIntrHandler:
+  28 0004 00000000 		.space	4
+  29              		.section	.text.I2C_1_Init,"ax",%progbits
+  30              		.align	2
+  31              		.global	I2C_1_Init
+  32              		.code	16
+  33              		.thumb_func
+  34              		.type	I2C_1_Init, %function
+  35              	I2C_1_Init:
+  36              	.LFB2:
+  37              		.file 1 ".\\Generated_Source\\PSoC4\\I2C_1.c"
+   1:.\Generated_Source\PSoC4/I2C_1.c **** /***************************************************************************//**
+   2:.\Generated_Source\PSoC4/I2C_1.c **** * \file I2C_1.c
+   3:.\Generated_Source\PSoC4/I2C_1.c **** * \version 3.20
+   4:.\Generated_Source\PSoC4/I2C_1.c **** *
+   5:.\Generated_Source\PSoC4/I2C_1.c **** * \brief
+   6:.\Generated_Source\PSoC4/I2C_1.c **** *  This file provides the source code to the API for the SCB Component.
+   7:.\Generated_Source\PSoC4/I2C_1.c **** *
+   8:.\Generated_Source\PSoC4/I2C_1.c **** * Note:
+   9:.\Generated_Source\PSoC4/I2C_1.c **** *
+  10:.\Generated_Source\PSoC4/I2C_1.c **** *******************************************************************************
+  11:.\Generated_Source\PSoC4/I2C_1.c **** * \copyright
+  12:.\Generated_Source\PSoC4/I2C_1.c **** * Copyright 2013-2016, Cypress Semiconductor Corporation.  All rights reserved.
+  13:.\Generated_Source\PSoC4/I2C_1.c **** * You may use this file only in accordance with the license, terms, conditions,
+  14:.\Generated_Source\PSoC4/I2C_1.c **** * disclaimers, and limitations in the end user license agreement accompanying
+  15:.\Generated_Source\PSoC4/I2C_1.c **** * the software package with which this file was provided.
+  16:.\Generated_Source\PSoC4/I2C_1.c **** *******************************************************************************/
+  17:.\Generated_Source\PSoC4/I2C_1.c **** 
+  18:.\Generated_Source\PSoC4/I2C_1.c **** #include "I2C_1_PVT.h"
+  19:.\Generated_Source\PSoC4/I2C_1.c **** 
+  20:.\Generated_Source\PSoC4/I2C_1.c **** #if (I2C_1_SCB_MODE_I2C_INC)
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 2
+
+
+  21:.\Generated_Source\PSoC4/I2C_1.c ****     #include "I2C_1_I2C_PVT.h"
+  22:.\Generated_Source\PSoC4/I2C_1.c **** #endif /* (I2C_1_SCB_MODE_I2C_INC) */
+  23:.\Generated_Source\PSoC4/I2C_1.c **** 
+  24:.\Generated_Source\PSoC4/I2C_1.c **** #if (I2C_1_SCB_MODE_EZI2C_INC)
+  25:.\Generated_Source\PSoC4/I2C_1.c ****     #include "I2C_1_EZI2C_PVT.h"
+  26:.\Generated_Source\PSoC4/I2C_1.c **** #endif /* (I2C_1_SCB_MODE_EZI2C_INC) */
+  27:.\Generated_Source\PSoC4/I2C_1.c **** 
+  28:.\Generated_Source\PSoC4/I2C_1.c **** #if (I2C_1_SCB_MODE_SPI_INC || I2C_1_SCB_MODE_UART_INC)
+  29:.\Generated_Source\PSoC4/I2C_1.c ****     #include "I2C_1_SPI_UART_PVT.h"
+  30:.\Generated_Source\PSoC4/I2C_1.c **** #endif /* (I2C_1_SCB_MODE_SPI_INC || I2C_1_SCB_MODE_UART_INC) */
+  31:.\Generated_Source\PSoC4/I2C_1.c **** 
+  32:.\Generated_Source\PSoC4/I2C_1.c **** 
+  33:.\Generated_Source\PSoC4/I2C_1.c **** /***************************************
+  34:.\Generated_Source\PSoC4/I2C_1.c **** *    Run Time Configuration Vars
+  35:.\Generated_Source\PSoC4/I2C_1.c **** ***************************************/
+  36:.\Generated_Source\PSoC4/I2C_1.c **** 
+  37:.\Generated_Source\PSoC4/I2C_1.c **** /* Stores internal component configuration for Unconfigured mode */
+  38:.\Generated_Source\PSoC4/I2C_1.c **** #if (I2C_1_SCB_MODE_UNCONFIG_CONST_CFG)
+  39:.\Generated_Source\PSoC4/I2C_1.c ****     /* Common configuration variables */
+  40:.\Generated_Source\PSoC4/I2C_1.c ****     uint8 I2C_1_scbMode = I2C_1_SCB_MODE_UNCONFIG;
+  41:.\Generated_Source\PSoC4/I2C_1.c ****     uint8 I2C_1_scbEnableWake;
+  42:.\Generated_Source\PSoC4/I2C_1.c ****     uint8 I2C_1_scbEnableIntr;
+  43:.\Generated_Source\PSoC4/I2C_1.c **** 
+  44:.\Generated_Source\PSoC4/I2C_1.c ****     /* I2C configuration variables */
+  45:.\Generated_Source\PSoC4/I2C_1.c ****     uint8 I2C_1_mode;
+  46:.\Generated_Source\PSoC4/I2C_1.c ****     uint8 I2C_1_acceptAddr;
+  47:.\Generated_Source\PSoC4/I2C_1.c **** 
+  48:.\Generated_Source\PSoC4/I2C_1.c ****     /* SPI/UART configuration variables */
+  49:.\Generated_Source\PSoC4/I2C_1.c ****     volatile uint8 * I2C_1_rxBuffer;
+  50:.\Generated_Source\PSoC4/I2C_1.c ****     uint8  I2C_1_rxDataBits;
+  51:.\Generated_Source\PSoC4/I2C_1.c ****     uint32 I2C_1_rxBufferSize;
+  52:.\Generated_Source\PSoC4/I2C_1.c **** 
+  53:.\Generated_Source\PSoC4/I2C_1.c ****     volatile uint8 * I2C_1_txBuffer;
+  54:.\Generated_Source\PSoC4/I2C_1.c ****     uint8  I2C_1_txDataBits;
+  55:.\Generated_Source\PSoC4/I2C_1.c ****     uint32 I2C_1_txBufferSize;
+  56:.\Generated_Source\PSoC4/I2C_1.c **** 
+  57:.\Generated_Source\PSoC4/I2C_1.c ****     /* EZI2C configuration variables */
+  58:.\Generated_Source\PSoC4/I2C_1.c ****     uint8 I2C_1_numberOfAddr;
+  59:.\Generated_Source\PSoC4/I2C_1.c ****     uint8 I2C_1_subAddrSize;
+  60:.\Generated_Source\PSoC4/I2C_1.c **** #endif /* (I2C_1_SCB_MODE_UNCONFIG_CONST_CFG) */
+  61:.\Generated_Source\PSoC4/I2C_1.c **** 
+  62:.\Generated_Source\PSoC4/I2C_1.c **** 
+  63:.\Generated_Source\PSoC4/I2C_1.c **** /***************************************
+  64:.\Generated_Source\PSoC4/I2C_1.c **** *     Common SCB Vars
+  65:.\Generated_Source\PSoC4/I2C_1.c **** ***************************************/
+  66:.\Generated_Source\PSoC4/I2C_1.c **** /**
+  67:.\Generated_Source\PSoC4/I2C_1.c **** * \addtogroup group_general
+  68:.\Generated_Source\PSoC4/I2C_1.c **** * \{
+  69:.\Generated_Source\PSoC4/I2C_1.c **** */
+  70:.\Generated_Source\PSoC4/I2C_1.c **** 
+  71:.\Generated_Source\PSoC4/I2C_1.c **** /** I2C_1_initVar indicates whether the I2C_1 
+  72:.\Generated_Source\PSoC4/I2C_1.c **** *  component has been initialized. The variable is initialized to 0 
+  73:.\Generated_Source\PSoC4/I2C_1.c **** *  and set to 1 the first time SCB_Start() is called. This allows 
+  74:.\Generated_Source\PSoC4/I2C_1.c **** *  the component to restart without reinitialization after the first 
+  75:.\Generated_Source\PSoC4/I2C_1.c **** *  call to the I2C_1_Start() routine.
+  76:.\Generated_Source\PSoC4/I2C_1.c **** *
+  77:.\Generated_Source\PSoC4/I2C_1.c **** *  If re-initialization of the component is required, then the 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 3
+
+
+  78:.\Generated_Source\PSoC4/I2C_1.c **** *  I2C_1_Init() function can be called before the 
+  79:.\Generated_Source\PSoC4/I2C_1.c **** *  I2C_1_Start() or I2C_1_Enable() function.
+  80:.\Generated_Source\PSoC4/I2C_1.c **** */
+  81:.\Generated_Source\PSoC4/I2C_1.c **** uint8 I2C_1_initVar = 0u;
+  82:.\Generated_Source\PSoC4/I2C_1.c **** 
+  83:.\Generated_Source\PSoC4/I2C_1.c **** 
+  84:.\Generated_Source\PSoC4/I2C_1.c **** #if (! (I2C_1_SCB_MODE_I2C_CONST_CFG || \
+  85:.\Generated_Source\PSoC4/I2C_1.c ****         I2C_1_SCB_MODE_EZI2C_CONST_CFG))
+  86:.\Generated_Source\PSoC4/I2C_1.c ****     /** This global variable stores TX interrupt sources after 
+  87:.\Generated_Source\PSoC4/I2C_1.c ****     * I2C_1_Stop() is called. Only these TX interrupt sources 
+  88:.\Generated_Source\PSoC4/I2C_1.c ****     * will be restored on a subsequent I2C_1_Enable() call.
+  89:.\Generated_Source\PSoC4/I2C_1.c ****     */
+  90:.\Generated_Source\PSoC4/I2C_1.c ****     uint16 I2C_1_IntrTxMask = 0u;
+  91:.\Generated_Source\PSoC4/I2C_1.c **** #endif /* (! (I2C_1_SCB_MODE_I2C_CONST_CFG || \
+  92:.\Generated_Source\PSoC4/I2C_1.c ****               I2C_1_SCB_MODE_EZI2C_CONST_CFG)) */
+  93:.\Generated_Source\PSoC4/I2C_1.c **** /** \} globals */
+  94:.\Generated_Source\PSoC4/I2C_1.c **** 
+  95:.\Generated_Source\PSoC4/I2C_1.c **** #if (I2C_1_SCB_IRQ_INTERNAL)
+  96:.\Generated_Source\PSoC4/I2C_1.c **** #if !defined (CY_REMOVE_I2C_1_CUSTOM_INTR_HANDLER)
+  97:.\Generated_Source\PSoC4/I2C_1.c ****     void (*I2C_1_customIntrHandler)(void) = NULL;
+  98:.\Generated_Source\PSoC4/I2C_1.c **** #endif /* !defined (CY_REMOVE_I2C_1_CUSTOM_INTR_HANDLER) */
+  99:.\Generated_Source\PSoC4/I2C_1.c **** #endif /* (I2C_1_SCB_IRQ_INTERNAL) */
+ 100:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 101:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 102:.\Generated_Source\PSoC4/I2C_1.c **** /***************************************
+ 103:.\Generated_Source\PSoC4/I2C_1.c **** *    Private Function Prototypes
+ 104:.\Generated_Source\PSoC4/I2C_1.c **** ***************************************/
+ 105:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 106:.\Generated_Source\PSoC4/I2C_1.c **** static void I2C_1_ScbEnableIntr(void);
+ 107:.\Generated_Source\PSoC4/I2C_1.c **** static void I2C_1_ScbModeStop(void);
+ 108:.\Generated_Source\PSoC4/I2C_1.c **** static void I2C_1_ScbModePostEnable(void);
+ 109:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 110:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 111:.\Generated_Source\PSoC4/I2C_1.c **** /*******************************************************************************
+ 112:.\Generated_Source\PSoC4/I2C_1.c **** * Function Name: I2C_1_Init
+ 113:.\Generated_Source\PSoC4/I2C_1.c **** ****************************************************************************//**
+ 114:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 115:.\Generated_Source\PSoC4/I2C_1.c **** *  Initializes the I2C_1 component to operate in one of the selected
+ 116:.\Generated_Source\PSoC4/I2C_1.c **** *  configurations: I2C, SPI, UART or EZI2C.
+ 117:.\Generated_Source\PSoC4/I2C_1.c **** *  When the configuration is set to "Unconfigured SCB", this function does
+ 118:.\Generated_Source\PSoC4/I2C_1.c **** *  not do any initialization. Use mode-specific initialization APIs instead:
+ 119:.\Generated_Source\PSoC4/I2C_1.c **** *  I2C_1_I2CInit, I2C_1_SpiInit, 
+ 120:.\Generated_Source\PSoC4/I2C_1.c **** *  I2C_1_UartInit or I2C_1_EzI2CInit.
+ 121:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 122:.\Generated_Source\PSoC4/I2C_1.c **** *******************************************************************************/
+ 123:.\Generated_Source\PSoC4/I2C_1.c **** void I2C_1_Init(void)
+ 124:.\Generated_Source\PSoC4/I2C_1.c **** {
+  38              		.loc 1 124 0
+  39              		.cfi_startproc
+  40 0000 80B5     		push	{r7, lr}
+  41              		.cfi_def_cfa_offset 8
+  42              		.cfi_offset 7, -8
+  43              		.cfi_offset 14, -4
+  44 0002 00AF     		add	r7, sp, #0
+  45              		.cfi_def_cfa_register 7
+ 125:.\Generated_Source\PSoC4/I2C_1.c **** #if (I2C_1_SCB_MODE_UNCONFIG_CONST_CFG)
+ 126:.\Generated_Source\PSoC4/I2C_1.c ****     if (I2C_1_SCB_MODE_UNCONFIG_RUNTM_CFG)
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 4
+
+
+ 127:.\Generated_Source\PSoC4/I2C_1.c ****     {
+ 128:.\Generated_Source\PSoC4/I2C_1.c ****         I2C_1_initVar = 0u;
+ 129:.\Generated_Source\PSoC4/I2C_1.c ****     }
+ 130:.\Generated_Source\PSoC4/I2C_1.c ****     else
+ 131:.\Generated_Source\PSoC4/I2C_1.c ****     {
+ 132:.\Generated_Source\PSoC4/I2C_1.c ****         /* Initialization was done before this function call */
+ 133:.\Generated_Source\PSoC4/I2C_1.c ****     }
+ 134:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 135:.\Generated_Source\PSoC4/I2C_1.c **** #elif (I2C_1_SCB_MODE_I2C_CONST_CFG)
+ 136:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_I2CInit();
+  46              		.loc 1 136 0
+  47 0004 FFF7FEFF 		bl	I2C_1_I2CInit
+ 137:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 138:.\Generated_Source\PSoC4/I2C_1.c **** #elif (I2C_1_SCB_MODE_SPI_CONST_CFG)
+ 139:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_SpiInit();
+ 140:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 141:.\Generated_Source\PSoC4/I2C_1.c **** #elif (I2C_1_SCB_MODE_UART_CONST_CFG)
+ 142:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_UartInit();
+ 143:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 144:.\Generated_Source\PSoC4/I2C_1.c **** #elif (I2C_1_SCB_MODE_EZI2C_CONST_CFG)
+ 145:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_EzI2CInit();
+ 146:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 147:.\Generated_Source\PSoC4/I2C_1.c **** #endif /* (I2C_1_SCB_MODE_UNCONFIG_CONST_CFG) */
+ 148:.\Generated_Source\PSoC4/I2C_1.c **** }
+  48              		.loc 1 148 0
+  49 0008 BD46     		mov	sp, r7
+  50              		@ sp needed
+  51 000a 80BD     		pop	{r7, pc}
+  52              		.cfi_endproc
+  53              	.LFE2:
+  54              		.size	I2C_1_Init, .-I2C_1_Init
+  55              		.section	.text.I2C_1_Enable,"ax",%progbits
+  56              		.align	2
+  57              		.global	I2C_1_Enable
+  58              		.code	16
+  59              		.thumb_func
+  60              		.type	I2C_1_Enable, %function
+  61              	I2C_1_Enable:
+  62              	.LFB3:
+ 149:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 150:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 151:.\Generated_Source\PSoC4/I2C_1.c **** /*******************************************************************************
+ 152:.\Generated_Source\PSoC4/I2C_1.c **** * Function Name: I2C_1_Enable
+ 153:.\Generated_Source\PSoC4/I2C_1.c **** ****************************************************************************//**
+ 154:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 155:.\Generated_Source\PSoC4/I2C_1.c **** *  Enables I2C_1 component operation: activates the hardware and 
+ 156:.\Generated_Source\PSoC4/I2C_1.c **** *  internal interrupt. It also restores TX interrupt sources disabled after the 
+ 157:.\Generated_Source\PSoC4/I2C_1.c **** *  I2C_1_Stop() function was called (note that level-triggered TX 
+ 158:.\Generated_Source\PSoC4/I2C_1.c **** *  interrupt sources remain disabled to not cause code lock-up).
+ 159:.\Generated_Source\PSoC4/I2C_1.c **** *  For I2C and EZI2C modes the interrupt is internal and mandatory for 
+ 160:.\Generated_Source\PSoC4/I2C_1.c **** *  operation. For SPI and UART modes the interrupt can be configured as none, 
+ 161:.\Generated_Source\PSoC4/I2C_1.c **** *  internal or external.
+ 162:.\Generated_Source\PSoC4/I2C_1.c **** *  The I2C_1 configuration should be not changed when the component
+ 163:.\Generated_Source\PSoC4/I2C_1.c **** *  is enabled. Any configuration changes should be made after disabling the 
+ 164:.\Generated_Source\PSoC4/I2C_1.c **** *  component.
+ 165:.\Generated_Source\PSoC4/I2C_1.c **** *  When configuration is set to “Unconfigured I2C_1”, the component 
+ 166:.\Generated_Source\PSoC4/I2C_1.c **** *  must first be initialized to operate in one of the following configurations: 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 5
+
+
+ 167:.\Generated_Source\PSoC4/I2C_1.c **** *  I2C, SPI, UART or EZ I2C, using the mode-specific initialization API. 
+ 168:.\Generated_Source\PSoC4/I2C_1.c **** *  Otherwise this function does not enable the component.
+ 169:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 170:.\Generated_Source\PSoC4/I2C_1.c **** *******************************************************************************/
+ 171:.\Generated_Source\PSoC4/I2C_1.c **** void I2C_1_Enable(void)
+ 172:.\Generated_Source\PSoC4/I2C_1.c **** {
+  63              		.loc 1 172 0
+  64              		.cfi_startproc
+  65 0000 80B5     		push	{r7, lr}
+  66              		.cfi_def_cfa_offset 8
+  67              		.cfi_offset 7, -8
+  68              		.cfi_offset 14, -4
+  69 0002 00AF     		add	r7, sp, #0
+  70              		.cfi_def_cfa_register 7
+ 173:.\Generated_Source\PSoC4/I2C_1.c **** #if (I2C_1_SCB_MODE_UNCONFIG_CONST_CFG)
+ 174:.\Generated_Source\PSoC4/I2C_1.c ****     /* Enable SCB block, only if it is already configured */
+ 175:.\Generated_Source\PSoC4/I2C_1.c ****     if (!I2C_1_SCB_MODE_UNCONFIG_RUNTM_CFG)
+ 176:.\Generated_Source\PSoC4/I2C_1.c ****     {
+ 177:.\Generated_Source\PSoC4/I2C_1.c ****         I2C_1_CTRL_REG |= I2C_1_CTRL_ENABLED;
+ 178:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 179:.\Generated_Source\PSoC4/I2C_1.c ****         I2C_1_ScbEnableIntr();
+ 180:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 181:.\Generated_Source\PSoC4/I2C_1.c ****         /* Call PostEnable function specific to current operation mode */
+ 182:.\Generated_Source\PSoC4/I2C_1.c ****         I2C_1_ScbModePostEnable();
+ 183:.\Generated_Source\PSoC4/I2C_1.c ****     }
+ 184:.\Generated_Source\PSoC4/I2C_1.c **** #else
+ 185:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_CTRL_REG |= I2C_1_CTRL_ENABLED;
+  71              		.loc 1 185 0
+  72 0004 064B     		ldr	r3, .L3
+  73 0006 064A     		ldr	r2, .L3
+  74 0008 1268     		ldr	r2, [r2]
+  75 000a 8021     		mov	r1, #128
+  76 000c 0906     		lsl	r1, r1, #24
+  77 000e 0A43     		orr	r2, r1
+  78 0010 1A60     		str	r2, [r3]
+ 186:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 187:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_ScbEnableIntr();
+  79              		.loc 1 187 0
+  80 0012 FFF7FEFF 		bl	I2C_1_ScbEnableIntr
+ 188:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 189:.\Generated_Source\PSoC4/I2C_1.c ****     /* Call PostEnable function specific to current operation mode */
+ 190:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_ScbModePostEnable();
+  81              		.loc 1 190 0
+  82 0016 FFF7FEFF 		bl	I2C_1_ScbModePostEnable
+ 191:.\Generated_Source\PSoC4/I2C_1.c **** #endif /* (I2C_1_SCB_MODE_UNCONFIG_CONST_CFG) */
+ 192:.\Generated_Source\PSoC4/I2C_1.c **** }
+  83              		.loc 1 192 0
+  84 001a BD46     		mov	sp, r7
+  85              		@ sp needed
+  86 001c 80BD     		pop	{r7, pc}
+  87              	.L4:
+  88 001e C046     		.align	2
+  89              	.L3:
+  90 0020 00002440 		.word	1076101120
+  91              		.cfi_endproc
+  92              	.LFE3:
+  93              		.size	I2C_1_Enable, .-I2C_1_Enable
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 6
+
+
+  94              		.section	.text.I2C_1_Start,"ax",%progbits
+  95              		.align	2
+  96              		.global	I2C_1_Start
+  97              		.code	16
+  98              		.thumb_func
+  99              		.type	I2C_1_Start, %function
+ 100              	I2C_1_Start:
+ 101              	.LFB4:
+ 193:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 194:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 195:.\Generated_Source\PSoC4/I2C_1.c **** /*******************************************************************************
+ 196:.\Generated_Source\PSoC4/I2C_1.c **** * Function Name: I2C_1_Start
+ 197:.\Generated_Source\PSoC4/I2C_1.c **** ****************************************************************************//**
+ 198:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 199:.\Generated_Source\PSoC4/I2C_1.c **** *  Invokes I2C_1_Init() and I2C_1_Enable().
+ 200:.\Generated_Source\PSoC4/I2C_1.c **** *  After this function call, the component is enabled and ready for operation.
+ 201:.\Generated_Source\PSoC4/I2C_1.c **** *  When configuration is set to "Unconfigured SCB", the component must first be
+ 202:.\Generated_Source\PSoC4/I2C_1.c **** *  initialized to operate in one of the following configurations: I2C, SPI, UART
+ 203:.\Generated_Source\PSoC4/I2C_1.c **** *  or EZI2C. Otherwise this function does not enable the component.
+ 204:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 205:.\Generated_Source\PSoC4/I2C_1.c **** * \globalvars
+ 206:.\Generated_Source\PSoC4/I2C_1.c **** *  I2C_1_initVar - used to check initial configuration, modified
+ 207:.\Generated_Source\PSoC4/I2C_1.c **** *  on first function call.
+ 208:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 209:.\Generated_Source\PSoC4/I2C_1.c **** *******************************************************************************/
+ 210:.\Generated_Source\PSoC4/I2C_1.c **** void I2C_1_Start(void)
+ 211:.\Generated_Source\PSoC4/I2C_1.c **** {
+ 102              		.loc 1 211 0
+ 103              		.cfi_startproc
+ 104 0000 80B5     		push	{r7, lr}
+ 105              		.cfi_def_cfa_offset 8
+ 106              		.cfi_offset 7, -8
+ 107              		.cfi_offset 14, -4
+ 108 0002 00AF     		add	r7, sp, #0
+ 109              		.cfi_def_cfa_register 7
+ 212:.\Generated_Source\PSoC4/I2C_1.c ****     if (0u == I2C_1_initVar)
+ 110              		.loc 1 212 0
+ 111 0004 064B     		ldr	r3, .L7
+ 112 0006 1B78     		ldrb	r3, [r3]
+ 113 0008 002B     		cmp	r3, #0
+ 114 000a 04D1     		bne	.L6
+ 213:.\Generated_Source\PSoC4/I2C_1.c ****     {
+ 214:.\Generated_Source\PSoC4/I2C_1.c ****         I2C_1_Init();
+ 115              		.loc 1 214 0
+ 116 000c FFF7FEFF 		bl	I2C_1_Init
+ 215:.\Generated_Source\PSoC4/I2C_1.c ****         I2C_1_initVar = 1u; /* Component was initialized */
+ 117              		.loc 1 215 0
+ 118 0010 034B     		ldr	r3, .L7
+ 119 0012 0122     		mov	r2, #1
+ 120 0014 1A70     		strb	r2, [r3]
+ 121              	.L6:
+ 216:.\Generated_Source\PSoC4/I2C_1.c ****     }
+ 217:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 218:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_Enable();
+ 122              		.loc 1 218 0
+ 123 0016 FFF7FEFF 		bl	I2C_1_Enable
+ 219:.\Generated_Source\PSoC4/I2C_1.c **** }
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 7
+
+
+ 124              		.loc 1 219 0
+ 125 001a BD46     		mov	sp, r7
+ 126              		@ sp needed
+ 127 001c 80BD     		pop	{r7, pc}
+ 128              	.L8:
+ 129 001e C046     		.align	2
+ 130              	.L7:
+ 131 0020 00000000 		.word	I2C_1_initVar
+ 132              		.cfi_endproc
+ 133              	.LFE4:
+ 134              		.size	I2C_1_Start, .-I2C_1_Start
+ 135              		.section	.text.I2C_1_Stop,"ax",%progbits
+ 136              		.align	2
+ 137              		.global	I2C_1_Stop
+ 138              		.code	16
+ 139              		.thumb_func
+ 140              		.type	I2C_1_Stop, %function
+ 141              	I2C_1_Stop:
+ 142              	.LFB5:
+ 220:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 221:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 222:.\Generated_Source\PSoC4/I2C_1.c **** /*******************************************************************************
+ 223:.\Generated_Source\PSoC4/I2C_1.c **** * Function Name: I2C_1_Stop
+ 224:.\Generated_Source\PSoC4/I2C_1.c **** ****************************************************************************//**
+ 225:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 226:.\Generated_Source\PSoC4/I2C_1.c **** *  Disables the I2C_1 component: disable the hardware and internal 
+ 227:.\Generated_Source\PSoC4/I2C_1.c **** *  interrupt. It also disables all TX interrupt sources so as not to cause an 
+ 228:.\Generated_Source\PSoC4/I2C_1.c **** *  unexpected interrupt trigger because after the component is enabled, the 
+ 229:.\Generated_Source\PSoC4/I2C_1.c **** *  TX FIFO is empty.
+ 230:.\Generated_Source\PSoC4/I2C_1.c **** *  Refer to the function I2C_1_Enable() for the interrupt 
+ 231:.\Generated_Source\PSoC4/I2C_1.c **** *  configuration details.
+ 232:.\Generated_Source\PSoC4/I2C_1.c **** *  This function disables the SCB component without checking to see if 
+ 233:.\Generated_Source\PSoC4/I2C_1.c **** *  communication is in progress. Before calling this function it may be 
+ 234:.\Generated_Source\PSoC4/I2C_1.c **** *  necessary to check the status of communication to make sure communication 
+ 235:.\Generated_Source\PSoC4/I2C_1.c **** *  is complete. If this is not done then communication could be stopped mid 
+ 236:.\Generated_Source\PSoC4/I2C_1.c **** *  byte and corrupted data could result.
+ 237:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 238:.\Generated_Source\PSoC4/I2C_1.c **** *******************************************************************************/
+ 239:.\Generated_Source\PSoC4/I2C_1.c **** void I2C_1_Stop(void)
+ 240:.\Generated_Source\PSoC4/I2C_1.c **** {
+ 143              		.loc 1 240 0
+ 144              		.cfi_startproc
+ 145 0000 80B5     		push	{r7, lr}
+ 146              		.cfi_def_cfa_offset 8
+ 147              		.cfi_offset 7, -8
+ 148              		.cfi_offset 14, -4
+ 149 0002 00AF     		add	r7, sp, #0
+ 150              		.cfi_def_cfa_register 7
+ 241:.\Generated_Source\PSoC4/I2C_1.c **** #if (I2C_1_SCB_IRQ_INTERNAL)
+ 242:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_DisableInt();
+ 151              		.loc 1 242 0
+ 152 0004 0920     		mov	r0, #9
+ 153 0006 FFF7FEFF 		bl	CyIntDisable
+ 243:.\Generated_Source\PSoC4/I2C_1.c **** #endif /* (I2C_1_SCB_IRQ_INTERNAL) */
+ 244:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 245:.\Generated_Source\PSoC4/I2C_1.c ****     /* Call Stop function specific to current operation mode */
+ 246:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_ScbModeStop();
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 8
+
+
+ 154              		.loc 1 246 0
+ 155 000a FFF7FEFF 		bl	I2C_1_ScbModeStop
+ 247:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 248:.\Generated_Source\PSoC4/I2C_1.c ****     /* Disable SCB IP */
+ 249:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_CTRL_REG &= (uint32) ~I2C_1_CTRL_ENABLED;
+ 156              		.loc 1 249 0
+ 157 000e 074B     		ldr	r3, .L10
+ 158 0010 064A     		ldr	r2, .L10
+ 159 0012 1268     		ldr	r2, [r2]
+ 160 0014 5200     		lsl	r2, r2, #1
+ 161 0016 5208     		lsr	r2, r2, #1
+ 162 0018 1A60     		str	r2, [r3]
+ 250:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 251:.\Generated_Source\PSoC4/I2C_1.c ****     /* Disable all TX interrupt sources so as not to cause an unexpected
+ 252:.\Generated_Source\PSoC4/I2C_1.c ****     * interrupt trigger after the component will be enabled because the 
+ 253:.\Generated_Source\PSoC4/I2C_1.c ****     * TX FIFO is empty.
+ 254:.\Generated_Source\PSoC4/I2C_1.c ****     * For SCB IP v0, it is critical as it does not mask-out interrupt
+ 255:.\Generated_Source\PSoC4/I2C_1.c ****     * sources when it is disabled. This can cause a code lock-up in the
+ 256:.\Generated_Source\PSoC4/I2C_1.c ****     * interrupt handler because TX FIFO cannot be loaded after the block
+ 257:.\Generated_Source\PSoC4/I2C_1.c ****     * is disabled.
+ 258:.\Generated_Source\PSoC4/I2C_1.c ****     */
+ 259:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_SetTxInterruptMode(I2C_1_NO_INTR_SOURCES);
+ 163              		.loc 1 259 0
+ 164 001a 054B     		ldr	r3, .L10+4
+ 165 001c 0022     		mov	r2, #0
+ 166 001e 1A60     		str	r2, [r3]
+ 260:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 261:.\Generated_Source\PSoC4/I2C_1.c **** #if (I2C_1_SCB_IRQ_INTERNAL)
+ 262:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_ClearPendingInt();
+ 167              		.loc 1 262 0
+ 168 0020 0920     		mov	r0, #9
+ 169 0022 FFF7FEFF 		bl	CyIntClearPending
+ 263:.\Generated_Source\PSoC4/I2C_1.c **** #endif /* (I2C_1_SCB_IRQ_INTERNAL) */
+ 264:.\Generated_Source\PSoC4/I2C_1.c **** }
+ 170              		.loc 1 264 0
+ 171 0026 BD46     		mov	sp, r7
+ 172              		@ sp needed
+ 173 0028 80BD     		pop	{r7, pc}
+ 174              	.L11:
+ 175 002a C046     		.align	2
+ 176              	.L10:
+ 177 002c 00002440 		.word	1076101120
+ 178 0030 880F2440 		.word	1076105096
+ 179              		.cfi_endproc
+ 180              	.LFE5:
+ 181              		.size	I2C_1_Stop, .-I2C_1_Stop
+ 182              		.section	.text.I2C_1_SetRxFifoLevel,"ax",%progbits
+ 183              		.align	2
+ 184              		.global	I2C_1_SetRxFifoLevel
+ 185              		.code	16
+ 186              		.thumb_func
+ 187              		.type	I2C_1_SetRxFifoLevel, %function
+ 188              	I2C_1_SetRxFifoLevel:
+ 189              	.LFB6:
+ 265:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 266:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 267:.\Generated_Source\PSoC4/I2C_1.c **** /*******************************************************************************
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 9
+
+
+ 268:.\Generated_Source\PSoC4/I2C_1.c **** * Function Name: I2C_1_SetRxFifoLevel
+ 269:.\Generated_Source\PSoC4/I2C_1.c **** ****************************************************************************//**
+ 270:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 271:.\Generated_Source\PSoC4/I2C_1.c **** *  Sets level in the RX FIFO to generate a RX level interrupt.
+ 272:.\Generated_Source\PSoC4/I2C_1.c **** *  When the RX FIFO has more entries than the RX FIFO level an RX level
+ 273:.\Generated_Source\PSoC4/I2C_1.c **** *  interrupt request is generated.
+ 274:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 275:.\Generated_Source\PSoC4/I2C_1.c **** *  \param level: Level in the RX FIFO to generate RX level interrupt.
+ 276:.\Generated_Source\PSoC4/I2C_1.c **** *   The range of valid level values is between 0 and RX FIFO depth - 1.
+ 277:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 278:.\Generated_Source\PSoC4/I2C_1.c **** *******************************************************************************/
+ 279:.\Generated_Source\PSoC4/I2C_1.c **** void I2C_1_SetRxFifoLevel(uint32 level)
+ 280:.\Generated_Source\PSoC4/I2C_1.c **** {
+ 190              		.loc 1 280 0
+ 191              		.cfi_startproc
+ 192 0000 80B5     		push	{r7, lr}
+ 193              		.cfi_def_cfa_offset 8
+ 194              		.cfi_offset 7, -8
+ 195              		.cfi_offset 14, -4
+ 196 0002 84B0     		sub	sp, sp, #16
+ 197              		.cfi_def_cfa_offset 24
+ 198 0004 00AF     		add	r7, sp, #0
+ 199              		.cfi_def_cfa_register 7
+ 200 0006 7860     		str	r0, [r7, #4]
+ 281:.\Generated_Source\PSoC4/I2C_1.c ****     uint32 rxFifoCtrl;
+ 282:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 283:.\Generated_Source\PSoC4/I2C_1.c ****     rxFifoCtrl = I2C_1_RX_FIFO_CTRL_REG;
+ 201              		.loc 1 283 0
+ 202 0008 094B     		ldr	r3, .L13
+ 203 000a 1B68     		ldr	r3, [r3]
+ 204 000c FB60     		str	r3, [r7, #12]
+ 284:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 285:.\Generated_Source\PSoC4/I2C_1.c ****     rxFifoCtrl &= ((uint32) ~I2C_1_RX_FIFO_CTRL_TRIGGER_LEVEL_MASK); /* Clear level mask bits */
+ 205              		.loc 1 285 0
+ 206 000e FB68     		ldr	r3, [r7, #12]
+ 207 0010 0F22     		mov	r2, #15
+ 208 0012 9343     		bic	r3, r2
+ 209 0014 FB60     		str	r3, [r7, #12]
+ 286:.\Generated_Source\PSoC4/I2C_1.c ****     rxFifoCtrl |= ((uint32) (I2C_1_RX_FIFO_CTRL_TRIGGER_LEVEL_MASK & level));
+ 210              		.loc 1 286 0
+ 211 0016 7B68     		ldr	r3, [r7, #4]
+ 212 0018 0F22     		mov	r2, #15
+ 213 001a 1340     		and	r3, r2
+ 214 001c FA68     		ldr	r2, [r7, #12]
+ 215 001e 1343     		orr	r3, r2
+ 216 0020 FB60     		str	r3, [r7, #12]
+ 287:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 288:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_RX_FIFO_CTRL_REG = rxFifoCtrl;
+ 217              		.loc 1 288 0
+ 218 0022 034B     		ldr	r3, .L13
+ 219 0024 FA68     		ldr	r2, [r7, #12]
+ 220 0026 1A60     		str	r2, [r3]
+ 289:.\Generated_Source\PSoC4/I2C_1.c **** }
+ 221              		.loc 1 289 0
+ 222 0028 BD46     		mov	sp, r7
+ 223 002a 04B0     		add	sp, sp, #16
+ 224              		@ sp needed
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 10
+
+
+ 225 002c 80BD     		pop	{r7, pc}
+ 226              	.L14:
+ 227 002e C046     		.align	2
+ 228              	.L13:
+ 229 0030 04032440 		.word	1076101892
+ 230              		.cfi_endproc
+ 231              	.LFE6:
+ 232              		.size	I2C_1_SetRxFifoLevel, .-I2C_1_SetRxFifoLevel
+ 233              		.section	.text.I2C_1_SetTxFifoLevel,"ax",%progbits
+ 234              		.align	2
+ 235              		.global	I2C_1_SetTxFifoLevel
+ 236              		.code	16
+ 237              		.thumb_func
+ 238              		.type	I2C_1_SetTxFifoLevel, %function
+ 239              	I2C_1_SetTxFifoLevel:
+ 240              	.LFB7:
+ 290:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 291:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 292:.\Generated_Source\PSoC4/I2C_1.c **** /*******************************************************************************
+ 293:.\Generated_Source\PSoC4/I2C_1.c **** * Function Name: I2C_1_SetTxFifoLevel
+ 294:.\Generated_Source\PSoC4/I2C_1.c **** ****************************************************************************//**
+ 295:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 296:.\Generated_Source\PSoC4/I2C_1.c **** *  Sets level in the TX FIFO to generate a TX level interrupt.
+ 297:.\Generated_Source\PSoC4/I2C_1.c **** *  When the TX FIFO has less entries than the TX FIFO level an TX level
+ 298:.\Generated_Source\PSoC4/I2C_1.c **** *  interrupt request is generated.
+ 299:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 300:.\Generated_Source\PSoC4/I2C_1.c **** *  \param level: Level in the TX FIFO to generate TX level interrupt.
+ 301:.\Generated_Source\PSoC4/I2C_1.c **** *   The range of valid level values is between 0 and TX FIFO depth - 1.
+ 302:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 303:.\Generated_Source\PSoC4/I2C_1.c **** *******************************************************************************/
+ 304:.\Generated_Source\PSoC4/I2C_1.c **** void I2C_1_SetTxFifoLevel(uint32 level)
+ 305:.\Generated_Source\PSoC4/I2C_1.c **** {
+ 241              		.loc 1 305 0
+ 242              		.cfi_startproc
+ 243 0000 80B5     		push	{r7, lr}
+ 244              		.cfi_def_cfa_offset 8
+ 245              		.cfi_offset 7, -8
+ 246              		.cfi_offset 14, -4
+ 247 0002 84B0     		sub	sp, sp, #16
+ 248              		.cfi_def_cfa_offset 24
+ 249 0004 00AF     		add	r7, sp, #0
+ 250              		.cfi_def_cfa_register 7
+ 251 0006 7860     		str	r0, [r7, #4]
+ 306:.\Generated_Source\PSoC4/I2C_1.c ****     uint32 txFifoCtrl;
+ 307:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 308:.\Generated_Source\PSoC4/I2C_1.c ****     txFifoCtrl = I2C_1_TX_FIFO_CTRL_REG;
+ 252              		.loc 1 308 0
+ 253 0008 094B     		ldr	r3, .L16
+ 254 000a 1B68     		ldr	r3, [r3]
+ 255 000c FB60     		str	r3, [r7, #12]
+ 309:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 310:.\Generated_Source\PSoC4/I2C_1.c ****     txFifoCtrl &= ((uint32) ~I2C_1_TX_FIFO_CTRL_TRIGGER_LEVEL_MASK); /* Clear level mask bits */
+ 256              		.loc 1 310 0
+ 257 000e FB68     		ldr	r3, [r7, #12]
+ 258 0010 0F22     		mov	r2, #15
+ 259 0012 9343     		bic	r3, r2
+ 260 0014 FB60     		str	r3, [r7, #12]
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 11
+
+
+ 311:.\Generated_Source\PSoC4/I2C_1.c ****     txFifoCtrl |= ((uint32) (I2C_1_TX_FIFO_CTRL_TRIGGER_LEVEL_MASK & level));
+ 261              		.loc 1 311 0
+ 262 0016 7B68     		ldr	r3, [r7, #4]
+ 263 0018 0F22     		mov	r2, #15
+ 264 001a 1340     		and	r3, r2
+ 265 001c FA68     		ldr	r2, [r7, #12]
+ 266 001e 1343     		orr	r3, r2
+ 267 0020 FB60     		str	r3, [r7, #12]
+ 312:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 313:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_TX_FIFO_CTRL_REG = txFifoCtrl;
+ 268              		.loc 1 313 0
+ 269 0022 034B     		ldr	r3, .L16
+ 270 0024 FA68     		ldr	r2, [r7, #12]
+ 271 0026 1A60     		str	r2, [r3]
+ 314:.\Generated_Source\PSoC4/I2C_1.c **** }
+ 272              		.loc 1 314 0
+ 273 0028 BD46     		mov	sp, r7
+ 274 002a 04B0     		add	sp, sp, #16
+ 275              		@ sp needed
+ 276 002c 80BD     		pop	{r7, pc}
+ 277              	.L17:
+ 278 002e C046     		.align	2
+ 279              	.L16:
+ 280 0030 04022440 		.word	1076101636
+ 281              		.cfi_endproc
+ 282              	.LFE7:
+ 283              		.size	I2C_1_SetTxFifoLevel, .-I2C_1_SetTxFifoLevel
+ 284              		.section	.text.I2C_1_SetCustomInterruptHandler,"ax",%progbits
+ 285              		.align	2
+ 286              		.global	I2C_1_SetCustomInterruptHandler
+ 287              		.code	16
+ 288              		.thumb_func
+ 289              		.type	I2C_1_SetCustomInterruptHandler, %function
+ 290              	I2C_1_SetCustomInterruptHandler:
+ 291              	.LFB8:
+ 315:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 316:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 317:.\Generated_Source\PSoC4/I2C_1.c **** #if (I2C_1_SCB_IRQ_INTERNAL)
+ 318:.\Generated_Source\PSoC4/I2C_1.c ****     /*******************************************************************************
+ 319:.\Generated_Source\PSoC4/I2C_1.c ****     * Function Name: I2C_1_SetCustomInterruptHandler
+ 320:.\Generated_Source\PSoC4/I2C_1.c ****     ****************************************************************************//**
+ 321:.\Generated_Source\PSoC4/I2C_1.c ****     *
+ 322:.\Generated_Source\PSoC4/I2C_1.c ****     *  Registers a function to be called by the internal interrupt handler.
+ 323:.\Generated_Source\PSoC4/I2C_1.c ****     *  First the function that is registered is called, then the internal interrupt
+ 324:.\Generated_Source\PSoC4/I2C_1.c ****     *  handler performs any operation such as software buffer management functions
+ 325:.\Generated_Source\PSoC4/I2C_1.c ****     *  before the interrupt returns.  It is the user's responsibility not to break
+ 326:.\Generated_Source\PSoC4/I2C_1.c ****     *  the software buffer operations. Only one custom handler is supported, which
+ 327:.\Generated_Source\PSoC4/I2C_1.c ****     *  is the function provided by the most recent call.
+ 328:.\Generated_Source\PSoC4/I2C_1.c ****     *  At the initialization time no custom handler is registered.
+ 329:.\Generated_Source\PSoC4/I2C_1.c ****     *
+ 330:.\Generated_Source\PSoC4/I2C_1.c ****     *  \param func: Pointer to the function to register.
+ 331:.\Generated_Source\PSoC4/I2C_1.c ****     *        The value NULL indicates to remove the current custom interrupt
+ 332:.\Generated_Source\PSoC4/I2C_1.c ****     *        handler.
+ 333:.\Generated_Source\PSoC4/I2C_1.c ****     *
+ 334:.\Generated_Source\PSoC4/I2C_1.c ****     *******************************************************************************/
+ 335:.\Generated_Source\PSoC4/I2C_1.c ****     void I2C_1_SetCustomInterruptHandler(void (*func)(void))
+ 336:.\Generated_Source\PSoC4/I2C_1.c ****     {
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 12
+
+
+ 292              		.loc 1 336 0
+ 293              		.cfi_startproc
+ 294 0000 80B5     		push	{r7, lr}
+ 295              		.cfi_def_cfa_offset 8
+ 296              		.cfi_offset 7, -8
+ 297              		.cfi_offset 14, -4
+ 298 0002 82B0     		sub	sp, sp, #8
+ 299              		.cfi_def_cfa_offset 16
+ 300 0004 00AF     		add	r7, sp, #0
+ 301              		.cfi_def_cfa_register 7
+ 302 0006 7860     		str	r0, [r7, #4]
+ 337:.\Generated_Source\PSoC4/I2C_1.c ****     #if !defined (CY_REMOVE_I2C_1_CUSTOM_INTR_HANDLER)
+ 338:.\Generated_Source\PSoC4/I2C_1.c ****         I2C_1_customIntrHandler = func; /* Register interrupt handler */
+ 303              		.loc 1 338 0
+ 304 0008 024B     		ldr	r3, .L19
+ 305 000a 7A68     		ldr	r2, [r7, #4]
+ 306 000c 1A60     		str	r2, [r3]
+ 339:.\Generated_Source\PSoC4/I2C_1.c ****     #else
+ 340:.\Generated_Source\PSoC4/I2C_1.c ****         if (NULL != func)
+ 341:.\Generated_Source\PSoC4/I2C_1.c ****         {
+ 342:.\Generated_Source\PSoC4/I2C_1.c ****             /* Suppress compiler warning */
+ 343:.\Generated_Source\PSoC4/I2C_1.c ****         }
+ 344:.\Generated_Source\PSoC4/I2C_1.c ****     #endif /* !defined (CY_REMOVE_I2C_1_CUSTOM_INTR_HANDLER) */
+ 345:.\Generated_Source\PSoC4/I2C_1.c ****     }
+ 307              		.loc 1 345 0
+ 308 000e BD46     		mov	sp, r7
+ 309 0010 02B0     		add	sp, sp, #8
+ 310              		@ sp needed
+ 311 0012 80BD     		pop	{r7, pc}
+ 312              	.L20:
+ 313              		.align	2
+ 314              	.L19:
+ 315 0014 00000000 		.word	I2C_1_customIntrHandler
+ 316              		.cfi_endproc
+ 317              	.LFE8:
+ 318              		.size	I2C_1_SetCustomInterruptHandler, .-I2C_1_SetCustomInterruptHandler
+ 319              		.section	.text.I2C_1_ScbEnableIntr,"ax",%progbits
+ 320              		.align	2
+ 321              		.code	16
+ 322              		.thumb_func
+ 323              		.type	I2C_1_ScbEnableIntr, %function
+ 324              	I2C_1_ScbEnableIntr:
+ 325              	.LFB9:
+ 346:.\Generated_Source\PSoC4/I2C_1.c **** #endif /* (I2C_1_SCB_IRQ_INTERNAL) */
+ 347:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 348:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 349:.\Generated_Source\PSoC4/I2C_1.c **** /*******************************************************************************
+ 350:.\Generated_Source\PSoC4/I2C_1.c **** * Function Name: I2C_1_ScbModeEnableIntr
+ 351:.\Generated_Source\PSoC4/I2C_1.c **** ****************************************************************************//**
+ 352:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 353:.\Generated_Source\PSoC4/I2C_1.c **** *  Enables an interrupt for a specific mode.
+ 354:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 355:.\Generated_Source\PSoC4/I2C_1.c **** *******************************************************************************/
+ 356:.\Generated_Source\PSoC4/I2C_1.c **** static void I2C_1_ScbEnableIntr(void)
+ 357:.\Generated_Source\PSoC4/I2C_1.c **** {
+ 326              		.loc 1 357 0
+ 327              		.cfi_startproc
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 13
+
+
+ 328 0000 80B5     		push	{r7, lr}
+ 329              		.cfi_def_cfa_offset 8
+ 330              		.cfi_offset 7, -8
+ 331              		.cfi_offset 14, -4
+ 332 0002 00AF     		add	r7, sp, #0
+ 333              		.cfi_def_cfa_register 7
+ 358:.\Generated_Source\PSoC4/I2C_1.c **** #if (I2C_1_SCB_IRQ_INTERNAL)
+ 359:.\Generated_Source\PSoC4/I2C_1.c ****     /* Enable interrupt in NVIC */
+ 360:.\Generated_Source\PSoC4/I2C_1.c ****     #if (I2C_1_SCB_MODE_UNCONFIG_CONST_CFG)
+ 361:.\Generated_Source\PSoC4/I2C_1.c ****         if (0u != I2C_1_scbEnableIntr)
+ 362:.\Generated_Source\PSoC4/I2C_1.c ****         {
+ 363:.\Generated_Source\PSoC4/I2C_1.c ****             I2C_1_EnableInt();
+ 364:.\Generated_Source\PSoC4/I2C_1.c ****         }
+ 365:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 366:.\Generated_Source\PSoC4/I2C_1.c ****     #else
+ 367:.\Generated_Source\PSoC4/I2C_1.c ****         I2C_1_EnableInt();
+ 334              		.loc 1 367 0
+ 335 0004 0920     		mov	r0, #9
+ 336 0006 FFF7FEFF 		bl	CyIntEnable
+ 368:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 369:.\Generated_Source\PSoC4/I2C_1.c ****     #endif /* (I2C_1_SCB_MODE_UNCONFIG_CONST_CFG) */
+ 370:.\Generated_Source\PSoC4/I2C_1.c **** #endif /* (I2C_1_SCB_IRQ_INTERNAL) */
+ 371:.\Generated_Source\PSoC4/I2C_1.c **** }
+ 337              		.loc 1 371 0
+ 338 000a BD46     		mov	sp, r7
+ 339              		@ sp needed
+ 340 000c 80BD     		pop	{r7, pc}
+ 341              		.cfi_endproc
+ 342              	.LFE9:
+ 343              		.size	I2C_1_ScbEnableIntr, .-I2C_1_ScbEnableIntr
+ 344              		.section	.text.I2C_1_ScbModePostEnable,"ax",%progbits
+ 345              		.align	2
+ 346              		.code	16
+ 347              		.thumb_func
+ 348              		.type	I2C_1_ScbModePostEnable, %function
+ 349              	I2C_1_ScbModePostEnable:
+ 350              	.LFB10:
+ 372:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 373:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 374:.\Generated_Source\PSoC4/I2C_1.c **** /*******************************************************************************
+ 375:.\Generated_Source\PSoC4/I2C_1.c **** * Function Name: I2C_1_ScbModePostEnable
+ 376:.\Generated_Source\PSoC4/I2C_1.c **** ****************************************************************************//**
+ 377:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 378:.\Generated_Source\PSoC4/I2C_1.c **** *  Calls the PostEnable function for a specific operation mode.
+ 379:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 380:.\Generated_Source\PSoC4/I2C_1.c **** *******************************************************************************/
+ 381:.\Generated_Source\PSoC4/I2C_1.c **** static void I2C_1_ScbModePostEnable(void)
+ 382:.\Generated_Source\PSoC4/I2C_1.c **** {
+ 351              		.loc 1 382 0
+ 352              		.cfi_startproc
+ 353 0000 80B5     		push	{r7, lr}
+ 354              		.cfi_def_cfa_offset 8
+ 355              		.cfi_offset 7, -8
+ 356              		.cfi_offset 14, -4
+ 357 0002 00AF     		add	r7, sp, #0
+ 358              		.cfi_def_cfa_register 7
+ 383:.\Generated_Source\PSoC4/I2C_1.c **** #if (I2C_1_SCB_MODE_UNCONFIG_CONST_CFG)
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 14
+
+
+ 384:.\Generated_Source\PSoC4/I2C_1.c **** #if (!I2C_1_CY_SCBIP_V1)
+ 385:.\Generated_Source\PSoC4/I2C_1.c ****     if (I2C_1_SCB_MODE_SPI_RUNTM_CFG)
+ 386:.\Generated_Source\PSoC4/I2C_1.c ****     {
+ 387:.\Generated_Source\PSoC4/I2C_1.c ****         I2C_1_SpiPostEnable();
+ 388:.\Generated_Source\PSoC4/I2C_1.c ****     }
+ 389:.\Generated_Source\PSoC4/I2C_1.c ****     else if (I2C_1_SCB_MODE_UART_RUNTM_CFG)
+ 390:.\Generated_Source\PSoC4/I2C_1.c ****     {
+ 391:.\Generated_Source\PSoC4/I2C_1.c ****         I2C_1_UartPostEnable();
+ 392:.\Generated_Source\PSoC4/I2C_1.c ****     }
+ 393:.\Generated_Source\PSoC4/I2C_1.c ****     else
+ 394:.\Generated_Source\PSoC4/I2C_1.c ****     {
+ 395:.\Generated_Source\PSoC4/I2C_1.c ****         /* Unknown mode: do nothing */
+ 396:.\Generated_Source\PSoC4/I2C_1.c ****     }
+ 397:.\Generated_Source\PSoC4/I2C_1.c **** #endif /* (!I2C_1_CY_SCBIP_V1) */
+ 398:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 399:.\Generated_Source\PSoC4/I2C_1.c **** #elif (I2C_1_SCB_MODE_SPI_CONST_CFG)
+ 400:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_SpiPostEnable();
+ 401:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 402:.\Generated_Source\PSoC4/I2C_1.c **** #elif (I2C_1_SCB_MODE_UART_CONST_CFG)
+ 403:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_UartPostEnable();
+ 404:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 405:.\Generated_Source\PSoC4/I2C_1.c **** #else
+ 406:.\Generated_Source\PSoC4/I2C_1.c ****     /* Unknown mode: do nothing */
+ 407:.\Generated_Source\PSoC4/I2C_1.c **** #endif /* (I2C_1_SCB_MODE_UNCONFIG_CONST_CFG) */
+ 408:.\Generated_Source\PSoC4/I2C_1.c **** }
+ 359              		.loc 1 408 0
+ 360 0004 BD46     		mov	sp, r7
+ 361              		@ sp needed
+ 362 0006 80BD     		pop	{r7, pc}
+ 363              		.cfi_endproc
+ 364              	.LFE10:
+ 365              		.size	I2C_1_ScbModePostEnable, .-I2C_1_ScbModePostEnable
+ 366              		.section	.text.I2C_1_ScbModeStop,"ax",%progbits
+ 367              		.align	2
+ 368              		.code	16
+ 369              		.thumb_func
+ 370              		.type	I2C_1_ScbModeStop, %function
+ 371              	I2C_1_ScbModeStop:
+ 372              	.LFB11:
+ 409:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 410:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 411:.\Generated_Source\PSoC4/I2C_1.c **** /*******************************************************************************
+ 412:.\Generated_Source\PSoC4/I2C_1.c **** * Function Name: I2C_1_ScbModeStop
+ 413:.\Generated_Source\PSoC4/I2C_1.c **** ****************************************************************************//**
+ 414:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 415:.\Generated_Source\PSoC4/I2C_1.c **** *  Calls the Stop function for a specific operation mode.
+ 416:.\Generated_Source\PSoC4/I2C_1.c **** *
+ 417:.\Generated_Source\PSoC4/I2C_1.c **** *******************************************************************************/
+ 418:.\Generated_Source\PSoC4/I2C_1.c **** static void I2C_1_ScbModeStop(void)
+ 419:.\Generated_Source\PSoC4/I2C_1.c **** {
+ 373              		.loc 1 419 0
+ 374              		.cfi_startproc
+ 375 0000 80B5     		push	{r7, lr}
+ 376              		.cfi_def_cfa_offset 8
+ 377              		.cfi_offset 7, -8
+ 378              		.cfi_offset 14, -4
+ 379 0002 00AF     		add	r7, sp, #0
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 15
+
+
+ 380              		.cfi_def_cfa_register 7
+ 420:.\Generated_Source\PSoC4/I2C_1.c **** #if (I2C_1_SCB_MODE_UNCONFIG_CONST_CFG)
+ 421:.\Generated_Source\PSoC4/I2C_1.c ****     if (I2C_1_SCB_MODE_I2C_RUNTM_CFG)
+ 422:.\Generated_Source\PSoC4/I2C_1.c ****     {
+ 423:.\Generated_Source\PSoC4/I2C_1.c ****         I2C_1_I2CStop();
+ 424:.\Generated_Source\PSoC4/I2C_1.c ****     }
+ 425:.\Generated_Source\PSoC4/I2C_1.c ****     else if (I2C_1_SCB_MODE_EZI2C_RUNTM_CFG)
+ 426:.\Generated_Source\PSoC4/I2C_1.c ****     {
+ 427:.\Generated_Source\PSoC4/I2C_1.c ****         I2C_1_EzI2CStop();
+ 428:.\Generated_Source\PSoC4/I2C_1.c ****     }
+ 429:.\Generated_Source\PSoC4/I2C_1.c **** #if (!I2C_1_CY_SCBIP_V1)
+ 430:.\Generated_Source\PSoC4/I2C_1.c ****     else if (I2C_1_SCB_MODE_SPI_RUNTM_CFG)
+ 431:.\Generated_Source\PSoC4/I2C_1.c ****     {
+ 432:.\Generated_Source\PSoC4/I2C_1.c ****         I2C_1_SpiStop();
+ 433:.\Generated_Source\PSoC4/I2C_1.c ****     }
+ 434:.\Generated_Source\PSoC4/I2C_1.c ****     else if (I2C_1_SCB_MODE_UART_RUNTM_CFG)
+ 435:.\Generated_Source\PSoC4/I2C_1.c ****     {
+ 436:.\Generated_Source\PSoC4/I2C_1.c ****         I2C_1_UartStop();
+ 437:.\Generated_Source\PSoC4/I2C_1.c ****     }
+ 438:.\Generated_Source\PSoC4/I2C_1.c **** #endif /* (!I2C_1_CY_SCBIP_V1) */
+ 439:.\Generated_Source\PSoC4/I2C_1.c ****     else
+ 440:.\Generated_Source\PSoC4/I2C_1.c ****     {
+ 441:.\Generated_Source\PSoC4/I2C_1.c ****         /* Unknown mode: do nothing */
+ 442:.\Generated_Source\PSoC4/I2C_1.c ****     }
+ 443:.\Generated_Source\PSoC4/I2C_1.c **** #elif (I2C_1_SCB_MODE_I2C_CONST_CFG)
+ 444:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_I2CStop();
+ 381              		.loc 1 444 0
+ 382 0004 FFF7FEFF 		bl	I2C_1_I2CStop
+ 445:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 446:.\Generated_Source\PSoC4/I2C_1.c **** #elif (I2C_1_SCB_MODE_EZI2C_CONST_CFG)
+ 447:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_EzI2CStop();
+ 448:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 449:.\Generated_Source\PSoC4/I2C_1.c **** #elif (I2C_1_SCB_MODE_SPI_CONST_CFG)
+ 450:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_SpiStop();
+ 451:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 452:.\Generated_Source\PSoC4/I2C_1.c **** #elif (I2C_1_SCB_MODE_UART_CONST_CFG)
+ 453:.\Generated_Source\PSoC4/I2C_1.c ****     I2C_1_UartStop();
+ 454:.\Generated_Source\PSoC4/I2C_1.c **** 
+ 455:.\Generated_Source\PSoC4/I2C_1.c **** #else
+ 456:.\Generated_Source\PSoC4/I2C_1.c ****     /* Unknown mode: do nothing */
+ 457:.\Generated_Source\PSoC4/I2C_1.c **** #endif /* (I2C_1_SCB_MODE_UNCONFIG_CONST_CFG) */
+ 458:.\Generated_Source\PSoC4/I2C_1.c **** }
+ 383              		.loc 1 458 0
+ 384 0008 BD46     		mov	sp, r7
+ 385              		@ sp needed
+ 386 000a 80BD     		pop	{r7, pc}
+ 387              		.cfi_endproc
+ 388              	.LFE11:
+ 389              		.size	I2C_1_ScbModeStop, .-I2C_1_ScbModeStop
+ 390              		.text
+ 391              	.Letext0:
+ 392              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 393              		.section	.debug_info,"",%progbits
+ 394              	.Ldebug_info0:
+ 395 0000 E0010000 		.4byte	0x1e0
+ 396 0004 0400     		.2byte	0x4
+ 397 0006 00000000 		.4byte	.Ldebug_abbrev0
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 16
+
+
+ 398 000a 04       		.byte	0x4
+ 399 000b 01       		.uleb128 0x1
+ 400 000c 3C010000 		.4byte	.LASF32
+ 401 0010 01       		.byte	0x1
+ 402 0011 6D000000 		.4byte	.LASF33
+ 403 0015 06000000 		.4byte	.LASF34
+ 404 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 405 001d 00000000 		.4byte	0
+ 406 0021 00000000 		.4byte	.Ldebug_line0
+ 407 0025 02       		.uleb128 0x2
+ 408 0026 01       		.byte	0x1
+ 409 0027 06       		.byte	0x6
+ 410 0028 97020000 		.4byte	.LASF0
+ 411 002c 02       		.uleb128 0x2
+ 412 002d 01       		.byte	0x1
+ 413 002e 08       		.byte	0x8
+ 414 002f DF000000 		.4byte	.LASF1
+ 415 0033 02       		.uleb128 0x2
+ 416 0034 02       		.byte	0x2
+ 417 0035 05       		.byte	0x5
+ 418 0036 61020000 		.4byte	.LASF2
+ 419 003a 02       		.uleb128 0x2
+ 420 003b 02       		.byte	0x2
+ 421 003c 07       		.byte	0x7
+ 422 003d BB000000 		.4byte	.LASF3
+ 423 0041 02       		.uleb128 0x2
+ 424 0042 04       		.byte	0x4
+ 425 0043 05       		.byte	0x5
+ 426 0044 8E020000 		.4byte	.LASF4
+ 427 0048 02       		.uleb128 0x2
+ 428 0049 04       		.byte	0x4
+ 429 004a 07       		.byte	0x7
+ 430 004b ED000000 		.4byte	.LASF5
+ 431 004f 02       		.uleb128 0x2
+ 432 0050 08       		.byte	0x8
+ 433 0051 05       		.byte	0x5
+ 434 0052 20020000 		.4byte	.LASF6
+ 435 0056 02       		.uleb128 0x2
+ 436 0057 08       		.byte	0x8
+ 437 0058 07       		.byte	0x7
+ 438 0059 00020000 		.4byte	.LASF7
+ 439 005d 03       		.uleb128 0x3
+ 440 005e 04       		.byte	0x4
+ 441 005f 05       		.byte	0x5
+ 442 0060 696E7400 		.ascii	"int\000"
+ 443 0064 02       		.uleb128 0x2
+ 444 0065 04       		.byte	0x4
+ 445 0066 07       		.byte	0x7
+ 446 0067 DF010000 		.4byte	.LASF8
+ 447 006b 04       		.uleb128 0x4
+ 448 006c FF000000 		.4byte	.LASF9
+ 449 0070 02       		.byte	0x2
+ 450 0071 9801     		.2byte	0x198
+ 451 0073 2C000000 		.4byte	0x2c
+ 452 0077 04       		.uleb128 0x4
+ 453 0078 D8010000 		.4byte	.LASF10
+ 454 007c 02       		.byte	0x2
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 17
+
+
+ 455 007d 9A01     		.2byte	0x19a
+ 456 007f 48000000 		.4byte	0x48
+ 457 0083 02       		.uleb128 0x2
+ 458 0084 04       		.byte	0x4
+ 459 0085 04       		.byte	0x4
+ 460 0086 D9000000 		.4byte	.LASF11
+ 461 008a 02       		.uleb128 0x2
+ 462 008b 08       		.byte	0x8
+ 463 008c 04       		.byte	0x4
+ 464 008d 25010000 		.4byte	.LASF12
+ 465 0091 02       		.uleb128 0x2
+ 466 0092 01       		.byte	0x1
+ 467 0093 08       		.byte	0x8
+ 468 0094 2E020000 		.4byte	.LASF13
+ 469 0098 04       		.uleb128 0x4
+ 470 0099 00000000 		.4byte	.LASF14
+ 471 009d 02       		.byte	0x2
+ 472 009e 4402     		.2byte	0x244
+ 473 00a0 A4000000 		.4byte	0xa4
+ 474 00a4 05       		.uleb128 0x5
+ 475 00a5 77000000 		.4byte	0x77
+ 476 00a9 06       		.uleb128 0x6
+ 477 00aa 04       		.byte	0x4
+ 478 00ab AF000000 		.4byte	0xaf
+ 479 00af 07       		.uleb128 0x7
+ 480 00b0 02       		.uleb128 0x2
+ 481 00b1 04       		.byte	0x4
+ 482 00b2 07       		.byte	0x7
+ 483 00b3 17020000 		.4byte	.LASF15
+ 484 00b7 08       		.uleb128 0x8
+ 485 00b8 CE000000 		.4byte	.LASF16
+ 486 00bc 01       		.byte	0x1
+ 487 00bd 7B       		.byte	0x7b
+ 488 00be 00000000 		.4byte	.LFB2
+ 489 00c2 0C000000 		.4byte	.LFE2-.LFB2
+ 490 00c6 01       		.uleb128 0x1
+ 491 00c7 9C       		.byte	0x9c
+ 492 00c8 08       		.uleb128 0x8
+ 493 00c9 33020000 		.4byte	.LASF17
+ 494 00cd 01       		.byte	0x1
+ 495 00ce AB       		.byte	0xab
+ 496 00cf 00000000 		.4byte	.LFB3
+ 497 00d3 24000000 		.4byte	.LFE3-.LFB3
+ 498 00d7 01       		.uleb128 0x1
+ 499 00d8 9C       		.byte	0x9c
+ 500 00d9 08       		.uleb128 0x8
+ 501 00da 55020000 		.4byte	.LASF18
+ 502 00de 01       		.byte	0x1
+ 503 00df D2       		.byte	0xd2
+ 504 00e0 00000000 		.4byte	.LFB4
+ 505 00e4 24000000 		.4byte	.LFE4-.LFB4
+ 506 00e8 01       		.uleb128 0x1
+ 507 00e9 9C       		.byte	0x9c
+ 508 00ea 08       		.uleb128 0x8
+ 509 00eb 31010000 		.4byte	.LASF19
+ 510 00ef 01       		.byte	0x1
+ 511 00f0 EF       		.byte	0xef
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 18
+
+
+ 512 00f1 00000000 		.4byte	.LFB5
+ 513 00f5 34000000 		.4byte	.LFE5-.LFB5
+ 514 00f9 01       		.uleb128 0x1
+ 515 00fa 9C       		.byte	0x9c
+ 516 00fb 09       		.uleb128 0x9
+ 517 00fc 40020000 		.4byte	.LASF20
+ 518 0100 01       		.byte	0x1
+ 519 0101 1701     		.2byte	0x117
+ 520 0103 00000000 		.4byte	.LFB6
+ 521 0107 34000000 		.4byte	.LFE6-.LFB6
+ 522 010b 01       		.uleb128 0x1
+ 523 010c 9C       		.byte	0x9c
+ 524 010d 30010000 		.4byte	0x130
+ 525 0111 0A       		.uleb128 0xa
+ 526 0112 8E000000 		.4byte	.LASF22
+ 527 0116 01       		.byte	0x1
+ 528 0117 1701     		.2byte	0x117
+ 529 0119 77000000 		.4byte	0x77
+ 530 011d 02       		.uleb128 0x2
+ 531 011e 91       		.byte	0x91
+ 532 011f 6C       		.sleb128 -20
+ 533 0120 0B       		.uleb128 0xb
+ 534 0121 83020000 		.4byte	.LASF23
+ 535 0125 01       		.byte	0x1
+ 536 0126 1901     		.2byte	0x119
+ 537 0128 77000000 		.4byte	0x77
+ 538 012c 02       		.uleb128 0x2
+ 539 012d 91       		.byte	0x91
+ 540 012e 74       		.sleb128 -12
+ 541 012f 00       		.byte	0
+ 542 0130 09       		.uleb128 0x9
+ 543 0131 A6000000 		.4byte	.LASF21
+ 544 0135 01       		.byte	0x1
+ 545 0136 3001     		.2byte	0x130
+ 546 0138 00000000 		.4byte	.LFB7
+ 547 013c 34000000 		.4byte	.LFE7-.LFB7
+ 548 0140 01       		.uleb128 0x1
+ 549 0141 9C       		.byte	0x9c
+ 550 0142 65010000 		.4byte	0x165
+ 551 0146 0A       		.uleb128 0xa
+ 552 0147 8E000000 		.4byte	.LASF22
+ 553 014b 01       		.byte	0x1
+ 554 014c 3001     		.2byte	0x130
+ 555 014e 77000000 		.4byte	0x77
+ 556 0152 02       		.uleb128 0x2
+ 557 0153 91       		.byte	0x91
+ 558 0154 6C       		.sleb128 -20
+ 559 0155 0B       		.uleb128 0xb
+ 560 0156 62000000 		.4byte	.LASF24
+ 561 015a 01       		.byte	0x1
+ 562 015b 3201     		.2byte	0x132
+ 563 015d 77000000 		.4byte	0x77
+ 564 0161 02       		.uleb128 0x2
+ 565 0162 91       		.byte	0x91
+ 566 0163 74       		.sleb128 -12
+ 567 0164 00       		.byte	0
+ 568 0165 09       		.uleb128 0x9
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 19
+
+
+ 569 0166 05010000 		.4byte	.LASF25
+ 570 016a 01       		.byte	0x1
+ 571 016b 4F01     		.2byte	0x14f
+ 572 016d 00000000 		.4byte	.LFB8
+ 573 0171 18000000 		.4byte	.LFE8-.LFB8
+ 574 0175 01       		.uleb128 0x1
+ 575 0176 9C       		.byte	0x9c
+ 576 0177 8B010000 		.4byte	0x18b
+ 577 017b 0A       		.uleb128 0xa
+ 578 017c 2C010000 		.4byte	.LASF26
+ 579 0180 01       		.byte	0x1
+ 580 0181 4F01     		.2byte	0x14f
+ 581 0183 A9000000 		.4byte	0xa9
+ 582 0187 02       		.uleb128 0x2
+ 583 0188 91       		.byte	0x91
+ 584 0189 74       		.sleb128 -12
+ 585 018a 00       		.byte	0
+ 586 018b 0C       		.uleb128 0xc
+ 587 018c EC010000 		.4byte	.LASF27
+ 588 0190 01       		.byte	0x1
+ 589 0191 6401     		.2byte	0x164
+ 590 0193 00000000 		.4byte	.LFB9
+ 591 0197 0E000000 		.4byte	.LFE9-.LFB9
+ 592 019b 01       		.uleb128 0x1
+ 593 019c 9C       		.byte	0x9c
+ 594 019d 0D       		.uleb128 0xd
+ 595 019e A3020000 		.4byte	.LASF28
+ 596 01a2 01       		.byte	0x1
+ 597 01a3 7D01     		.2byte	0x17d
+ 598 01a5 00000000 		.4byte	.LFB10
+ 599 01a9 08000000 		.4byte	.LFE10-.LFB10
+ 600 01ad 01       		.uleb128 0x1
+ 601 01ae 9C       		.byte	0x9c
+ 602 01af 0C       		.uleb128 0xc
+ 603 01b0 94000000 		.4byte	.LASF29
+ 604 01b4 01       		.byte	0x1
+ 605 01b5 A201     		.2byte	0x1a2
+ 606 01b7 00000000 		.4byte	.LFB11
+ 607 01bb 0C000000 		.4byte	.LFE11-.LFB11
+ 608 01bf 01       		.uleb128 0x1
+ 609 01c0 9C       		.byte	0x9c
+ 610 01c1 0E       		.uleb128 0xe
+ 611 01c2 CA010000 		.4byte	.LASF30
+ 612 01c6 01       		.byte	0x1
+ 613 01c7 51       		.byte	0x51
+ 614 01c8 6B000000 		.4byte	0x6b
+ 615 01cc 05       		.uleb128 0x5
+ 616 01cd 03       		.byte	0x3
+ 617 01ce 00000000 		.4byte	I2C_1_initVar
+ 618 01d2 0E       		.uleb128 0xe
+ 619 01d3 6B020000 		.4byte	.LASF31
+ 620 01d7 01       		.byte	0x1
+ 621 01d8 61       		.byte	0x61
+ 622 01d9 A9000000 		.4byte	0xa9
+ 623 01dd 05       		.uleb128 0x5
+ 624 01de 03       		.byte	0x3
+ 625 01df 00000000 		.4byte	I2C_1_customIntrHandler
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 20
+
+
+ 626 01e3 00       		.byte	0
+ 627              		.section	.debug_abbrev,"",%progbits
+ 628              	.Ldebug_abbrev0:
+ 629 0000 01       		.uleb128 0x1
+ 630 0001 11       		.uleb128 0x11
+ 631 0002 01       		.byte	0x1
+ 632 0003 25       		.uleb128 0x25
+ 633 0004 0E       		.uleb128 0xe
+ 634 0005 13       		.uleb128 0x13
+ 635 0006 0B       		.uleb128 0xb
+ 636 0007 03       		.uleb128 0x3
+ 637 0008 0E       		.uleb128 0xe
+ 638 0009 1B       		.uleb128 0x1b
+ 639 000a 0E       		.uleb128 0xe
+ 640 000b 55       		.uleb128 0x55
+ 641 000c 17       		.uleb128 0x17
+ 642 000d 11       		.uleb128 0x11
+ 643 000e 01       		.uleb128 0x1
+ 644 000f 10       		.uleb128 0x10
+ 645 0010 17       		.uleb128 0x17
+ 646 0011 00       		.byte	0
+ 647 0012 00       		.byte	0
+ 648 0013 02       		.uleb128 0x2
+ 649 0014 24       		.uleb128 0x24
+ 650 0015 00       		.byte	0
+ 651 0016 0B       		.uleb128 0xb
+ 652 0017 0B       		.uleb128 0xb
+ 653 0018 3E       		.uleb128 0x3e
+ 654 0019 0B       		.uleb128 0xb
+ 655 001a 03       		.uleb128 0x3
+ 656 001b 0E       		.uleb128 0xe
+ 657 001c 00       		.byte	0
+ 658 001d 00       		.byte	0
+ 659 001e 03       		.uleb128 0x3
+ 660 001f 24       		.uleb128 0x24
+ 661 0020 00       		.byte	0
+ 662 0021 0B       		.uleb128 0xb
+ 663 0022 0B       		.uleb128 0xb
+ 664 0023 3E       		.uleb128 0x3e
+ 665 0024 0B       		.uleb128 0xb
+ 666 0025 03       		.uleb128 0x3
+ 667 0026 08       		.uleb128 0x8
+ 668 0027 00       		.byte	0
+ 669 0028 00       		.byte	0
+ 670 0029 04       		.uleb128 0x4
+ 671 002a 16       		.uleb128 0x16
+ 672 002b 00       		.byte	0
+ 673 002c 03       		.uleb128 0x3
+ 674 002d 0E       		.uleb128 0xe
+ 675 002e 3A       		.uleb128 0x3a
+ 676 002f 0B       		.uleb128 0xb
+ 677 0030 3B       		.uleb128 0x3b
+ 678 0031 05       		.uleb128 0x5
+ 679 0032 49       		.uleb128 0x49
+ 680 0033 13       		.uleb128 0x13
+ 681 0034 00       		.byte	0
+ 682 0035 00       		.byte	0
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 21
+
+
+ 683 0036 05       		.uleb128 0x5
+ 684 0037 35       		.uleb128 0x35
+ 685 0038 00       		.byte	0
+ 686 0039 49       		.uleb128 0x49
+ 687 003a 13       		.uleb128 0x13
+ 688 003b 00       		.byte	0
+ 689 003c 00       		.byte	0
+ 690 003d 06       		.uleb128 0x6
+ 691 003e 0F       		.uleb128 0xf
+ 692 003f 00       		.byte	0
+ 693 0040 0B       		.uleb128 0xb
+ 694 0041 0B       		.uleb128 0xb
+ 695 0042 49       		.uleb128 0x49
+ 696 0043 13       		.uleb128 0x13
+ 697 0044 00       		.byte	0
+ 698 0045 00       		.byte	0
+ 699 0046 07       		.uleb128 0x7
+ 700 0047 15       		.uleb128 0x15
+ 701 0048 00       		.byte	0
+ 702 0049 27       		.uleb128 0x27
+ 703 004a 19       		.uleb128 0x19
+ 704 004b 00       		.byte	0
+ 705 004c 00       		.byte	0
+ 706 004d 08       		.uleb128 0x8
+ 707 004e 2E       		.uleb128 0x2e
+ 708 004f 00       		.byte	0
+ 709 0050 3F       		.uleb128 0x3f
+ 710 0051 19       		.uleb128 0x19
+ 711 0052 03       		.uleb128 0x3
+ 712 0053 0E       		.uleb128 0xe
+ 713 0054 3A       		.uleb128 0x3a
+ 714 0055 0B       		.uleb128 0xb
+ 715 0056 3B       		.uleb128 0x3b
+ 716 0057 0B       		.uleb128 0xb
+ 717 0058 27       		.uleb128 0x27
+ 718 0059 19       		.uleb128 0x19
+ 719 005a 11       		.uleb128 0x11
+ 720 005b 01       		.uleb128 0x1
+ 721 005c 12       		.uleb128 0x12
+ 722 005d 06       		.uleb128 0x6
+ 723 005e 40       		.uleb128 0x40
+ 724 005f 18       		.uleb128 0x18
+ 725 0060 9642     		.uleb128 0x2116
+ 726 0062 19       		.uleb128 0x19
+ 727 0063 00       		.byte	0
+ 728 0064 00       		.byte	0
+ 729 0065 09       		.uleb128 0x9
+ 730 0066 2E       		.uleb128 0x2e
+ 731 0067 01       		.byte	0x1
+ 732 0068 3F       		.uleb128 0x3f
+ 733 0069 19       		.uleb128 0x19
+ 734 006a 03       		.uleb128 0x3
+ 735 006b 0E       		.uleb128 0xe
+ 736 006c 3A       		.uleb128 0x3a
+ 737 006d 0B       		.uleb128 0xb
+ 738 006e 3B       		.uleb128 0x3b
+ 739 006f 05       		.uleb128 0x5
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 22
+
+
+ 740 0070 27       		.uleb128 0x27
+ 741 0071 19       		.uleb128 0x19
+ 742 0072 11       		.uleb128 0x11
+ 743 0073 01       		.uleb128 0x1
+ 744 0074 12       		.uleb128 0x12
+ 745 0075 06       		.uleb128 0x6
+ 746 0076 40       		.uleb128 0x40
+ 747 0077 18       		.uleb128 0x18
+ 748 0078 9742     		.uleb128 0x2117
+ 749 007a 19       		.uleb128 0x19
+ 750 007b 01       		.uleb128 0x1
+ 751 007c 13       		.uleb128 0x13
+ 752 007d 00       		.byte	0
+ 753 007e 00       		.byte	0
+ 754 007f 0A       		.uleb128 0xa
+ 755 0080 05       		.uleb128 0x5
+ 756 0081 00       		.byte	0
+ 757 0082 03       		.uleb128 0x3
+ 758 0083 0E       		.uleb128 0xe
+ 759 0084 3A       		.uleb128 0x3a
+ 760 0085 0B       		.uleb128 0xb
+ 761 0086 3B       		.uleb128 0x3b
+ 762 0087 05       		.uleb128 0x5
+ 763 0088 49       		.uleb128 0x49
+ 764 0089 13       		.uleb128 0x13
+ 765 008a 02       		.uleb128 0x2
+ 766 008b 18       		.uleb128 0x18
+ 767 008c 00       		.byte	0
+ 768 008d 00       		.byte	0
+ 769 008e 0B       		.uleb128 0xb
+ 770 008f 34       		.uleb128 0x34
+ 771 0090 00       		.byte	0
+ 772 0091 03       		.uleb128 0x3
+ 773 0092 0E       		.uleb128 0xe
+ 774 0093 3A       		.uleb128 0x3a
+ 775 0094 0B       		.uleb128 0xb
+ 776 0095 3B       		.uleb128 0x3b
+ 777 0096 05       		.uleb128 0x5
+ 778 0097 49       		.uleb128 0x49
+ 779 0098 13       		.uleb128 0x13
+ 780 0099 02       		.uleb128 0x2
+ 781 009a 18       		.uleb128 0x18
+ 782 009b 00       		.byte	0
+ 783 009c 00       		.byte	0
+ 784 009d 0C       		.uleb128 0xc
+ 785 009e 2E       		.uleb128 0x2e
+ 786 009f 00       		.byte	0
+ 787 00a0 03       		.uleb128 0x3
+ 788 00a1 0E       		.uleb128 0xe
+ 789 00a2 3A       		.uleb128 0x3a
+ 790 00a3 0B       		.uleb128 0xb
+ 791 00a4 3B       		.uleb128 0x3b
+ 792 00a5 05       		.uleb128 0x5
+ 793 00a6 27       		.uleb128 0x27
+ 794 00a7 19       		.uleb128 0x19
+ 795 00a8 11       		.uleb128 0x11
+ 796 00a9 01       		.uleb128 0x1
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 23
+
+
+ 797 00aa 12       		.uleb128 0x12
+ 798 00ab 06       		.uleb128 0x6
+ 799 00ac 40       		.uleb128 0x40
+ 800 00ad 18       		.uleb128 0x18
+ 801 00ae 9642     		.uleb128 0x2116
+ 802 00b0 19       		.uleb128 0x19
+ 803 00b1 00       		.byte	0
+ 804 00b2 00       		.byte	0
+ 805 00b3 0D       		.uleb128 0xd
+ 806 00b4 2E       		.uleb128 0x2e
+ 807 00b5 00       		.byte	0
+ 808 00b6 03       		.uleb128 0x3
+ 809 00b7 0E       		.uleb128 0xe
+ 810 00b8 3A       		.uleb128 0x3a
+ 811 00b9 0B       		.uleb128 0xb
+ 812 00ba 3B       		.uleb128 0x3b
+ 813 00bb 05       		.uleb128 0x5
+ 814 00bc 27       		.uleb128 0x27
+ 815 00bd 19       		.uleb128 0x19
+ 816 00be 11       		.uleb128 0x11
+ 817 00bf 01       		.uleb128 0x1
+ 818 00c0 12       		.uleb128 0x12
+ 819 00c1 06       		.uleb128 0x6
+ 820 00c2 40       		.uleb128 0x40
+ 821 00c3 18       		.uleb128 0x18
+ 822 00c4 9742     		.uleb128 0x2117
+ 823 00c6 19       		.uleb128 0x19
+ 824 00c7 00       		.byte	0
+ 825 00c8 00       		.byte	0
+ 826 00c9 0E       		.uleb128 0xe
+ 827 00ca 34       		.uleb128 0x34
+ 828 00cb 00       		.byte	0
+ 829 00cc 03       		.uleb128 0x3
+ 830 00cd 0E       		.uleb128 0xe
+ 831 00ce 3A       		.uleb128 0x3a
+ 832 00cf 0B       		.uleb128 0xb
+ 833 00d0 3B       		.uleb128 0x3b
+ 834 00d1 0B       		.uleb128 0xb
+ 835 00d2 49       		.uleb128 0x49
+ 836 00d3 13       		.uleb128 0x13
+ 837 00d4 3F       		.uleb128 0x3f
+ 838 00d5 19       		.uleb128 0x19
+ 839 00d6 02       		.uleb128 0x2
+ 840 00d7 18       		.uleb128 0x18
+ 841 00d8 00       		.byte	0
+ 842 00d9 00       		.byte	0
+ 843 00da 00       		.byte	0
+ 844              		.section	.debug_aranges,"",%progbits
+ 845 0000 64000000 		.4byte	0x64
+ 846 0004 0200     		.2byte	0x2
+ 847 0006 00000000 		.4byte	.Ldebug_info0
+ 848 000a 04       		.byte	0x4
+ 849 000b 00       		.byte	0
+ 850 000c 0000     		.2byte	0
+ 851 000e 0000     		.2byte	0
+ 852 0010 00000000 		.4byte	.LFB2
+ 853 0014 0C000000 		.4byte	.LFE2-.LFB2
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 24
+
+
+ 854 0018 00000000 		.4byte	.LFB3
+ 855 001c 24000000 		.4byte	.LFE3-.LFB3
+ 856 0020 00000000 		.4byte	.LFB4
+ 857 0024 24000000 		.4byte	.LFE4-.LFB4
+ 858 0028 00000000 		.4byte	.LFB5
+ 859 002c 34000000 		.4byte	.LFE5-.LFB5
+ 860 0030 00000000 		.4byte	.LFB6
+ 861 0034 34000000 		.4byte	.LFE6-.LFB6
+ 862 0038 00000000 		.4byte	.LFB7
+ 863 003c 34000000 		.4byte	.LFE7-.LFB7
+ 864 0040 00000000 		.4byte	.LFB8
+ 865 0044 18000000 		.4byte	.LFE8-.LFB8
+ 866 0048 00000000 		.4byte	.LFB9
+ 867 004c 0E000000 		.4byte	.LFE9-.LFB9
+ 868 0050 00000000 		.4byte	.LFB10
+ 869 0054 08000000 		.4byte	.LFE10-.LFB10
+ 870 0058 00000000 		.4byte	.LFB11
+ 871 005c 0C000000 		.4byte	.LFE11-.LFB11
+ 872 0060 00000000 		.4byte	0
+ 873 0064 00000000 		.4byte	0
+ 874              		.section	.debug_ranges,"",%progbits
+ 875              	.Ldebug_ranges0:
+ 876 0000 00000000 		.4byte	.LFB2
+ 877 0004 0C000000 		.4byte	.LFE2
+ 878 0008 00000000 		.4byte	.LFB3
+ 879 000c 24000000 		.4byte	.LFE3
+ 880 0010 00000000 		.4byte	.LFB4
+ 881 0014 24000000 		.4byte	.LFE4
+ 882 0018 00000000 		.4byte	.LFB5
+ 883 001c 34000000 		.4byte	.LFE5
+ 884 0020 00000000 		.4byte	.LFB6
+ 885 0024 34000000 		.4byte	.LFE6
+ 886 0028 00000000 		.4byte	.LFB7
+ 887 002c 34000000 		.4byte	.LFE7
+ 888 0030 00000000 		.4byte	.LFB8
+ 889 0034 18000000 		.4byte	.LFE8
+ 890 0038 00000000 		.4byte	.LFB9
+ 891 003c 0E000000 		.4byte	.LFE9
+ 892 0040 00000000 		.4byte	.LFB10
+ 893 0044 08000000 		.4byte	.LFE10
+ 894 0048 00000000 		.4byte	.LFB11
+ 895 004c 0C000000 		.4byte	.LFE11
+ 896 0050 00000000 		.4byte	0
+ 897 0054 00000000 		.4byte	0
+ 898              		.section	.debug_line,"",%progbits
+ 899              	.Ldebug_line0:
+ 900 0000 33010000 		.section	.debug_str,"MS",%progbits,1
+ 900      02005B00 
+ 900      00000201 
+ 900      FB0E0D00 
+ 900      01010101 
+ 901              	.LASF14:
+ 902 0000 72656733 		.ascii	"reg32\000"
+ 902      3200
+ 903              	.LASF34:
+ 904 0006 483A5C4A 		.ascii	"H:\\Jr Year\\343TermProject\\BLE_Temperature_Measur"
+ 904      72205965 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 25
+
+
+ 904      61725C33 
+ 904      34335465 
+ 904      726D5072 
+ 905 0036 656D656E 		.ascii	"ement01\\BLE_Temperature_Measurement01.cydsn\000"
+ 905      7430315C 
+ 905      424C455F 
+ 905      54656D70 
+ 905      65726174 
+ 906              	.LASF24:
+ 907 0062 74784669 		.ascii	"txFifoCtrl\000"
+ 907      666F4374 
+ 907      726C00
+ 908              	.LASF33:
+ 909 006d 2E5C4765 		.ascii	".\\Generated_Source\\PSoC4\\I2C_1.c\000"
+ 909      6E657261 
+ 909      7465645F 
+ 909      536F7572 
+ 909      63655C50 
+ 910              	.LASF22:
+ 911 008e 6C657665 		.ascii	"level\000"
+ 911      6C00
+ 912              	.LASF29:
+ 913 0094 4932435F 		.ascii	"I2C_1_ScbModeStop\000"
+ 913      315F5363 
+ 913      624D6F64 
+ 913      6553746F 
+ 913      7000
+ 914              	.LASF21:
+ 915 00a6 4932435F 		.ascii	"I2C_1_SetTxFifoLevel\000"
+ 915      315F5365 
+ 915      74547846 
+ 915      69666F4C 
+ 915      6576656C 
+ 916              	.LASF3:
+ 917 00bb 73686F72 		.ascii	"short unsigned int\000"
+ 917      7420756E 
+ 917      7369676E 
+ 917      65642069 
+ 917      6E7400
+ 918              	.LASF16:
+ 919 00ce 4932435F 		.ascii	"I2C_1_Init\000"
+ 919      315F496E 
+ 919      697400
+ 920              	.LASF11:
+ 921 00d9 666C6F61 		.ascii	"float\000"
+ 921      7400
+ 922              	.LASF1:
+ 923 00df 756E7369 		.ascii	"unsigned char\000"
+ 923      676E6564 
+ 923      20636861 
+ 923      7200
+ 924              	.LASF5:
+ 925 00ed 6C6F6E67 		.ascii	"long unsigned int\000"
+ 925      20756E73 
+ 925      69676E65 
+ 925      6420696E 
+ 925      7400
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 26
+
+
+ 926              	.LASF9:
+ 927 00ff 75696E74 		.ascii	"uint8\000"
+ 927      3800
+ 928              	.LASF25:
+ 929 0105 4932435F 		.ascii	"I2C_1_SetCustomInterruptHandler\000"
+ 929      315F5365 
+ 929      74437573 
+ 929      746F6D49 
+ 929      6E746572 
+ 930              	.LASF12:
+ 931 0125 646F7562 		.ascii	"double\000"
+ 931      6C6500
+ 932              	.LASF26:
+ 933 012c 66756E63 		.ascii	"func\000"
+ 933      00
+ 934              	.LASF19:
+ 935 0131 4932435F 		.ascii	"I2C_1_Stop\000"
+ 935      315F5374 
+ 935      6F7000
+ 936              	.LASF32:
+ 937 013c 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 937      4320342E 
+ 937      392E3320 
+ 937      32303135 
+ 937      30333033 
+ 938 016f 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m0 -mthumb -g -O"
+ 938      20726576 
+ 938      6973696F 
+ 938      6E203232 
+ 938      31323230 
+ 939 01a2 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 939      66756E63 
+ 939      74696F6E 
+ 939      2D736563 
+ 939      74696F6E 
+ 940              	.LASF30:
+ 941 01ca 4932435F 		.ascii	"I2C_1_initVar\000"
+ 941      315F696E 
+ 941      69745661 
+ 941      7200
+ 942              	.LASF10:
+ 943 01d8 75696E74 		.ascii	"uint32\000"
+ 943      333200
+ 944              	.LASF8:
+ 945 01df 756E7369 		.ascii	"unsigned int\000"
+ 945      676E6564 
+ 945      20696E74 
+ 945      00
+ 946              	.LASF27:
+ 947 01ec 4932435F 		.ascii	"I2C_1_ScbEnableIntr\000"
+ 947      315F5363 
+ 947      62456E61 
+ 947      626C6549 
+ 947      6E747200 
+ 948              	.LASF7:
+ 949 0200 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 949      206C6F6E 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 27
+
+
+ 949      6720756E 
+ 949      7369676E 
+ 949      65642069 
+ 950              	.LASF15:
+ 951 0217 73697A65 		.ascii	"sizetype\000"
+ 951      74797065 
+ 951      00
+ 952              	.LASF6:
+ 953 0220 6C6F6E67 		.ascii	"long long int\000"
+ 953      206C6F6E 
+ 953      6720696E 
+ 953      7400
+ 954              	.LASF13:
+ 955 022e 63686172 		.ascii	"char\000"
+ 955      00
+ 956              	.LASF17:
+ 957 0233 4932435F 		.ascii	"I2C_1_Enable\000"
+ 957      315F456E 
+ 957      61626C65 
+ 957      00
+ 958              	.LASF20:
+ 959 0240 4932435F 		.ascii	"I2C_1_SetRxFifoLevel\000"
+ 959      315F5365 
+ 959      74527846 
+ 959      69666F4C 
+ 959      6576656C 
+ 960              	.LASF18:
+ 961 0255 4932435F 		.ascii	"I2C_1_Start\000"
+ 961      315F5374 
+ 961      61727400 
+ 962              	.LASF2:
+ 963 0261 73686F72 		.ascii	"short int\000"
+ 963      7420696E 
+ 963      7400
+ 964              	.LASF31:
+ 965 026b 4932435F 		.ascii	"I2C_1_customIntrHandler\000"
+ 965      315F6375 
+ 965      73746F6D 
+ 965      496E7472 
+ 965      48616E64 
+ 966              	.LASF23:
+ 967 0283 72784669 		.ascii	"rxFifoCtrl\000"
+ 967      666F4374 
+ 967      726C00
+ 968              	.LASF4:
+ 969 028e 6C6F6E67 		.ascii	"long int\000"
+ 969      20696E74 
+ 969      00
+ 970              	.LASF0:
+ 971 0297 7369676E 		.ascii	"signed char\000"
+ 971      65642063 
+ 971      68617200 
+ 972              	.LASF28:
+ 973 02a3 4932435F 		.ascii	"I2C_1_ScbModePostEnable\000"
+ 973      315F5363 
+ 973      624D6F64 
+ 973      65506F73 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\ccy5sYBL.s 			page 28
+
+
+ 973      74456E61 
+ 974              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br
