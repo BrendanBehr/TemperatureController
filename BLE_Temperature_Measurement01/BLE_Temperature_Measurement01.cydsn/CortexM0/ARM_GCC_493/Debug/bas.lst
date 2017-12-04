@@ -1,0 +1,5319 @@
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 34, 0
+  11              		.eabi_attribute 18, 4
+  12              		.code	16
+  13              		.file	"bas.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.global	batterySimulationNotify
+  18              		.bss
+  19              		.align	1
+  20              		.type	batterySimulationNotify, %object
+  21              		.size	batterySimulationNotify, 2
+  22              	batterySimulationNotify:
+  23 0000 0000     		.space	2
+  24              		.global	batteryMeasureNotify
+  25              		.align	1
+  26              		.type	batteryMeasureNotify, %object
+  27              		.size	batteryMeasureNotify, 2
+  28              	batteryMeasureNotify:
+  29 0002 0000     		.space	2
+  30              		.section	.text.BasCallBack,"ax",%progbits
+  31              		.align	2
+  32              		.global	BasCallBack
+  33              		.code	16
+  34              		.thumb_func
+  35              		.type	BasCallBack, %function
+  36              	BasCallBack:
+  37              	.LFB37:
+  38              		.file 1 ".\\bas.c"
+   1:.\bas.c       **** /*******************************************************************************
+   2:.\bas.c       **** * File Name: bas.c
+   3:.\bas.c       **** *
+   4:.\bas.c       **** * Version: 1.0
+   5:.\bas.c       **** *
+   6:.\bas.c       **** * Description:
+   7:.\bas.c       **** *  This file contains BAS callback handler function.
+   8:.\bas.c       **** *
+   9:.\bas.c       **** * Hardware Dependency:
+  10:.\bas.c       **** *  CY8CKIT-042 BLE
+  11:.\bas.c       **** * 
+  12:.\bas.c       **** ********************************************************************************
+  13:.\bas.c       **** * Copyright 2015, Cypress Semiconductor Corporation.  All rights reserved.
+  14:.\bas.c       **** * You may use this file only in accordance with the license, terms, conditions,
+  15:.\bas.c       **** * disclaimers, and limitations in the end user license agreement accompanying
+  16:.\bas.c       **** * the software package with which this file was provided.
+  17:.\bas.c       **** *******************************************************************************/
+  18:.\bas.c       **** 
+  19:.\bas.c       **** #include "common.h"
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 2
+
+
+  20:.\bas.c       **** #include "bas.h"
+  21:.\bas.c       **** 
+  22:.\bas.c       **** uint16 batterySimulationNotify = 0u;
+  23:.\bas.c       **** uint16 batteryMeasureNotify = 0u;
+  24:.\bas.c       **** 
+  25:.\bas.c       **** 
+  26:.\bas.c       **** /*******************************************************************************
+  27:.\bas.c       **** * Function Name: BasCallBack()
+  28:.\bas.c       **** ********************************************************************************
+  29:.\bas.c       **** *
+  30:.\bas.c       **** * Summary:
+  31:.\bas.c       **** *   This is an event callback function to receive service specific events from 
+  32:.\bas.c       **** *   Battery Service.
+  33:.\bas.c       **** *
+  34:.\bas.c       **** * Parameters:
+  35:.\bas.c       **** *  event - the event code
+  36:.\bas.c       **** *  *eventParam - the event parameters
+  37:.\bas.c       **** *
+  38:.\bas.c       **** * Return:
+  39:.\bas.c       **** *  None.
+  40:.\bas.c       **** *
+  41:.\bas.c       **** ********************************************************************************/
+  42:.\bas.c       **** void BasCallBack(uint32 event, void *eventParam)
+  43:.\bas.c       **** {
+  39              		.loc 1 43 0
+  40              		.cfi_startproc
+  41 0000 80B5     		push	{r7, lr}
+  42              		.cfi_def_cfa_offset 8
+  43              		.cfi_offset 7, -8
+  44              		.cfi_offset 14, -4
+  45 0002 84B0     		sub	sp, sp, #16
+  46              		.cfi_def_cfa_offset 24
+  47 0004 00AF     		add	r7, sp, #0
+  48              		.cfi_def_cfa_register 7
+  49 0006 7860     		str	r0, [r7, #4]
+  50 0008 3960     		str	r1, [r7]
+  44:.\bas.c       ****     uint8 locServiceIndex;
+  45:.\bas.c       ****     
+  46:.\bas.c       ****     locServiceIndex = ((CYBLE_BAS_CHAR_VALUE_T *)eventParam)->serviceIndex;
+  51              		.loc 1 46 0
+  52 000a 0F23     		mov	r3, #15
+  53 000c FB18     		add	r3, r7, r3
+  54 000e 3A68     		ldr	r2, [r7]
+  55 0010 9278     		ldrb	r2, [r2, #2]
+  56 0012 1A70     		strb	r2, [r3]
+  47:.\bas.c       ****     DBG_PRINTF("BAS event: %lx, ", event);
+  48:.\bas.c       ****     
+  49:.\bas.c       ****     switch(event)
+  57              		.loc 1 49 0
+  58 0014 7B68     		ldr	r3, [r7, #4]
+  59 0016 243B     		sub	r3, r3, #36
+  60 0018 FF3B     		sub	r3, r3, #255
+  61 001a 052B     		cmp	r3, #5
+  62 001c 28D8     		bhi	.L15
+  63 001e 9A00     		lsl	r2, r3, #2
+  64 0020 164B     		ldr	r3, .L17
+  65 0022 D318     		add	r3, r2, r3
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 3
+
+
+  66 0024 1B68     		ldr	r3, [r3]
+  67 0026 9F46     		mov	pc, r3
+  68              		.section	.rodata
+  69              		.align	2
+  70              	.L4:
+  71 0000 28000000 		.word	.L3
+  72 0004 4C000000 		.word	.L5
+  73 0008 74000000 		.word	.L16
+  74 000c 74000000 		.word	.L16
+  75 0010 74000000 		.word	.L16
+  76 0014 74000000 		.word	.L16
+  77              		.section	.text.BasCallBack
+  78              	.L3:
+  50:.\bas.c       ****     {
+  51:.\bas.c       ****         case CYBLE_EVT_BASS_NOTIFICATION_ENABLED:
+  52:.\bas.c       ****             DBG_PRINTF("CYBLE_EVT_BASS_NOTIFICATION_ENABLED: %x \r\n", locServiceIndex);
+  53:.\bas.c       ****             if(BAS_SERVICE_SIMULATE == locServiceIndex)
+  79              		.loc 1 53 0
+  80 0028 0F23     		mov	r3, #15
+  81 002a FB18     		add	r3, r7, r3
+  82 002c 1B78     		ldrb	r3, [r3]
+  83 002e 002B     		cmp	r3, #0
+  84 0030 02D1     		bne	.L10
+  54:.\bas.c       ****             {
+  55:.\bas.c       ****                 batterySimulationNotify = ENABLED;
+  85              		.loc 1 55 0
+  86 0032 134B     		ldr	r3, .L17+4
+  87 0034 0122     		mov	r2, #1
+  88 0036 1A80     		strh	r2, [r3]
+  89              	.L10:
+  56:.\bas.c       ****             }
+  57:.\bas.c       ****             if(BAS_SERVICE_MEASURE == locServiceIndex)
+  90              		.loc 1 57 0
+  91 0038 0F23     		mov	r3, #15
+  92 003a FB18     		add	r3, r7, r3
+  93 003c 1B78     		ldrb	r3, [r3]
+  94 003e 002B     		cmp	r3, #0
+  95 0040 03D1     		bne	.L11
+  58:.\bas.c       ****             {
+  59:.\bas.c       ****                 batteryMeasureNotify = ENABLED;
+  96              		.loc 1 59 0
+  97 0042 104B     		ldr	r3, .L17+8
+  98 0044 0122     		mov	r2, #1
+  99 0046 1A80     		strh	r2, [r3]
+  60:.\bas.c       ****             }
+  61:.\bas.c       ****             break;
+ 100              		.loc 1 61 0
+ 101 0048 15E0     		b	.L1
+ 102              	.L11:
+ 103 004a 14E0     		b	.L1
+ 104              	.L5:
+  62:.\bas.c       ****                 
+  63:.\bas.c       ****         case CYBLE_EVT_BASS_NOTIFICATION_DISABLED:
+  64:.\bas.c       ****             DBG_PRINTF("CYBLE_EVT_BASS_NOTIFICATION_DISABLED: %x \r\n", locServiceIndex);
+  65:.\bas.c       ****             if(BAS_SERVICE_SIMULATE == locServiceIndex)
+ 105              		.loc 1 65 0
+ 106 004c 0F23     		mov	r3, #15
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 4
+
+
+ 107 004e FB18     		add	r3, r7, r3
+ 108 0050 1B78     		ldrb	r3, [r3]
+ 109 0052 002B     		cmp	r3, #0
+ 110 0054 02D1     		bne	.L13
+  66:.\bas.c       ****             {
+  67:.\bas.c       ****                 batterySimulationNotify = DISABLED;
+ 111              		.loc 1 67 0
+ 112 0056 0A4B     		ldr	r3, .L17+4
+ 113 0058 0022     		mov	r2, #0
+ 114 005a 1A80     		strh	r2, [r3]
+ 115              	.L13:
+  68:.\bas.c       ****             }
+  69:.\bas.c       ****             if(BAS_SERVICE_MEASURE == locServiceIndex)
+ 116              		.loc 1 69 0
+ 117 005c 0F23     		mov	r3, #15
+ 118 005e FB18     		add	r3, r7, r3
+ 119 0060 1B78     		ldrb	r3, [r3]
+ 120 0062 002B     		cmp	r3, #0
+ 121 0064 03D1     		bne	.L14
+  70:.\bas.c       ****             {
+  71:.\bas.c       ****                 batteryMeasureNotify = DISABLED;
+ 122              		.loc 1 71 0
+ 123 0066 074B     		ldr	r3, .L17+8
+ 124 0068 0022     		mov	r2, #0
+ 125 006a 1A80     		strh	r2, [r3]
+  72:.\bas.c       ****             }
+  73:.\bas.c       ****             break;
+ 126              		.loc 1 73 0
+ 127 006c 03E0     		b	.L1
+ 128              	.L14:
+ 129 006e 02E0     		b	.L1
+ 130              	.L15:
+  74:.\bas.c       ****         case CYBLE_EVT_BASC_NOTIFICATION:
+  75:.\bas.c       ****             break;
+  76:.\bas.c       ****         case CYBLE_EVT_BASC_READ_CHAR_RESPONSE:
+  77:.\bas.c       ****             break;
+  78:.\bas.c       ****         case CYBLE_EVT_BASC_READ_DESCR_RESPONSE:
+  79:.\bas.c       ****             break;
+  80:.\bas.c       ****         case CYBLE_EVT_BASC_WRITE_DESCR_RESPONSE:
+  81:.\bas.c       ****             break;
+  82:.\bas.c       **** 		default:
+  83:.\bas.c       ****             DBG_PRINTF("Not supported event\r\n");
+  84:.\bas.c       **** 			break;
+ 131              		.loc 1 84 0
+ 132 0070 C046     		mov	r8, r8
+ 133 0072 00E0     		b	.L1
+ 134              	.L16:
+  81:.\bas.c       **** 		default:
+ 135              		.loc 1 81 0
+ 136 0074 C046     		mov	r8, r8
+ 137              	.L1:
+  85:.\bas.c       ****     }
+  86:.\bas.c       **** }
+ 138              		.loc 1 86 0
+ 139 0076 BD46     		mov	sp, r7
+ 140 0078 04B0     		add	sp, sp, #16
+ 141              		@ sp needed
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 5
+
+
+ 142 007a 80BD     		pop	{r7, pc}
+ 143              	.L18:
+ 144              		.align	2
+ 145              	.L17:
+ 146 007c 00000000 		.word	.L4
+ 147 0080 00000000 		.word	batterySimulationNotify
+ 148 0084 00000000 		.word	batteryMeasureNotify
+ 149              		.cfi_endproc
+ 150              	.LFE37:
+ 151              		.size	BasCallBack, .-BasCallBack
+ 152              		.section	.text.MeasureBattery,"ax",%progbits
+ 153              		.align	2
+ 154              		.global	MeasureBattery
+ 155              		.code	16
+ 156              		.thumb_func
+ 157              		.type	MeasureBattery, %function
+ 158              	MeasureBattery:
+ 159              	.LFB38:
+  87:.\bas.c       **** 
+  88:.\bas.c       **** 
+  89:.\bas.c       **** /*******************************************************************************
+  90:.\bas.c       **** * Function Name: MeasureBattery()
+  91:.\bas.c       **** ********************************************************************************
+  92:.\bas.c       **** *
+  93:.\bas.c       **** * Summary:
+  94:.\bas.c       **** *   This function measures the battery voltage and sends it to the client.
+  95:.\bas.c       **** *
+  96:.\bas.c       **** *******************************************************************************/
+  97:.\bas.c       **** void MeasureBattery(void)
+  98:.\bas.c       **** {
+ 160              		.loc 1 98 0
+ 161              		.cfi_startproc
+ 162 0000 80B5     		push	{r7, lr}
+ 163              		.cfi_def_cfa_offset 8
+ 164              		.cfi_offset 7, -8
+ 165              		.cfi_offset 14, -4
+ 166 0002 00AF     		add	r7, sp, #0
+ 167              		.cfi_def_cfa_register 7
+  99:.\bas.c       **** 	//int16 adcResult;
+ 100:.\bas.c       ****     int32 mvolts;
+ 101:.\bas.c       **** 	//uint32 sarControlReg;
+ 102:.\bas.c       ****     //uint8 batteryLevel;
+ 103:.\bas.c       ****     //CYBLE_API_RESULT_T apiResult;
+ 104:.\bas.c       ****     
+ 105:.\bas.c       ****     static uint32 batteryTimer = BATTERY_TIMEOUT;
+ 106:.\bas.c       ****     
+ 107:.\bas.c       ****     if(--batteryTimer == 0u) 
+ 168              		.loc 1 107 0
+ 169 0004 0B4B     		ldr	r3, .L21
+ 170 0006 1B68     		ldr	r3, [r3]
+ 171 0008 5A1E     		sub	r2, r3, #1
+ 172 000a 0A4B     		ldr	r3, .L21
+ 173 000c 1A60     		str	r2, [r3]
+ 174 000e 094B     		ldr	r3, .L21
+ 175 0010 1B68     		ldr	r3, [r3]
+ 176 0012 002B     		cmp	r3, #0
+ 177 0014 0BD1     		bne	.L19
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 6
+
+
+ 108:.\bas.c       ****     {
+ 109:.\bas.c       ****         batteryTimer = BATTERY_TIMEOUT;
+ 178              		.loc 1 109 0
+ 179 0016 074B     		ldr	r3, .L21
+ 180 0018 0322     		mov	r2, #3
+ 181 001a 1A60     		str	r2, [r3]
+ 110:.\bas.c       ****         
+ 111:.\bas.c       ****     	/* Set the reference to 1.024V and enable reference bypass */
+ 112:.\bas.c       ****     	//sarControlReg = ADC_SAR_CTRL_REG & ~ADC_VREF_MASK;
+ 113:.\bas.c       ****     	//ADC_SAR_CTRL_REG = sarControlReg | ADC_VREF_INTERNAL1024BYPASSED;
+ 114:.\bas.c       ****     	
+ 115:.\bas.c       ****     	/* 25 ms delay for reference capacitor to charge */
+ 116:.\bas.c       ****     	CyDelay(25u);             
+ 182              		.loc 1 116 0
+ 183 001c 1920     		mov	r0, #25
+ 184 001e FFF7FEFF 		bl	CyDelay
+ 117:.\bas.c       ****     	
+ 118:.\bas.c       ****     	/* Set the reference to VDD and disable reference bypass */
+ 119:.\bas.c       ****     	//sarControlReg = ADC_SAR_CTRL_REG & ~ADC_VREF_MASK;
+ 120:.\bas.c       ****     	//ADC_SAR_CTRL_REG = sarControlReg | ADC_VREF_VDDA;
+ 121:.\bas.c       **** 
+ 122:.\bas.c       ****     	/* Perform a measurement. Store this value in Vref. */
+ 123:.\bas.c       ****     	CyDelay(1u);
+ 185              		.loc 1 123 0
+ 186 0022 0120     		mov	r0, #1
+ 187 0024 FFF7FEFF 		bl	CyDelay
+ 124:.\bas.c       ****     	//ADC_StartConvert();
+ 125:.\bas.c       ****     	//ADC_IsEndConversion(ADC_WAIT_FOR_RESULT);
+ 126:.\bas.c       **** 
+ 127:.\bas.c       ****     	/* Set the reference to 1.024V and enable reference bypass */
+ 128:.\bas.c       ****     	//sarControlReg = ADC_SAR_CTRL_REG & ~ADC_VREF_MASK;
+ 129:.\bas.c       ****     	//ADC_SAR_CTRL_REG = sarControlReg | ADC_VREF_INTERNAL1024BYPASSED;
+ 130:.\bas.c       ****         
+ 131:.\bas.c       ****         //adcResult = ADC_GetResult16(ADC_BATTERY_CHANNEL);
+ 132:.\bas.c       ****     	/* Calculate input voltage by using ratio of ADC counts from reference
+ 133:.\bas.c       ****     	*  and ADC Full Scale counts. 
+ 134:.\bas.c       ****         */
+ 135:.\bas.c       ****     	//mvolts = (1024 * 2048) / adcResult;
+ 136:.\bas.c       ****         
+ 137:.\bas.c       ****         /* Convert battery level voltage to percentage using linear approximation
+ 138:.\bas.c       ****         *  divided to two sections according to typical performance of 
+ 139:.\bas.c       ****         *  CR2033 battery specification:
+ 140:.\bas.c       ****         *  3V - 100%
+ 141:.\bas.c       ****         *  2.8V - 29%
+ 142:.\bas.c       ****         *  2.0V - 0%
+ 143:.\bas.c       ****         */
+ 144:.\bas.c       ****         if(mvolts < MEASURE_BATTERY_MIN)
+ 145:.\bas.c       ****         {
+ 146:.\bas.c       ****         //    batteryLevel = 0;
+ 147:.\bas.c       ****         }
+ 148:.\bas.c       ****         else if(mvolts < MEASURE_BATTERY_MID)
+ 149:.\bas.c       ****         {
+ 150:.\bas.c       ****         //    batteryLevel = (mvolts - MEASURE_BATTERY_MIN) * MEASURE_BATTERY_MID_PERCENT / 
+ 151:.\bas.c       ****         //                   (MEASURE_BATTERY_MID - MEASURE_BATTERY_MIN); 
+ 152:.\bas.c       ****         }
+ 153:.\bas.c       ****         else if(mvolts < MEASURE_BATTERY_MAX)
+ 154:.\bas.c       ****         {
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 7
+
+
+ 155:.\bas.c       ****         //    batteryLevel = MEASURE_BATTERY_MID_PERCENT +
+ 156:.\bas.c       ****         //                   (mvolts - MEASURE_BATTERY_MID) * (100 - MEASURE_BATTERY_MID_PERCENT) /
+ 157:.\bas.c       ****         //                   (MEASURE_BATTERY_MAX - MEASURE_BATTERY_MID); 
+ 158:.\bas.c       ****         }
+ 159:.\bas.c       ****         else
+ 160:.\bas.c       ****         {
+ 161:.\bas.c       ****         //    batteryLevel = CYBLE_BAS_MAX_BATTERY_LEVEL_VALUE;
+ 162:.\bas.c       ****         }
+ 163:.\bas.c       ****         
+ 164:.\bas.c       ****         //if(batteryLevel < LOW_BATTERY_LIMIT)
+ 165:.\bas.c       ****         //{
+ 166:.\bas.c       ****         //    LowPower_LED_Write(LED_ON);
+ 167:.\bas.c       ****         //}
+ 168:.\bas.c       ****         //else
+ 169:.\bas.c       ****         //{
+ 170:.\bas.c       ****             LowPower_LED_Write(LED_OFF);
+ 188              		.loc 1 170 0
+ 189 0028 0120     		mov	r0, #1
+ 190 002a FFF7FEFF 		bl	LowPower_LED_Write
+ 191              	.L19:
+ 171:.\bas.c       ****         //}
+ 172:.\bas.c       **** 
+ 173:.\bas.c       ****         if(batteryMeasureNotify == ENABLED)
+ 174:.\bas.c       ****         {
+ 175:.\bas.c       ****             /* Update Battery Level characteristic value and send Notification */
+ 176:.\bas.c       ****         //    apiResult = CyBle_BassSendNotification(cyBle_connHandle, BAS_SERVICE_MEASURE, CYBLE_B
+ 177:.\bas.c       ****         //        sizeof(batteryLevel), &batteryLevel);
+ 178:.\bas.c       ****         }
+ 179:.\bas.c       ****         else
+ 180:.\bas.c       ****         {
+ 181:.\bas.c       ****             /* Update Battery Level characteristic value */
+ 182:.\bas.c       ****         //    apiResult = CyBle_BassSetCharacteristicValue(BAS_SERVICE_MEASURE, CYBLE_BAS_BATTERY_L
+ 183:.\bas.c       ****         //        sizeof(batteryLevel), &batteryLevel);
+ 184:.\bas.c       ****         }
+ 185:.\bas.c       ****         //if(apiResult != CYBLE_ERROR_OK)
+ 186:.\bas.c       ****         //{
+ 187:.\bas.c       ****         //    DBG_PRINTF("API Error: %x \r\n", apiResult);
+ 188:.\bas.c       ****         //    batteryMeasureNotify = DISABLED;
+ 189:.\bas.c       ****         //}
+ 190:.\bas.c       ****         //else
+ 191:.\bas.c       ****         //{
+ 192:.\bas.c       ****             DBG_PRINTF("MeasureBatteryLevelUpdate: %d \r\n",batteryLevel);
+ 193:.\bas.c       ****         //}
+ 194:.\bas.c       ****     }
+ 195:.\bas.c       **** }
+ 192              		.loc 1 195 0
+ 193 002e BD46     		mov	sp, r7
+ 194              		@ sp needed
+ 195 0030 80BD     		pop	{r7, pc}
+ 196              	.L22:
+ 197 0032 C046     		.align	2
+ 198              	.L21:
+ 199 0034 00000000 		.word	batteryTimer.7877
+ 200              		.cfi_endproc
+ 201              	.LFE38:
+ 202              		.size	MeasureBattery, .-MeasureBattery
+ 203              		.section	.text.SimulateBattery,"ax",%progbits
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 8
+
+
+ 204              		.align	2
+ 205              		.global	SimulateBattery
+ 206              		.code	16
+ 207              		.thumb_func
+ 208              		.type	SimulateBattery, %function
+ 209              	SimulateBattery:
+ 210              	.LFB39:
+ 196:.\bas.c       **** 
+ 197:.\bas.c       **** 
+ 198:.\bas.c       **** /*******************************************************************************
+ 199:.\bas.c       **** * Function Name: SimulateBattery()
+ 200:.\bas.c       **** ********************************************************************************
+ 201:.\bas.c       **** *
+ 202:.\bas.c       **** * Summary:
+ 203:.\bas.c       **** *   The custom function to simulate Battery Voltage.
+ 204:.\bas.c       **** *
+ 205:.\bas.c       **** *******************************************************************************/
+ 206:.\bas.c       **** void SimulateBattery(void)
+ 207:.\bas.c       **** {
+ 211              		.loc 1 207 0
+ 212              		.cfi_startproc
+ 213 0000 90B5     		push	{r4, r7, lr}
+ 214              		.cfi_def_cfa_offset 12
+ 215              		.cfi_offset 4, -12
+ 216              		.cfi_offset 7, -8
+ 217              		.cfi_offset 14, -4
+ 218 0002 85B0     		sub	sp, sp, #20
+ 219              		.cfi_def_cfa_offset 32
+ 220 0004 02AF     		add	r7, sp, #8
+ 221              		.cfi_def_cfa 7, 24
+ 208:.\bas.c       ****     static uint32 batteryTimer = BATTERY_TIMEOUT;
+ 209:.\bas.c       ****     static uint8 batteryLevel = SIM_BATTERY_MIN;
+ 210:.\bas.c       ****     CYBLE_API_RESULT_T apiResult;
+ 211:.\bas.c       ****     
+ 212:.\bas.c       ****     if((CyBle_GattGetBusyStatus() == CYBLE_STACK_STATE_FREE) && (--batteryTimer == 0u))
+ 222              		.loc 1 212 0
+ 223 0006 2B4B     		ldr	r3, .L30
+ 224 0008 1B78     		ldrb	r3, [r3]
+ 225 000a DBB2     		uxtb	r3, r3
+ 226 000c 002B     		cmp	r3, #0
+ 227 000e 4ED1     		bne	.L23
+ 228              		.loc 1 212 0 is_stmt 0 discriminator 1
+ 229 0010 294B     		ldr	r3, .L30+4
+ 230 0012 1B68     		ldr	r3, [r3]
+ 231 0014 5A1E     		sub	r2, r3, #1
+ 232 0016 284B     		ldr	r3, .L30+4
+ 233 0018 1A60     		str	r2, [r3]
+ 234 001a 274B     		ldr	r3, .L30+4
+ 235 001c 1B68     		ldr	r3, [r3]
+ 236 001e 002B     		cmp	r3, #0
+ 237 0020 45D1     		bne	.L23
+ 213:.\bas.c       ****     {
+ 214:.\bas.c       ****         batteryTimer = BATTERY_TIMEOUT;
+ 238              		.loc 1 214 0 is_stmt 1
+ 239 0022 254B     		ldr	r3, .L30+4
+ 240 0024 0322     		mov	r2, #3
+ 241 0026 1A60     		str	r2, [r3]
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 9
+
+
+ 215:.\bas.c       ****         
+ 216:.\bas.c       ****         /* Battery Level simulation */
+ 217:.\bas.c       ****         batteryLevel += SIM_BATTERY_INCREMENT;
+ 242              		.loc 1 217 0
+ 243 0028 244B     		ldr	r3, .L30+8
+ 244 002a 1B78     		ldrb	r3, [r3]
+ 245 002c 0133     		add	r3, r3, #1
+ 246 002e DAB2     		uxtb	r2, r3
+ 247 0030 224B     		ldr	r3, .L30+8
+ 248 0032 1A70     		strb	r2, [r3]
+ 218:.\bas.c       ****         if(batteryLevel > SIM_BATTERY_MAX)
+ 249              		.loc 1 218 0
+ 250 0034 214B     		ldr	r3, .L30+8
+ 251 0036 1B78     		ldrb	r3, [r3]
+ 252 0038 142B     		cmp	r3, #20
+ 253 003a 02D9     		bls	.L25
+ 219:.\bas.c       ****         {
+ 220:.\bas.c       ****             batteryLevel = SIM_BATTERY_MIN; 
+ 254              		.loc 1 220 0
+ 255 003c 1F4B     		ldr	r3, .L30+8
+ 256 003e 0222     		mov	r2, #2
+ 257 0040 1A70     		strb	r2, [r3]
+ 258              	.L25:
+ 221:.\bas.c       ****         }
+ 222:.\bas.c       ****         if(batteryLevel < LOW_BATTERY_LIMIT)
+ 259              		.loc 1 222 0
+ 260 0042 1E4B     		ldr	r3, .L30+8
+ 261 0044 1B78     		ldrb	r3, [r3]
+ 262 0046 092B     		cmp	r3, #9
+ 263 0048 03D8     		bhi	.L26
+ 223:.\bas.c       ****         {
+ 224:.\bas.c       ****             LowPower_LED_Write(LED_ON);
+ 264              		.loc 1 224 0
+ 265 004a 0020     		mov	r0, #0
+ 266 004c FFF7FEFF 		bl	LowPower_LED_Write
+ 267 0050 02E0     		b	.L27
+ 268              	.L26:
+ 225:.\bas.c       ****         }
+ 226:.\bas.c       ****         else
+ 227:.\bas.c       ****         {
+ 228:.\bas.c       ****             LowPower_LED_Write(LED_OFF);
+ 269              		.loc 1 228 0
+ 270 0052 0120     		mov	r0, #1
+ 271 0054 FFF7FEFF 		bl	LowPower_LED_Write
+ 272              	.L27:
+ 229:.\bas.c       ****         }
+ 230:.\bas.c       **** 
+ 231:.\bas.c       ****         if(batterySimulationNotify == ENABLED)
+ 273              		.loc 1 231 0
+ 274 0058 194B     		ldr	r3, .L30+12
+ 275 005a 1B88     		ldrh	r3, [r3]
+ 276 005c 012B     		cmp	r3, #1
+ 277 005e 16D1     		bne	.L28
+ 232:.\bas.c       ****         {
+ 233:.\bas.c       ****             /* Update Battery Level characteristic value and send Notification */
+ 234:.\bas.c       ****              apiResult = CyBle_BassSendNotification(cyBle_connHandle, BAS_SERVICE_SIMULATE, 
+ 278              		.loc 1 234 0
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 10
+
+
+ 279 0060 BC1D     		add	r4, r7, #6
+ 280 0062 184B     		ldr	r3, .L30+16
+ 281 0064 154A     		ldr	r2, .L30+8
+ 282 0066 0092     		str	r2, [sp]
+ 283 0068 1A78     		ldrb	r2, [r3]
+ 284 006a 5B78     		ldrb	r3, [r3, #1]
+ 285 006c 1B02     		lsl	r3, r3, #8
+ 286 006e 1A43     		orr	r2, r3
+ 287 0070 0023     		mov	r3, #0
+ 288 0072 1204     		lsl	r2, r2, #16
+ 289 0074 120C     		lsr	r2, r2, #16
+ 290 0076 1B0C     		lsr	r3, r3, #16
+ 291 0078 1B04     		lsl	r3, r3, #16
+ 292 007a 1343     		orr	r3, r2
+ 293 007c 181C     		mov	r0, r3
+ 294 007e 0021     		mov	r1, #0
+ 295 0080 0022     		mov	r2, #0
+ 296 0082 0123     		mov	r3, #1
+ 297 0084 FFF7FEFF 		bl	CyBle_BassSendNotification
+ 298 0088 031C     		mov	r3, r0
+ 299 008a 2380     		strh	r3, [r4]
+ 300 008c 08E0     		b	.L29
+ 301              	.L28:
+ 235:.\bas.c       ****                 CYBLE_BAS_BATTERY_LEVEL, sizeof(batteryLevel), &batteryLevel);
+ 236:.\bas.c       ****         }
+ 237:.\bas.c       ****         else
+ 238:.\bas.c       ****         {
+ 239:.\bas.c       ****             /* Update Battery Level characteristic value */
+ 240:.\bas.c       ****              apiResult = CyBle_BassSetCharacteristicValue(BAS_SERVICE_SIMULATE, 
+ 302              		.loc 1 240 0
+ 303 008e BC1D     		add	r4, r7, #6
+ 304 0090 0A4B     		ldr	r3, .L30+8
+ 305 0092 0020     		mov	r0, #0
+ 306 0094 0021     		mov	r1, #0
+ 307 0096 0122     		mov	r2, #1
+ 308 0098 FFF7FEFF 		bl	CyBle_BassSetCharacteristicValue
+ 309 009c 031C     		mov	r3, r0
+ 310 009e 2380     		strh	r3, [r4]
+ 311              	.L29:
+ 241:.\bas.c       ****                 CYBLE_BAS_BATTERY_LEVEL, sizeof(batteryLevel), &batteryLevel);
+ 242:.\bas.c       ****         }
+ 243:.\bas.c       ****         if(apiResult != CYBLE_ERROR_OK)
+ 312              		.loc 1 243 0
+ 313 00a0 BB1D     		add	r3, r7, #6
+ 314 00a2 1B88     		ldrh	r3, [r3]
+ 315 00a4 002B     		cmp	r3, #0
+ 316 00a6 02D0     		beq	.L23
+ 244:.\bas.c       ****         {
+ 245:.\bas.c       ****             DBG_PRINTF("API Error: %x \r\n", apiResult);
+ 246:.\bas.c       ****             batterySimulationNotify = DISABLED;
+ 317              		.loc 1 246 0
+ 318 00a8 054B     		ldr	r3, .L30+12
+ 319 00aa 0022     		mov	r2, #0
+ 320 00ac 1A80     		strh	r2, [r3]
+ 321              	.L23:
+ 247:.\bas.c       ****         }
+ 248:.\bas.c       ****         else
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 11
+
+
+ 249:.\bas.c       ****         {
+ 250:.\bas.c       ****             DBG_PRINTF("SimulBatteryLevelUpdate: %d \r\n",batteryLevel);
+ 251:.\bas.c       ****         }
+ 252:.\bas.c       ****     }
+ 253:.\bas.c       **** }
+ 322              		.loc 1 253 0
+ 323 00ae BD46     		mov	sp, r7
+ 324 00b0 03B0     		add	sp, sp, #12
+ 325              		@ sp needed
+ 326 00b2 90BD     		pop	{r4, r7, pc}
+ 327              	.L31:
+ 328              		.align	2
+ 329              	.L30:
+ 330 00b4 00000000 		.word	cyBle_busyStatus
+ 331 00b8 04000000 		.word	batteryTimer.7881
+ 332 00bc 08000000 		.word	batteryLevel.7882
+ 333 00c0 00000000 		.word	batterySimulationNotify
+ 334 00c4 00000000 		.word	cyBle_connHandle
+ 335              		.cfi_endproc
+ 336              	.LFE39:
+ 337              		.size	SimulateBattery, .-SimulateBattery
+ 338              		.data
+ 339              		.align	2
+ 340              		.type	batteryTimer.7877, %object
+ 341              		.size	batteryTimer.7877, 4
+ 342              	batteryTimer.7877:
+ 343 0000 03000000 		.word	3
+ 344              		.align	2
+ 345              		.type	batteryTimer.7881, %object
+ 346              		.size	batteryTimer.7881, 4
+ 347              	batteryTimer.7881:
+ 348 0004 03000000 		.word	3
+ 349              		.type	batteryLevel.7882, %object
+ 350              		.size	batteryLevel.7882, 1
+ 351              	batteryLevel.7882:
+ 352 0008 02       		.byte	2
+ 353 0009 000000   		.text
+ 354              	.Letext0:
+ 355              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 356              		.file 3 "Generated_Source\\PSoC4/BLE_Stack.h"
+ 357              		.file 4 "Generated_Source\\PSoC4/BLE_StackGatt.h"
+ 358              		.file 5 "Generated_Source\\PSoC4/BLE_bas.h"
+ 359              		.file 6 "Generated_Source\\PSoC4/BLE_dis.h"
+ 360              		.file 7 "Generated_Source\\PSoC4/BLE_hts.h"
+ 361              		.file 8 "Generated_Source\\PSoC4/BLE_eventHandler.h"
+ 362              		.section	.debug_info,"",%progbits
+ 363              	.Ldebug_info0:
+ 364 0000 1D0D0000 		.4byte	0xd1d
+ 365 0004 0400     		.2byte	0x4
+ 366 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 367 000a 04       		.byte	0x4
+ 368 000b 01       		.uleb128 0x1
+ 369 000c FD250000 		.4byte	.LASF431
+ 370 0010 01       		.byte	0x1
+ 371 0011 5B1F0000 		.4byte	.LASF432
+ 372 0015 6F1E0000 		.4byte	.LASF433
+ 373 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 12
+
+
+ 374 001d 00000000 		.4byte	0
+ 375 0021 00000000 		.4byte	.Ldebug_line0
+ 376 0025 02       		.uleb128 0x2
+ 377 0026 01       		.byte	0x1
+ 378 0027 06       		.byte	0x6
+ 379 0028 E70A0000 		.4byte	.LASF0
+ 380 002c 02       		.uleb128 0x2
+ 381 002d 01       		.byte	0x1
+ 382 002e 08       		.byte	0x8
+ 383 002f AC0B0000 		.4byte	.LASF1
+ 384 0033 02       		.uleb128 0x2
+ 385 0034 02       		.byte	0x2
+ 386 0035 05       		.byte	0x5
+ 387 0036 602A0000 		.4byte	.LASF2
+ 388 003a 02       		.uleb128 0x2
+ 389 003b 02       		.byte	0x2
+ 390 003c 07       		.byte	0x7
+ 391 003d 68300000 		.4byte	.LASF3
+ 392 0041 02       		.uleb128 0x2
+ 393 0042 04       		.byte	0x4
+ 394 0043 05       		.byte	0x5
+ 395 0044 34080000 		.4byte	.LASF4
+ 396 0048 02       		.uleb128 0x2
+ 397 0049 04       		.byte	0x4
+ 398 004a 07       		.byte	0x7
+ 399 004b A2150000 		.4byte	.LASF5
+ 400 004f 02       		.uleb128 0x2
+ 401 0050 08       		.byte	0x8
+ 402 0051 05       		.byte	0x5
+ 403 0052 51190000 		.4byte	.LASF6
+ 404 0056 02       		.uleb128 0x2
+ 405 0057 08       		.byte	0x8
+ 406 0058 07       		.byte	0x7
+ 407 0059 45240000 		.4byte	.LASF7
+ 408 005d 03       		.uleb128 0x3
+ 409 005e 04       		.byte	0x4
+ 410 005f 05       		.byte	0x5
+ 411 0060 696E7400 		.ascii	"int\000"
+ 412 0064 02       		.uleb128 0x2
+ 413 0065 04       		.byte	0x4
+ 414 0066 07       		.byte	0x7
+ 415 0067 961D0000 		.4byte	.LASF8
+ 416 006b 04       		.uleb128 0x4
+ 417 006c DE290000 		.4byte	.LASF9
+ 418 0070 02       		.byte	0x2
+ 419 0071 9801     		.2byte	0x198
+ 420 0073 2C000000 		.4byte	0x2c
+ 421 0077 04       		.uleb128 0x4
+ 422 0078 47330000 		.4byte	.LASF10
+ 423 007c 02       		.byte	0x2
+ 424 007d 9901     		.2byte	0x199
+ 425 007f 3A000000 		.4byte	0x3a
+ 426 0083 04       		.uleb128 0x4
+ 427 0084 5A020000 		.4byte	.LASF11
+ 428 0088 02       		.byte	0x2
+ 429 0089 9A01     		.2byte	0x19a
+ 430 008b 48000000 		.4byte	0x48
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 13
+
+
+ 431 008f 04       		.uleb128 0x4
+ 432 0090 D9300000 		.4byte	.LASF12
+ 433 0094 02       		.byte	0x2
+ 434 0095 9D01     		.2byte	0x19d
+ 435 0097 41000000 		.4byte	0x41
+ 436 009b 02       		.uleb128 0x2
+ 437 009c 04       		.byte	0x4
+ 438 009d 04       		.byte	0x4
+ 439 009e 5D1C0000 		.4byte	.LASF13
+ 440 00a2 02       		.uleb128 0x2
+ 441 00a3 08       		.byte	0x8
+ 442 00a4 04       		.byte	0x4
+ 443 00a5 5F1A0000 		.4byte	.LASF14
+ 444 00a9 02       		.uleb128 0x2
+ 445 00aa 01       		.byte	0x1
+ 446 00ab 08       		.byte	0x8
+ 447 00ac 2C0E0000 		.4byte	.LASF15
+ 448 00b0 05       		.uleb128 0x5
+ 449 00b1 6B000000 		.4byte	0x6b
+ 450 00b5 02       		.uleb128 0x2
+ 451 00b6 04       		.byte	0x4
+ 452 00b7 07       		.byte	0x7
+ 453 00b8 5C000000 		.4byte	.LASF16
+ 454 00bc 06       		.uleb128 0x6
+ 455 00bd 04       		.byte	0x4
+ 456 00be 07       		.uleb128 0x7
+ 457 00bf 01       		.byte	0x1
+ 458 00c0 03       		.byte	0x3
+ 459 00c1 4201     		.2byte	0x142
+ 460 00c3 7B020000 		.4byte	0x27b
+ 461 00c7 08       		.uleb128 0x8
+ 462 00c8 6C0E0000 		.4byte	.LASF17
+ 463 00cc 00       		.sleb128 0
+ 464 00cd 08       		.uleb128 0x8
+ 465 00ce 05090000 		.4byte	.LASF18
+ 466 00d2 01       		.sleb128 1
+ 467 00d3 08       		.uleb128 0x8
+ 468 00d4 5C240000 		.4byte	.LASF19
+ 469 00d8 02       		.sleb128 2
+ 470 00d9 08       		.uleb128 0x8
+ 471 00da 3A0B0000 		.4byte	.LASF20
+ 472 00de 03       		.sleb128 3
+ 473 00df 08       		.uleb128 0x8
+ 474 00e0 71310000 		.4byte	.LASF21
+ 475 00e4 04       		.sleb128 4
+ 476 00e5 08       		.uleb128 0x8
+ 477 00e6 422F0000 		.4byte	.LASF22
+ 478 00ea 05       		.sleb128 5
+ 479 00eb 08       		.uleb128 0x8
+ 480 00ec C4210000 		.4byte	.LASF23
+ 481 00f0 06       		.sleb128 6
+ 482 00f1 08       		.uleb128 0x8
+ 483 00f2 152C0000 		.4byte	.LASF24
+ 484 00f6 20       		.sleb128 32
+ 485 00f7 08       		.uleb128 0x8
+ 486 00f8 06060000 		.4byte	.LASF25
+ 487 00fc 21       		.sleb128 33
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 14
+
+
+ 488 00fd 08       		.uleb128 0x8
+ 489 00fe 8E180000 		.4byte	.LASF26
+ 490 0102 22       		.sleb128 34
+ 491 0103 08       		.uleb128 0x8
+ 492 0104 3E200000 		.4byte	.LASF27
+ 493 0108 23       		.sleb128 35
+ 494 0109 08       		.uleb128 0x8
+ 495 010a 77140000 		.4byte	.LASF28
+ 496 010e 24       		.sleb128 36
+ 497 010f 08       		.uleb128 0x8
+ 498 0110 DA140000 		.4byte	.LASF29
+ 499 0114 25       		.sleb128 37
+ 500 0115 08       		.uleb128 0x8
+ 501 0116 2D290000 		.4byte	.LASF30
+ 502 011a 26       		.sleb128 38
+ 503 011b 08       		.uleb128 0x8
+ 504 011c 12020000 		.4byte	.LASF31
+ 505 0120 27       		.sleb128 39
+ 506 0121 08       		.uleb128 0x8
+ 507 0122 95320000 		.4byte	.LASF32
+ 508 0126 28       		.sleb128 40
+ 509 0127 08       		.uleb128 0x8
+ 510 0128 67220000 		.4byte	.LASF33
+ 511 012c 29       		.sleb128 41
+ 512 012d 08       		.uleb128 0x8
+ 513 012e AA170000 		.4byte	.LASF34
+ 514 0132 2A       		.sleb128 42
+ 515 0133 08       		.uleb128 0x8
+ 516 0134 A31F0000 		.4byte	.LASF35
+ 517 0138 2B       		.sleb128 43
+ 518 0139 08       		.uleb128 0x8
+ 519 013a A02F0000 		.4byte	.LASF36
+ 520 013e 2C       		.sleb128 44
+ 521 013f 08       		.uleb128 0x8
+ 522 0140 0B010000 		.4byte	.LASF37
+ 523 0144 2D       		.sleb128 45
+ 524 0145 08       		.uleb128 0x8
+ 525 0146 062A0000 		.4byte	.LASF38
+ 526 014a 2E       		.sleb128 46
+ 527 014b 08       		.uleb128 0x8
+ 528 014c 0F070000 		.4byte	.LASF39
+ 529 0150 2F       		.sleb128 47
+ 530 0151 08       		.uleb128 0x8
+ 531 0152 E60D0000 		.4byte	.LASF40
+ 532 0156 30       		.sleb128 48
+ 533 0157 08       		.uleb128 0x8
+ 534 0158 3A1B0000 		.4byte	.LASF41
+ 535 015c 31       		.sleb128 49
+ 536 015d 08       		.uleb128 0x8
+ 537 015e 830E0000 		.4byte	.LASF42
+ 538 0162 32       		.sleb128 50
+ 539 0163 08       		.uleb128 0x8
+ 540 0164 990C0000 		.4byte	.LASF43
+ 541 0168 33       		.sleb128 51
+ 542 0169 08       		.uleb128 0x8
+ 543 016a 1C2B0000 		.4byte	.LASF44
+ 544 016e C000     		.sleb128 64
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 15
+
+
+ 545 0170 08       		.uleb128 0x8
+ 546 0171 31020000 		.4byte	.LASF45
+ 547 0175 C100     		.sleb128 65
+ 548 0177 08       		.uleb128 0x8
+ 549 0178 86310000 		.4byte	.LASF46
+ 550 017c C200     		.sleb128 66
+ 551 017e 08       		.uleb128 0x8
+ 552 017f DE220000 		.4byte	.LASF47
+ 553 0183 C300     		.sleb128 67
+ 554 0185 08       		.uleb128 0x8
+ 555 0186 BA0B0000 		.4byte	.LASF48
+ 556 018a C400     		.sleb128 68
+ 557 018c 08       		.uleb128 0x8
+ 558 018d 620B0000 		.4byte	.LASF49
+ 559 0191 C500     		.sleb128 69
+ 560 0193 08       		.uleb128 0x8
+ 561 0194 64270000 		.4byte	.LASF50
+ 562 0198 C600     		.sleb128 70
+ 563 019a 08       		.uleb128 0x8
+ 564 019b 46270000 		.4byte	.LASF51
+ 565 019f C700     		.sleb128 71
+ 566 01a1 08       		.uleb128 0x8
+ 567 01a2 9A0D0000 		.4byte	.LASF52
+ 568 01a6 C800     		.sleb128 72
+ 569 01a8 08       		.uleb128 0x8
+ 570 01a9 96200000 		.4byte	.LASF53
+ 571 01ad C900     		.sleb128 73
+ 572 01af 08       		.uleb128 0x8
+ 573 01b0 E40E0000 		.4byte	.LASF54
+ 574 01b4 CA00     		.sleb128 74
+ 575 01b6 08       		.uleb128 0x8
+ 576 01b7 4D0E0000 		.4byte	.LASF55
+ 577 01bb CB00     		.sleb128 75
+ 578 01bd 08       		.uleb128 0x8
+ 579 01be E61F0000 		.4byte	.LASF56
+ 580 01c2 CC00     		.sleb128 76
+ 581 01c4 08       		.uleb128 0x8
+ 582 01c5 9D280000 		.4byte	.LASF57
+ 583 01c9 CD00     		.sleb128 77
+ 584 01cb 08       		.uleb128 0x8
+ 585 01cc F2070000 		.4byte	.LASF58
+ 586 01d0 CE00     		.sleb128 78
+ 587 01d2 08       		.uleb128 0x8
+ 588 01d3 A31D0000 		.4byte	.LASF59
+ 589 01d7 CF00     		.sleb128 79
+ 590 01d9 08       		.uleb128 0x8
+ 591 01da F62B0000 		.4byte	.LASF60
+ 592 01de D000     		.sleb128 80
+ 593 01e0 08       		.uleb128 0x8
+ 594 01e1 480F0000 		.4byte	.LASF61
+ 595 01e5 D100     		.sleb128 81
+ 596 01e7 08       		.uleb128 0x8
+ 597 01e8 E5050000 		.4byte	.LASF62
+ 598 01ec D200     		.sleb128 82
+ 599 01ee 08       		.uleb128 0x8
+ 600 01ef C22E0000 		.4byte	.LASF63
+ 601 01f3 D300     		.sleb128 83
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 16
+
+
+ 602 01f5 08       		.uleb128 0x8
+ 603 01f6 D7320000 		.4byte	.LASF64
+ 604 01fa D400     		.sleb128 84
+ 605 01fc 08       		.uleb128 0x8
+ 606 01fd A4040000 		.4byte	.LASF65
+ 607 0201 D500     		.sleb128 85
+ 608 0203 08       		.uleb128 0x8
+ 609 0204 DA0F0000 		.4byte	.LASF66
+ 610 0208 D600     		.sleb128 86
+ 611 020a 08       		.uleb128 0x8
+ 612 020b 091D0000 		.4byte	.LASF67
+ 613 020f D700     		.sleb128 87
+ 614 0211 08       		.uleb128 0x8
+ 615 0212 56320000 		.4byte	.LASF68
+ 616 0216 D800     		.sleb128 88
+ 617 0218 08       		.uleb128 0x8
+ 618 0219 F62F0000 		.4byte	.LASF69
+ 619 021d F000     		.sleb128 112
+ 620 021f 08       		.uleb128 0x8
+ 621 0220 A6130000 		.4byte	.LASF70
+ 622 0224 F100     		.sleb128 113
+ 623 0226 08       		.uleb128 0x8
+ 624 0227 450A0000 		.4byte	.LASF71
+ 625 022b F200     		.sleb128 114
+ 626 022d 08       		.uleb128 0x8
+ 627 022e D82B0000 		.4byte	.LASF72
+ 628 0232 F300     		.sleb128 115
+ 629 0234 08       		.uleb128 0x8
+ 630 0235 EB200000 		.4byte	.LASF73
+ 631 0239 F400     		.sleb128 116
+ 632 023b 08       		.uleb128 0x8
+ 633 023c 1A180000 		.4byte	.LASF74
+ 634 0240 F500     		.sleb128 117
+ 635 0242 08       		.uleb128 0x8
+ 636 0243 790D0000 		.4byte	.LASF75
+ 637 0247 F600     		.sleb128 118
+ 638 0249 08       		.uleb128 0x8
+ 639 024a AB240000 		.4byte	.LASF76
+ 640 024e F700     		.sleb128 119
+ 641 0250 08       		.uleb128 0x8
+ 642 0251 C8040000 		.4byte	.LASF77
+ 643 0255 F800     		.sleb128 120
+ 644 0257 08       		.uleb128 0x8
+ 645 0258 C00C0000 		.4byte	.LASF78
+ 646 025c F900     		.sleb128 121
+ 647 025e 08       		.uleb128 0x8
+ 648 025f CA310000 		.4byte	.LASF79
+ 649 0263 FA00     		.sleb128 122
+ 650 0265 08       		.uleb128 0x8
+ 651 0266 AB1A0000 		.4byte	.LASF80
+ 652 026a FA01     		.sleb128 250
+ 653 026c 08       		.uleb128 0x8
+ 654 026d F92D0000 		.4byte	.LASF81
+ 655 0271 FB01     		.sleb128 251
+ 656 0273 08       		.uleb128 0x8
+ 657 0274 951F0000 		.4byte	.LASF82
+ 658 0278 FF01     		.sleb128 255
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 17
+
+
+ 659 027a 00       		.byte	0
+ 660 027b 07       		.uleb128 0x7
+ 661 027c 02       		.byte	0x2
+ 662 027d 03       		.byte	0x3
+ 663 027e FF02     		.2byte	0x2ff
+ 664 0280 4B030000 		.4byte	0x34b
+ 665 0284 08       		.uleb128 0x8
+ 666 0285 530B0000 		.4byte	.LASF83
+ 667 0289 00       		.sleb128 0
+ 668 028a 08       		.uleb128 0x8
+ 669 028b 35110000 		.4byte	.LASF84
+ 670 028f 01       		.sleb128 1
+ 671 0290 08       		.uleb128 0x8
+ 672 0291 53310000 		.4byte	.LASF85
+ 673 0295 02       		.sleb128 2
+ 674 0296 08       		.uleb128 0x8
+ 675 0297 81120000 		.4byte	.LASF86
+ 676 029b 03       		.sleb128 3
+ 677 029c 08       		.uleb128 0x8
+ 678 029d 35150000 		.4byte	.LASF87
+ 679 02a1 04       		.sleb128 4
+ 680 02a2 08       		.uleb128 0x8
+ 681 02a3 1E1A0000 		.4byte	.LASF88
+ 682 02a7 05       		.sleb128 5
+ 683 02a8 08       		.uleb128 0x8
+ 684 02a9 982D0000 		.4byte	.LASF89
+ 685 02ad 06       		.sleb128 6
+ 686 02ae 08       		.uleb128 0x8
+ 687 02af C70E0000 		.4byte	.LASF90
+ 688 02b3 07       		.sleb128 7
+ 689 02b4 08       		.uleb128 0x8
+ 690 02b5 E41B0000 		.4byte	.LASF91
+ 691 02b9 08       		.sleb128 8
+ 692 02ba 08       		.uleb128 0x8
+ 693 02bb B52C0000 		.4byte	.LASF92
+ 694 02bf 09       		.sleb128 9
+ 695 02c0 08       		.uleb128 0x8
+ 696 02c1 72330000 		.4byte	.LASF93
+ 697 02c5 0A       		.sleb128 10
+ 698 02c6 08       		.uleb128 0x8
+ 699 02c7 7C060000 		.4byte	.LASF94
+ 700 02cb 0B       		.sleb128 11
+ 701 02cc 08       		.uleb128 0x8
+ 702 02cd 2B2F0000 		.4byte	.LASF95
+ 703 02d1 0C       		.sleb128 12
+ 704 02d2 08       		.uleb128 0x8
+ 705 02d3 EE1E0000 		.4byte	.LASF96
+ 706 02d7 0D       		.sleb128 13
+ 707 02d8 08       		.uleb128 0x8
+ 708 02d9 AF160000 		.4byte	.LASF97
+ 709 02dd 0E       		.sleb128 14
+ 710 02de 08       		.uleb128 0x8
+ 711 02df F9190000 		.4byte	.LASF98
+ 712 02e3 0F       		.sleb128 15
+ 713 02e4 08       		.uleb128 0x8
+ 714 02e5 34040000 		.4byte	.LASF99
+ 715 02e9 10       		.sleb128 16
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 18
+
+
+ 716 02ea 08       		.uleb128 0x8
+ 717 02eb C01B0000 		.4byte	.LASF100
+ 718 02ef 11       		.sleb128 17
+ 719 02f0 08       		.uleb128 0x8
+ 720 02f1 18090000 		.4byte	.LASF101
+ 721 02f5 12       		.sleb128 18
+ 722 02f6 08       		.uleb128 0x8
+ 723 02f7 BF0A0000 		.4byte	.LASF102
+ 724 02fb 13       		.sleb128 19
+ 725 02fc 08       		.uleb128 0x8
+ 726 02fd 661A0000 		.4byte	.LASF103
+ 727 0301 27       		.sleb128 39
+ 728 0302 08       		.uleb128 0x8
+ 729 0303 BE1C0000 		.4byte	.LASF104
+ 730 0307 28       		.sleb128 40
+ 731 0308 08       		.uleb128 0x8
+ 732 0309 62040000 		.4byte	.LASF105
+ 733 030d 29       		.sleb128 41
+ 734 030e 08       		.uleb128 0x8
+ 735 030f A82A0000 		.4byte	.LASF106
+ 736 0313 2A       		.sleb128 42
+ 737 0314 08       		.uleb128 0x8
+ 738 0315 37160000 		.4byte	.LASF107
+ 739 0319 2B       		.sleb128 43
+ 740 031a 08       		.uleb128 0x8
+ 741 031b 7F250000 		.4byte	.LASF108
+ 742 031f 2C       		.sleb128 44
+ 743 0320 08       		.uleb128 0x8
+ 744 0321 19110000 		.4byte	.LASF109
+ 745 0325 FE01     		.sleb128 254
+ 746 0327 08       		.uleb128 0x8
+ 747 0328 73130000 		.4byte	.LASF110
+ 748 032c FF01     		.sleb128 255
+ 749 032e 08       		.uleb128 0x8
+ 750 032f 7D200000 		.4byte	.LASF111
+ 751 0333 8002     		.sleb128 256
+ 752 0335 08       		.uleb128 0x8
+ 753 0336 64200000 		.4byte	.LASF112
+ 754 033a 8102     		.sleb128 257
+ 755 033c 08       		.uleb128 0x8
+ 756 033d BD090000 		.4byte	.LASF113
+ 757 0341 8202     		.sleb128 258
+ 758 0343 08       		.uleb128 0x8
+ 759 0344 91240000 		.4byte	.LASF114
+ 760 0348 8302     		.sleb128 259
+ 761 034a 00       		.byte	0
+ 762 034b 04       		.uleb128 0x4
+ 763 034c 182E0000 		.4byte	.LASF115
+ 764 0350 03       		.byte	0x3
+ 765 0351 6B03     		.2byte	0x36b
+ 766 0353 7B020000 		.4byte	0x27b
+ 767 0357 09       		.uleb128 0x9
+ 768 0358 04       		.byte	0x4
+ 769 0359 6B000000 		.4byte	0x6b
+ 770 035d 0A       		.uleb128 0xa
+ 771 035e 02       		.byte	0x2
+ 772 035f 04       		.byte	0x4
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 19
+
+
+ 773 0360 9C01     		.2byte	0x19c
+ 774 0362 81030000 		.4byte	0x381
+ 775 0366 0B       		.uleb128 0xb
+ 776 0367 38070000 		.4byte	.LASF116
+ 777 036b 04       		.byte	0x4
+ 778 036c A301     		.2byte	0x1a3
+ 779 036e 6B000000 		.4byte	0x6b
+ 780 0372 00       		.byte	0
+ 781 0373 0B       		.uleb128 0xb
+ 782 0374 4D310000 		.4byte	.LASF117
+ 783 0378 04       		.byte	0x4
+ 784 0379 A901     		.2byte	0x1a9
+ 785 037b 6B000000 		.4byte	0x6b
+ 786 037f 01       		.byte	0x1
+ 787 0380 00       		.byte	0
+ 788 0381 04       		.uleb128 0x4
+ 789 0382 45060000 		.4byte	.LASF118
+ 790 0386 04       		.byte	0x4
+ 791 0387 AB01     		.2byte	0x1ab
+ 792 0389 5D030000 		.4byte	0x35d
+ 793 038d 0A       		.uleb128 0xa
+ 794 038e 08       		.byte	0x8
+ 795 038f 04       		.byte	0x4
+ 796 0390 C701     		.2byte	0x1c7
+ 797 0392 BE030000 		.4byte	0x3be
+ 798 0396 0C       		.uleb128 0xc
+ 799 0397 76616C00 		.ascii	"val\000"
+ 800 039b 04       		.byte	0x4
+ 801 039c CA01     		.2byte	0x1ca
+ 802 039e 57030000 		.4byte	0x357
+ 803 03a2 00       		.byte	0
+ 804 03a3 0C       		.uleb128 0xc
+ 805 03a4 6C656E00 		.ascii	"len\000"
+ 806 03a8 04       		.byte	0x4
+ 807 03a9 CD01     		.2byte	0x1cd
+ 808 03ab 77000000 		.4byte	0x77
+ 809 03af 04       		.byte	0x4
+ 810 03b0 0B       		.uleb128 0xb
+ 811 03b1 DF300000 		.4byte	.LASF119
+ 812 03b5 04       		.byte	0x4
+ 813 03b6 D401     		.2byte	0x1d4
+ 814 03b8 77000000 		.4byte	0x77
+ 815 03bc 06       		.byte	0x6
+ 816 03bd 00       		.byte	0
+ 817 03be 04       		.uleb128 0x4
+ 818 03bf EB040000 		.4byte	.LASF120
+ 819 03c3 04       		.byte	0x4
+ 820 03c4 D601     		.2byte	0x1d6
+ 821 03c6 8D030000 		.4byte	0x38d
+ 822 03ca 0D       		.uleb128 0xd
+ 823 03cb 01       		.byte	0x1
+ 824 03cc 05       		.byte	0x5
+ 825 03cd 3A       		.byte	0x3a
+ 826 03ce DF030000 		.4byte	0x3df
+ 827 03d2 08       		.uleb128 0x8
+ 828 03d3 C1300000 		.4byte	.LASF121
+ 829 03d7 00       		.sleb128 0
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 20
+
+
+ 830 03d8 08       		.uleb128 0x8
+ 831 03d9 56180000 		.4byte	.LASF122
+ 832 03dd 01       		.sleb128 1
+ 833 03de 00       		.byte	0
+ 834 03df 0E       		.uleb128 0xe
+ 835 03e0 B7050000 		.4byte	.LASF123
+ 836 03e4 05       		.byte	0x5
+ 837 03e5 3D       		.byte	0x3d
+ 838 03e6 CA030000 		.4byte	0x3ca
+ 839 03ea 0F       		.uleb128 0xf
+ 840 03eb 08       		.byte	0x8
+ 841 03ec 05       		.byte	0x5
+ 842 03ed 6A       		.byte	0x6a
+ 843 03ee 23040000 		.4byte	0x423
+ 844 03f2 10       		.uleb128 0x10
+ 845 03f3 B1260000 		.4byte	.LASF124
+ 846 03f7 05       		.byte	0x5
+ 847 03f8 6C       		.byte	0x6c
+ 848 03f9 81030000 		.4byte	0x381
+ 849 03fd 00       		.byte	0
+ 850 03fe 10       		.uleb128 0x10
+ 851 03ff F9090000 		.4byte	.LASF125
+ 852 0403 05       		.byte	0x5
+ 853 0404 6D       		.byte	0x6d
+ 854 0405 6B000000 		.4byte	0x6b
+ 855 0409 02       		.byte	0x2
+ 856 040a 10       		.uleb128 0x10
+ 857 040b E4000000 		.4byte	.LASF126
+ 858 040f 05       		.byte	0x5
+ 859 0410 6E       		.byte	0x6e
+ 860 0411 DF030000 		.4byte	0x3df
+ 861 0415 03       		.byte	0x3
+ 862 0416 10       		.uleb128 0x10
+ 863 0417 ED240000 		.4byte	.LASF127
+ 864 041b 05       		.byte	0x5
+ 865 041c 6F       		.byte	0x6f
+ 866 041d 23040000 		.4byte	0x423
+ 867 0421 04       		.byte	0x4
+ 868 0422 00       		.byte	0
+ 869 0423 09       		.uleb128 0x9
+ 870 0424 04       		.byte	0x4
+ 871 0425 BE030000 		.4byte	0x3be
+ 872 0429 0E       		.uleb128 0xe
+ 873 042a F9280000 		.4byte	.LASF128
+ 874 042e 05       		.byte	0x5
+ 875 042f 70       		.byte	0x70
+ 876 0430 EA030000 		.4byte	0x3ea
+ 877 0434 0D       		.uleb128 0xd
+ 878 0435 01       		.byte	0x1
+ 879 0436 06       		.byte	0x6
+ 880 0437 22       		.byte	0x22
+ 881 0438 79040000 		.4byte	0x479
+ 882 043c 08       		.uleb128 0x8
+ 883 043d D2230000 		.4byte	.LASF129
+ 884 0441 00       		.sleb128 0
+ 885 0442 08       		.uleb128 0x8
+ 886 0443 3B100000 		.4byte	.LASF130
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 21
+
+
+ 887 0447 01       		.sleb128 1
+ 888 0448 08       		.uleb128 0x8
+ 889 0449 77170000 		.4byte	.LASF131
+ 890 044d 02       		.sleb128 2
+ 891 044e 08       		.uleb128 0x8
+ 892 044f 3B090000 		.4byte	.LASF132
+ 893 0453 03       		.sleb128 3
+ 894 0454 08       		.uleb128 0x8
+ 895 0455 CE050000 		.4byte	.LASF133
+ 896 0459 04       		.sleb128 4
+ 897 045a 08       		.uleb128 0x8
+ 898 045b C30F0000 		.4byte	.LASF134
+ 899 045f 05       		.sleb128 5
+ 900 0460 08       		.uleb128 0x8
+ 901 0461 C7100000 		.4byte	.LASF135
+ 902 0465 06       		.sleb128 6
+ 903 0466 08       		.uleb128 0x8
+ 904 0467 0A1E0000 		.4byte	.LASF136
+ 905 046b 07       		.sleb128 7
+ 906 046c 08       		.uleb128 0x8
+ 907 046d 81190000 		.4byte	.LASF137
+ 908 0471 08       		.sleb128 8
+ 909 0472 08       		.uleb128 0x8
+ 910 0473 47000000 		.4byte	.LASF138
+ 911 0477 09       		.sleb128 9
+ 912 0478 00       		.byte	0
+ 913 0479 0D       		.uleb128 0xd
+ 914 047a 01       		.byte	0x1
+ 915 047b 07       		.byte	0x7
+ 916 047c 21       		.byte	0x21
+ 917 047d A0040000 		.4byte	0x4a0
+ 918 0481 08       		.uleb128 0x8
+ 919 0482 052B0000 		.4byte	.LASF139
+ 920 0486 00       		.sleb128 0
+ 921 0487 08       		.uleb128 0x8
+ 922 0488 33250000 		.4byte	.LASF140
+ 923 048c 01       		.sleb128 1
+ 924 048d 08       		.uleb128 0x8
+ 925 048e A9080000 		.4byte	.LASF141
+ 926 0492 02       		.sleb128 2
+ 927 0493 08       		.uleb128 0x8
+ 928 0494 8F170000 		.4byte	.LASF142
+ 929 0498 03       		.sleb128 3
+ 930 0499 08       		.uleb128 0x8
+ 931 049a C9220000 		.4byte	.LASF143
+ 932 049e 04       		.sleb128 4
+ 933 049f 00       		.byte	0
+ 934 04a0 0D       		.uleb128 0xd
+ 935 04a1 01       		.byte	0x1
+ 936 04a2 07       		.byte	0x7
+ 937 04a3 2C       		.byte	0x2c
+ 938 04a4 BB040000 		.4byte	0x4bb
+ 939 04a8 08       		.uleb128 0x8
+ 940 04a9 03040000 		.4byte	.LASF144
+ 941 04ad 00       		.sleb128 0
+ 942 04ae 08       		.uleb128 0x8
+ 943 04af 4C020000 		.4byte	.LASF145
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 22
+
+
+ 944 04b3 01       		.sleb128 1
+ 945 04b4 08       		.uleb128 0x8
+ 946 04b5 FC0B0000 		.4byte	.LASF146
+ 947 04b9 02       		.sleb128 2
+ 948 04ba 00       		.byte	0
+ 949 04bb 0D       		.uleb128 0xd
+ 950 04bc 02       		.byte	0x2
+ 951 04bd 08       		.byte	0x8
+ 952 04be AB       		.byte	0xab
+ 953 04bf 2E0C0000 		.4byte	0xc2e
+ 954 04c3 08       		.uleb128 0x8
+ 955 04c4 CB1E0000 		.4byte	.LASF147
+ 956 04c8 8002     		.sleb128 256
+ 957 04ca 08       		.uleb128 0x8
+ 958 04cb EE310000 		.4byte	.LASF148
+ 959 04cf 8102     		.sleb128 257
+ 960 04d1 08       		.uleb128 0x8
+ 961 04d2 E3080000 		.4byte	.LASF149
+ 962 04d6 8202     		.sleb128 258
+ 963 04d8 08       		.uleb128 0x8
+ 964 04d9 A4310000 		.4byte	.LASF150
+ 965 04dd 8302     		.sleb128 259
+ 966 04df 08       		.uleb128 0x8
+ 967 04e0 22240000 		.4byte	.LASF151
+ 968 04e4 8402     		.sleb128 260
+ 969 04e6 08       		.uleb128 0x8
+ 970 04e7 842A0000 		.4byte	.LASF152
+ 971 04eb 8502     		.sleb128 261
+ 972 04ed 08       		.uleb128 0x8
+ 973 04ee F30C0000 		.4byte	.LASF153
+ 974 04f2 8602     		.sleb128 262
+ 975 04f4 08       		.uleb128 0x8
+ 976 04f5 810A0000 		.4byte	.LASF154
+ 977 04f9 8702     		.sleb128 263
+ 978 04fb 08       		.uleb128 0x8
+ 979 04fc 42300000 		.4byte	.LASF155
+ 980 0500 8802     		.sleb128 264
+ 981 0502 08       		.uleb128 0x8
+ 982 0503 7E040000 		.4byte	.LASF156
+ 983 0507 8902     		.sleb128 265
+ 984 0509 08       		.uleb128 0x8
+ 985 050a 61020000 		.4byte	.LASF157
+ 986 050e 8A02     		.sleb128 266
+ 987 0510 08       		.uleb128 0x8
+ 988 0511 BA250000 		.4byte	.LASF158
+ 989 0515 8B02     		.sleb128 267
+ 990 0517 08       		.uleb128 0x8
+ 991 0518 92190000 		.4byte	.LASF159
+ 992 051c 8C02     		.sleb128 268
+ 993 051e 08       		.uleb128 0x8
+ 994 051f A7220000 		.4byte	.LASF160
+ 995 0523 8D02     		.sleb128 269
+ 996 0525 08       		.uleb128 0x8
+ 997 0526 30030000 		.4byte	.LASF161
+ 998 052a 8E02     		.sleb128 270
+ 999 052c 08       		.uleb128 0x8
+ 1000 052d C91A0000 		.4byte	.LASF162
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 23
+
+
+ 1001 0531 8F02     		.sleb128 271
+ 1002 0533 08       		.uleb128 0x8
+ 1003 0534 1D060000 		.4byte	.LASF163
+ 1004 0538 9002     		.sleb128 272
+ 1005 053a 08       		.uleb128 0x8
+ 1006 053b 602E0000 		.4byte	.LASF164
+ 1007 053f 9102     		.sleb128 273
+ 1008 0541 08       		.uleb128 0x8
+ 1009 0542 C10D0000 		.4byte	.LASF165
+ 1010 0546 9202     		.sleb128 274
+ 1011 0548 08       		.uleb128 0x8
+ 1012 0549 8B260000 		.4byte	.LASF166
+ 1013 054d 9302     		.sleb128 275
+ 1014 054f 08       		.uleb128 0x8
+ 1015 0550 F6300000 		.4byte	.LASF167
+ 1016 0554 9402     		.sleb128 276
+ 1017 0556 08       		.uleb128 0x8
+ 1018 0557 9D290000 		.4byte	.LASF168
+ 1019 055b 9502     		.sleb128 277
+ 1020 055d 08       		.uleb128 0x8
+ 1021 055e 62080000 		.4byte	.LASF169
+ 1022 0562 9602     		.sleb128 278
+ 1023 0564 08       		.uleb128 0x8
+ 1024 0565 4E330000 		.4byte	.LASF170
+ 1025 0569 9702     		.sleb128 279
+ 1026 056b 08       		.uleb128 0x8
+ 1027 056c 321D0000 		.4byte	.LASF171
+ 1028 0570 9802     		.sleb128 280
+ 1029 0572 08       		.uleb128 0x8
+ 1030 0573 6D110000 		.4byte	.LASF172
+ 1031 0577 9902     		.sleb128 281
+ 1032 0579 08       		.uleb128 0x8
+ 1033 057a 592B0000 		.4byte	.LASF173
+ 1034 057e 9A02     		.sleb128 282
+ 1035 0580 08       		.uleb128 0x8
+ 1036 0581 C21F0000 		.4byte	.LASF174
+ 1037 0585 9B02     		.sleb128 283
+ 1038 0587 08       		.uleb128 0x8
+ 1039 0588 B1330000 		.4byte	.LASF175
+ 1040 058c 9C02     		.sleb128 284
+ 1041 058e 08       		.uleb128 0x8
+ 1042 058f BE2B0000 		.4byte	.LASF176
+ 1043 0593 9D02     		.sleb128 285
+ 1044 0595 08       		.uleb128 0x8
+ 1045 0596 79320000 		.4byte	.LASF177
+ 1046 059a 9E02     		.sleb128 286
+ 1047 059c 08       		.uleb128 0x8
+ 1048 059d 8D160000 		.4byte	.LASF178
+ 1049 05a1 9F02     		.sleb128 287
+ 1050 05a3 08       		.uleb128 0x8
+ 1051 05a4 CC130000 		.4byte	.LASF179
+ 1052 05a8 A002     		.sleb128 288
+ 1053 05aa 08       		.uleb128 0x8
+ 1054 05ab E0030000 		.4byte	.LASF180
+ 1055 05af A102     		.sleb128 289
+ 1056 05b1 08       		.uleb128 0x8
+ 1057 05b2 8C230000 		.4byte	.LASF181
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 24
+
+
+ 1058 05b6 A202     		.sleb128 290
+ 1059 05b8 08       		.uleb128 0x8
+ 1060 05b9 F2160000 		.4byte	.LASF182
+ 1061 05bd A302     		.sleb128 291
+ 1062 05bf 08       		.uleb128 0x8
+ 1063 05c0 BC260000 		.4byte	.LASF183
+ 1064 05c4 A402     		.sleb128 292
+ 1065 05c6 08       		.uleb128 0x8
+ 1066 05c7 4B220000 		.4byte	.LASF184
+ 1067 05cb A502     		.sleb128 293
+ 1068 05cd 08       		.uleb128 0x8
+ 1069 05ce 0F2D0000 		.4byte	.LASF185
+ 1070 05d2 A602     		.sleb128 294
+ 1071 05d4 08       		.uleb128 0x8
+ 1072 05d5 170B0000 		.4byte	.LASF186
+ 1073 05d9 A702     		.sleb128 295
+ 1074 05db 08       		.uleb128 0x8
+ 1075 05dc 782B0000 		.4byte	.LASF187
+ 1076 05e0 A802     		.sleb128 296
+ 1077 05e2 08       		.uleb128 0x8
+ 1078 05e3 12040000 		.4byte	.LASF188
+ 1079 05e7 A902     		.sleb128 297
+ 1080 05e9 08       		.uleb128 0x8
+ 1081 05ea C52A0000 		.4byte	.LASF189
+ 1082 05ee AA02     		.sleb128 298
+ 1083 05f0 08       		.uleb128 0x8
+ 1084 05f1 AD020000 		.4byte	.LASF190
+ 1085 05f5 AB02     		.sleb128 299
+ 1086 05f7 08       		.uleb128 0x8
+ 1087 05f8 D1020000 		.4byte	.LASF191
+ 1088 05fc AC02     		.sleb128 300
+ 1089 05fe 08       		.uleb128 0x8
+ 1090 05ff 65000000 		.4byte	.LASF192
+ 1091 0603 AD02     		.sleb128 301
+ 1092 0605 08       		.uleb128 0x8
+ 1093 0606 CA240000 		.4byte	.LASF193
+ 1094 060a AE02     		.sleb128 302
+ 1095 060c 08       		.uleb128 0x8
+ 1096 060d 10320000 		.4byte	.LASF194
+ 1097 0611 AF02     		.sleb128 303
+ 1098 0613 08       		.uleb128 0x8
+ 1099 0614 5E050000 		.4byte	.LASF195
+ 1100 0618 B002     		.sleb128 304
+ 1101 061a 08       		.uleb128 0x8
+ 1102 061b E71D0000 		.4byte	.LASF196
+ 1103 061f B102     		.sleb128 305
+ 1104 0621 08       		.uleb128 0x8
+ 1105 0622 55290000 		.4byte	.LASF197
+ 1106 0626 B202     		.sleb128 306
+ 1107 0628 08       		.uleb128 0x8
+ 1108 0629 A3100000 		.4byte	.LASF198
+ 1109 062d B302     		.sleb128 307
+ 1110 062f 08       		.uleb128 0x8
+ 1111 0630 131F0000 		.4byte	.LASF199
+ 1112 0634 B402     		.sleb128 308
+ 1113 0636 08       		.uleb128 0x8
+ 1114 0637 EE120000 		.4byte	.LASF200
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 25
+
+
+ 1115 063b B502     		.sleb128 309
+ 1116 063d 08       		.uleb128 0x8
+ 1117 063e 80050000 		.4byte	.LASF201
+ 1118 0642 B602     		.sleb128 310
+ 1119 0644 08       		.uleb128 0x8
+ 1120 0645 F0010000 		.4byte	.LASF202
+ 1121 0649 B702     		.sleb128 311
+ 1122 064b 08       		.uleb128 0x8
+ 1123 064c 66070000 		.4byte	.LASF203
+ 1124 0650 B802     		.sleb128 312
+ 1125 0652 08       		.uleb128 0x8
+ 1126 0653 0F250000 		.4byte	.LASF204
+ 1127 0657 B902     		.sleb128 313
+ 1128 0659 08       		.uleb128 0x8
+ 1129 065a 6A2A0000 		.4byte	.LASF205
+ 1130 065e BA02     		.sleb128 314
+ 1131 0660 08       		.uleb128 0x8
+ 1132 0661 ED060000 		.4byte	.LASF206
+ 1133 0665 BB02     		.sleb128 315
+ 1134 0667 08       		.uleb128 0x8
+ 1135 0668 09210000 		.4byte	.LASF207
+ 1136 066c BC02     		.sleb128 316
+ 1137 066e 08       		.uleb128 0x8
+ 1138 066f D62D0000 		.4byte	.LASF208
+ 1139 0673 BD02     		.sleb128 317
+ 1140 0675 08       		.uleb128 0x8
+ 1141 0676 3C1A0000 		.4byte	.LASF209
+ 1142 067a BE02     		.sleb128 318
+ 1143 067c 08       		.uleb128 0x8
+ 1144 067d 2B2E0000 		.4byte	.LASF210
+ 1145 0681 BF02     		.sleb128 319
+ 1146 0683 08       		.uleb128 0x8
+ 1147 0684 41070000 		.4byte	.LASF211
+ 1148 0688 C002     		.sleb128 320
+ 1149 068a 08       		.uleb128 0x8
+ 1150 068b 83210000 		.4byte	.LASF212
+ 1151 068f C102     		.sleb128 321
+ 1152 0691 08       		.uleb128 0x8
+ 1153 0692 1C300000 		.4byte	.LASF213
+ 1154 0696 C202     		.sleb128 322
+ 1155 0698 08       		.uleb128 0x8
+ 1156 0699 832E0000 		.4byte	.LASF214
+ 1157 069d C302     		.sleb128 323
+ 1158 069f 08       		.uleb128 0x8
+ 1159 06a0 87000000 		.4byte	.LASF215
+ 1160 06a4 C402     		.sleb128 324
+ 1161 06a6 08       		.uleb128 0x8
+ 1162 06a7 E82A0000 		.4byte	.LASF216
+ 1163 06ab C502     		.sleb128 325
+ 1164 06ad 08       		.uleb128 0x8
+ 1165 06ae D3170000 		.4byte	.LASF217
+ 1166 06b2 C602     		.sleb128 326
+ 1167 06b4 08       		.uleb128 0x8
+ 1168 06b5 BA290000 		.4byte	.LASF218
+ 1169 06b9 C702     		.sleb128 327
+ 1170 06bb 08       		.uleb128 0x8
+ 1171 06bc AB270000 		.4byte	.LASF219
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 26
+
+
+ 1172 06c0 C802     		.sleb128 328
+ 1173 06c2 08       		.uleb128 0x8
+ 1174 06c3 9B010000 		.4byte	.LASF220
+ 1175 06c7 C902     		.sleb128 329
+ 1176 06c9 08       		.uleb128 0x8
+ 1177 06ca E1260000 		.4byte	.LASF221
+ 1178 06ce CA02     		.sleb128 330
+ 1179 06d0 08       		.uleb128 0x8
+ 1180 06d1 120C0000 		.4byte	.LASF222
+ 1181 06d5 CB02     		.sleb128 331
+ 1182 06d7 08       		.uleb128 0x8
+ 1183 06d8 AC070000 		.4byte	.LASF223
+ 1184 06dc CC02     		.sleb128 332
+ 1185 06de 08       		.uleb128 0x8
+ 1186 06df 89070000 		.4byte	.LASF224
+ 1187 06e3 CD02     		.sleb128 333
+ 1188 06e5 08       		.uleb128 0x8
+ 1189 06e6 D80B0000 		.4byte	.LASF225
+ 1190 06ea CE02     		.sleb128 334
+ 1191 06ec 08       		.uleb128 0x8
+ 1192 06ed CE180000 		.4byte	.LASF226
+ 1193 06f1 CF02     		.sleb128 335
+ 1194 06f3 08       		.uleb128 0x8
+ 1195 06f4 2B310000 		.4byte	.LASF227
+ 1196 06f8 D002     		.sleb128 336
+ 1197 06fa 08       		.uleb128 0x8
+ 1198 06fb FC0F0000 		.4byte	.LASF228
+ 1199 06ff D102     		.sleb128 337
+ 1200 0701 08       		.uleb128 0x8
+ 1201 0702 F3240000 		.4byte	.LASF229
+ 1202 0706 D202     		.sleb128 338
+ 1203 0708 08       		.uleb128 0x8
+ 1204 0709 AF200000 		.4byte	.LASF230
+ 1205 070d D302     		.sleb128 339
+ 1206 070f 08       		.uleb128 0x8
+ 1207 0710 56010000 		.4byte	.LASF231
+ 1208 0714 D402     		.sleb128 340
+ 1209 0716 08       		.uleb128 0x8
+ 1210 0717 54170000 		.4byte	.LASF232
+ 1211 071b D502     		.sleb128 341
+ 1212 071d 08       		.uleb128 0x8
+ 1213 071e A2000000 		.4byte	.LASF233
+ 1214 0722 D602     		.sleb128 342
+ 1215 0724 08       		.uleb128 0x8
+ 1216 0725 10080000 		.4byte	.LASF234
+ 1217 0729 D702     		.sleb128 343
+ 1218 072b 08       		.uleb128 0x8
+ 1219 072c E32E0000 		.4byte	.LASF235
+ 1220 0730 D802     		.sleb128 344
+ 1221 0732 08       		.uleb128 0x8
+ 1222 0733 C9120000 		.4byte	.LASF236
+ 1223 0737 D902     		.sleb128 345
+ 1224 0739 08       		.uleb128 0x8
+ 1225 073a DA110000 		.4byte	.LASF237
+ 1226 073e DA02     		.sleb128 346
+ 1227 0740 08       		.uleb128 0x8
+ 1228 0741 FE040000 		.4byte	.LASF238
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 27
+
+
+ 1229 0745 DB02     		.sleb128 347
+ 1230 0747 08       		.uleb128 0x8
+ 1231 0748 B22D0000 		.4byte	.LASF239
+ 1232 074c DC02     		.sleb128 348
+ 1233 074e 08       		.uleb128 0x8
+ 1234 074f 801B0000 		.4byte	.LASF240
+ 1235 0753 DD02     		.sleb128 349
+ 1236 0755 08       		.uleb128 0x8
+ 1237 0756 3B180000 		.4byte	.LASF241
+ 1238 075a DE02     		.sleb128 350
+ 1239 075c 08       		.uleb128 0x8
+ 1240 075d 9C060000 		.4byte	.LASF242
+ 1241 0761 DF02     		.sleb128 351
+ 1242 0763 08       		.uleb128 0x8
+ 1243 0764 9C050000 		.4byte	.LASF243
+ 1244 0768 E002     		.sleb128 352
+ 1245 076a 08       		.uleb128 0x8
+ 1246 076b 78010000 		.4byte	.LASF244
+ 1247 076f E102     		.sleb128 353
+ 1248 0771 08       		.uleb128 0x8
+ 1249 0772 F6170000 		.4byte	.LASF245
+ 1250 0776 E202     		.sleb128 354
+ 1251 0778 08       		.uleb128 0x8
+ 1252 0779 23330000 		.4byte	.LASF246
+ 1253 077d E302     		.sleb128 355
+ 1254 077f 08       		.uleb128 0x8
+ 1255 0780 14140000 		.4byte	.LASF247
+ 1256 0784 E402     		.sleb128 356
+ 1257 0786 08       		.uleb128 0x8
+ 1258 0787 00120000 		.4byte	.LASF248
+ 1259 078b E502     		.sleb128 357
+ 1260 078d 08       		.uleb128 0x8
+ 1261 078e C21D0000 		.4byte	.LASF249
+ 1262 0792 E602     		.sleb128 358
+ 1263 0794 08       		.uleb128 0x8
+ 1264 0795 5C2C0000 		.4byte	.LASF250
+ 1265 0799 E702     		.sleb128 359
+ 1266 079b 08       		.uleb128 0x8
+ 1267 079c 63250000 		.4byte	.LASF251
+ 1268 07a0 E802     		.sleb128 360
+ 1269 07a2 08       		.uleb128 0x8
+ 1270 07a3 0E030000 		.4byte	.LASF252
+ 1271 07a7 E902     		.sleb128 361
+ 1272 07a9 08       		.uleb128 0x8
+ 1273 07aa 6E240000 		.4byte	.LASF253
+ 1274 07ae EA02     		.sleb128 362
+ 1275 07b0 08       		.uleb128 0x8
+ 1276 07b1 11150000 		.4byte	.LASF254
+ 1277 07b5 EB02     		.sleb128 363
+ 1278 07b7 08       		.uleb128 0x8
+ 1279 07b8 16170000 		.4byte	.LASF255
+ 1280 07bc EC02     		.sleb128 364
+ 1281 07be 08       		.uleb128 0x8
+ 1282 07bf C9200000 		.4byte	.LASF256
+ 1283 07c3 ED02     		.sleb128 365
+ 1284 07c5 08       		.uleb128 0x8
+ 1285 07c6 B7280000 		.4byte	.LASF257
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 28
+
+
+ 1286 07ca EE02     		.sleb128 366
+ 1287 07cc 08       		.uleb128 0x8
+ 1288 07cd 52100000 		.4byte	.LASF258
+ 1289 07d1 EF02     		.sleb128 367
+ 1290 07d3 08       		.uleb128 0x8
+ 1291 07d4 1D1C0000 		.4byte	.LASF259
+ 1292 07d8 F002     		.sleb128 368
+ 1293 07da 08       		.uleb128 0x8
+ 1294 07db 881A0000 		.4byte	.LASF260
+ 1295 07df F102     		.sleb128 369
+ 1296 07e1 08       		.uleb128 0x8
+ 1297 07e2 481E0000 		.4byte	.LASF261
+ 1298 07e6 F202     		.sleb128 370
+ 1299 07e8 08       		.uleb128 0x8
+ 1300 07e9 83280000 		.4byte	.LASF262
+ 1301 07ed F302     		.sleb128 371
+ 1302 07ef 08       		.uleb128 0x8
+ 1303 07f0 3F1C0000 		.4byte	.LASF263
+ 1304 07f4 F402     		.sleb128 372
+ 1305 07f6 08       		.uleb128 0x8
+ 1306 07f7 021C0000 		.4byte	.LASF264
+ 1307 07fb F502     		.sleb128 373
+ 1308 07fd 08       		.uleb128 0x8
+ 1309 07fe A21C0000 		.4byte	.LASF265
+ 1310 0802 F602     		.sleb128 374
+ 1311 0804 08       		.uleb128 0x8
+ 1312 0805 53110000 		.4byte	.LASF266
+ 1313 0809 F702     		.sleb128 375
+ 1314 080b 08       		.uleb128 0x8
+ 1315 080c 060A0000 		.4byte	.LASF267
+ 1316 0810 F802     		.sleb128 376
+ 1317 0812 08       		.uleb128 0x8
+ 1318 0813 362B0000 		.4byte	.LASF268
+ 1319 0817 F902     		.sleb128 377
+ 1320 0819 08       		.uleb128 0x8
+ 1321 081a B7140000 		.4byte	.LASF269
+ 1322 081e FA02     		.sleb128 378
+ 1323 0820 08       		.uleb128 0x8
+ 1324 0821 52090000 		.4byte	.LASF270
+ 1325 0825 FB02     		.sleb128 379
+ 1326 0827 08       		.uleb128 0x8
+ 1327 0828 9C2B0000 		.4byte	.LASF271
+ 1328 082c FC02     		.sleb128 380
+ 1329 082e 08       		.uleb128 0x8
+ 1330 082f 97250000 		.4byte	.LASF272
+ 1331 0833 FD02     		.sleb128 381
+ 1332 0835 08       		.uleb128 0x8
+ 1333 0836 FE230000 		.4byte	.LASF273
+ 1334 083a FE02     		.sleb128 382
+ 1335 083c 08       		.uleb128 0x8
+ 1336 083d B3190000 		.4byte	.LASF274
+ 1337 0841 FF02     		.sleb128 383
+ 1338 0843 08       		.uleb128 0x8
+ 1339 0844 C0010000 		.4byte	.LASF275
+ 1340 0848 8003     		.sleb128 384
+ 1341 084a 08       		.uleb128 0x8
+ 1342 084b 69210000 		.4byte	.LASF276
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 29
+
+
+ 1343 084f 8103     		.sleb128 385
+ 1344 0851 08       		.uleb128 0x8
+ 1345 0852 11310000 		.4byte	.LASF277
+ 1346 0856 8203     		.sleb128 386
+ 1347 0858 08       		.uleb128 0x8
+ 1348 0859 312D0000 		.4byte	.LASF278
+ 1349 085d 8303     		.sleb128 387
+ 1350 085f 08       		.uleb128 0x8
+ 1351 0860 13190000 		.4byte	.LASF279
+ 1352 0864 8403     		.sleb128 388
+ 1353 0866 08       		.uleb128 0x8
+ 1354 0867 7B300000 		.4byte	.LASF280
+ 1355 086b 8503     		.sleb128 389
+ 1356 086d 08       		.uleb128 0x8
+ 1357 086e A40E0000 		.4byte	.LASF281
+ 1358 0872 8603     		.sleb128 390
+ 1359 0874 08       		.uleb128 0x8
+ 1360 0875 9E2E0000 		.4byte	.LASF282
+ 1361 0879 8703     		.sleb128 391
+ 1362 087b 08       		.uleb128 0x8
+ 1363 087c F0330000 		.4byte	.LASF283
+ 1364 0880 8803     		.sleb128 392
+ 1365 0882 08       		.uleb128 0x8
+ 1366 0883 E31C0000 		.4byte	.LASF284
+ 1367 0887 8903     		.sleb128 393
+ 1368 0889 08       		.uleb128 0x8
+ 1369 088a B7320000 		.4byte	.LASF285
+ 1370 088e 8A03     		.sleb128 394
+ 1371 0890 08       		.uleb128 0x8
+ 1372 0891 801C0000 		.4byte	.LASF286
+ 1373 0895 8B03     		.sleb128 395
+ 1374 0897 08       		.uleb128 0x8
+ 1375 0898 A70A0000 		.4byte	.LASF287
+ 1376 089c 8C03     		.sleb128 396
+ 1377 089e 08       		.uleb128 0x8
+ 1378 089f F4140000 		.4byte	.LASF288
+ 1379 08a3 8D03     		.sleb128 397
+ 1380 08a5 08       		.uleb128 0x8
+ 1381 08a6 22130000 		.4byte	.LASF289
+ 1382 08aa 8E03     		.sleb128 398
+ 1383 08ac 08       		.uleb128 0x8
+ 1384 08ad 280A0000 		.4byte	.LASF290
+ 1385 08b1 8F03     		.sleb128 399
+ 1386 08b3 08       		.uleb128 0x8
+ 1387 08b4 CF270000 		.4byte	.LASF291
+ 1388 08b8 9003     		.sleb128 400
+ 1389 08ba 08       		.uleb128 0x8
+ 1390 08bb 7E150000 		.4byte	.LASF292
+ 1391 08bf 9103     		.sleb128 401
+ 1392 08c1 08       		.uleb128 0x8
+ 1393 08c2 05220000 		.4byte	.LASF293
+ 1394 08c6 9203     		.sleb128 402
+ 1395 08c8 08       		.uleb128 0x8
+ 1396 08c9 97030000 		.4byte	.LASF294
+ 1397 08cd 9303     		.sleb128 403
+ 1398 08cf 08       		.uleb128 0x8
+ 1399 08d0 0E0D0000 		.4byte	.LASF295
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 30
+
+
+ 1400 08d4 9403     		.sleb128 404
+ 1401 08d6 08       		.uleb128 0x8
+ 1402 08d7 FC220000 		.4byte	.LASF296
+ 1403 08db 9503     		.sleb128 405
+ 1404 08dd 08       		.uleb128 0x8
+ 1405 08de 08130000 		.4byte	.LASF297
+ 1406 08e2 9603     		.sleb128 406
+ 1407 08e4 08       		.uleb128 0x8
+ 1408 08e5 B2180000 		.4byte	.LASF298
+ 1409 08e9 9703     		.sleb128 407
+ 1410 08eb 08       		.uleb128 0x8
+ 1411 08ec D7190000 		.4byte	.LASF299
+ 1412 08f0 9803     		.sleb128 408
+ 1413 08f2 08       		.uleb128 0x8
+ 1414 08f3 392C0000 		.4byte	.LASF300
+ 1415 08f7 9903     		.sleb128 409
+ 1416 08f9 08       		.uleb128 0x8
+ 1417 08fa DB100000 		.4byte	.LASF301
+ 1418 08fe 9A03     		.sleb128 410
+ 1419 0900 08       		.uleb128 0x8
+ 1420 0901 721F0000 		.4byte	.LASF302
+ 1421 0905 9B03     		.sleb128 411
+ 1422 0907 08       		.uleb128 0x8
+ 1423 0908 16100000 		.4byte	.LASF303
+ 1424 090c 9C03     		.sleb128 412
+ 1425 090e 08       		.uleb128 0x8
+ 1426 090f 53140000 		.4byte	.LASF304
+ 1427 0913 9D03     		.sleb128 413
+ 1428 0915 08       		.uleb128 0x8
+ 1429 0916 5E340000 		.4byte	.LASF305
+ 1430 091a 9E03     		.sleb128 414
+ 1431 091c 08       		.uleb128 0x8
+ 1432 091d A8210000 		.4byte	.LASF306
+ 1433 0921 9F03     		.sleb128 415
+ 1434 0923 08       		.uleb128 0x8
+ 1435 0924 29220000 		.4byte	.LASF307
+ 1436 0928 A003     		.sleb128 416
+ 1437 092a 08       		.uleb128 0x8
+ 1438 092b 59060000 		.4byte	.LASF308
+ 1439 092f A103     		.sleb128 417
+ 1440 0931 08       		.uleb128 0x8
+ 1441 0932 A6120000 		.4byte	.LASF309
+ 1442 0936 A203     		.sleb128 418
+ 1443 0938 08       		.uleb128 0x8
+ 1444 0939 45280000 		.4byte	.LASF310
+ 1445 093d A303     		.sleb128 419
+ 1446 093f 08       		.uleb128 0x8
+ 1447 0940 99090000 		.4byte	.LASF311
+ 1448 0944 A403     		.sleb128 420
+ 1449 0946 08       		.uleb128 0x8
+ 1450 0947 22000000 		.4byte	.LASF312
+ 1451 094b A503     		.sleb128 421
+ 1452 094d 08       		.uleb128 0x8
+ 1453 094e CA2C0000 		.4byte	.LASF313
+ 1454 0952 A603     		.sleb128 422
+ 1455 0954 08       		.uleb128 0x8
+ 1456 0955 020F0000 		.4byte	.LASF314
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 31
+
+
+ 1457 0959 A703     		.sleb128 423
+ 1458 095b 08       		.uleb128 0x8
+ 1459 095c 15340000 		.4byte	.LASF315
+ 1460 0960 A803     		.sleb128 424
+ 1461 0962 08       		.uleb128 0x8
+ 1462 0963 D8160000 		.4byte	.LASF316
+ 1463 0967 A903     		.sleb128 425
+ 1464 0969 08       		.uleb128 0x8
+ 1465 096a 35190000 		.4byte	.LASF317
+ 1466 096e AA03     		.sleb128 426
+ 1467 0970 08       		.uleb128 0x8
+ 1468 0971 D6330000 		.4byte	.LASF318
+ 1469 0975 AB03     		.sleb128 427
+ 1470 0977 08       		.uleb128 0x8
+ 1471 0978 E4290000 		.4byte	.LASF319
+ 1472 097c AC03     		.sleb128 428
+ 1473 097e 08       		.uleb128 0x8
+ 1474 097f 381F0000 		.4byte	.LASF320
+ 1475 0983 AD03     		.sleb128 429
+ 1476 0985 08       		.uleb128 0x8
+ 1477 0986 2C210000 		.4byte	.LASF321
+ 1478 098a AE03     		.sleb128 430
+ 1479 098c 08       		.uleb128 0x8
+ 1480 098d 7C2F0000 		.4byte	.LASF322
+ 1481 0991 AF03     		.sleb128 431
+ 1482 0993 08       		.uleb128 0x8
+ 1483 0994 D7150000 		.4byte	.LASF323
+ 1484 0998 B003     		.sleb128 432
+ 1485 099a 08       		.uleb128 0x8
+ 1486 099b 680A0000 		.4byte	.LASF324
+ 1487 099f B103     		.sleb128 433
+ 1488 09a1 08       		.uleb128 0x8
+ 1489 09a2 D3060000 		.4byte	.LASF325
+ 1490 09a6 B203     		.sleb128 434
+ 1491 09a8 08       		.uleb128 0x8
+ 1492 09a9 DB280000 		.4byte	.LASF326
+ 1493 09ad B303     		.sleb128 435
+ 1494 09af 08       		.uleb128 0x8
+ 1495 09b0 570D0000 		.4byte	.LASF327
+ 1496 09b4 B403     		.sleb128 436
+ 1497 09b6 08       		.uleb128 0x8
+ 1498 09b7 F8320000 		.4byte	.LASF328
+ 1499 09bb B503     		.sleb128 437
+ 1500 09bd 08       		.uleb128 0x8
+ 1501 09be 76090000 		.4byte	.LASF329
+ 1502 09c2 B603     		.sleb128 438
+ 1503 09c4 08       		.uleb128 0x8
+ 1504 09c5 B4150000 		.4byte	.LASF330
+ 1505 09c9 B703     		.sleb128 439
+ 1506 09cb 08       		.uleb128 0x8
+ 1507 09cc EF180000 		.4byte	.LASF331
+ 1508 09d0 B803     		.sleb128 440
+ 1509 09d2 08       		.uleb128 0x8
+ 1510 09d3 5E2F0000 		.4byte	.LASF332
+ 1511 09d7 B903     		.sleb128 441
+ 1512 09d9 08       		.uleb128 0x8
+ 1513 09da 982C0000 		.4byte	.LASF333
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 32
+
+
+ 1514 09de BA03     		.sleb128 442
+ 1515 09e0 08       		.uleb128 0x8
+ 1516 09e1 63120000 		.4byte	.LASF334
+ 1517 09e5 BB03     		.sleb128 443
+ 1518 09e7 08       		.uleb128 0x8
+ 1519 09e8 5E1B0000 		.4byte	.LASF335
+ 1520 09ec BC03     		.sleb128 444
+ 1521 09ee 08       		.uleb128 0x8
+ 1522 09ef 752D0000 		.4byte	.LASF336
+ 1523 09f3 BD03     		.sleb128 445
+ 1524 09f5 08       		.uleb128 0x8
+ 1525 09f6 DB250000 		.4byte	.LASF337
+ 1526 09fa BE03     		.sleb128 446
+ 1527 09fc 08       		.uleb128 0x8
+ 1528 09fd EB020000 		.4byte	.LASF338
+ 1529 0a01 BF03     		.sleb128 447
+ 1530 0a03 08       		.uleb128 0x8
+ 1531 0a04 45230000 		.4byte	.LASF339
+ 1532 0a08 C003     		.sleb128 448
+ 1533 0a0a 08       		.uleb128 0x8
+ 1534 0a0b CE070000 		.4byte	.LASF340
+ 1535 0a0f C103     		.sleb128 449
+ 1536 0a11 08       		.uleb128 0x8
+ 1537 0a12 3D080000 		.4byte	.LASF341
+ 1538 0a16 C203     		.sleb128 450
+ 1539 0a18 08       		.uleb128 0x8
+ 1540 0a19 69280000 		.4byte	.LASF342
+ 1541 0a1d C303     		.sleb128 451
+ 1542 0a1f 08       		.uleb128 0x8
+ 1543 0a20 21050000 		.4byte	.LASF343
+ 1544 0a24 C403     		.sleb128 452
+ 1545 0a26 08       		.uleb128 0x8
+ 1546 0a27 47250000 		.4byte	.LASF344
+ 1547 0a2b C503     		.sleb128 453
+ 1548 0a2d 08       		.uleb128 0x8
+ 1549 0a2e B0230000 		.4byte	.LASF345
+ 1550 0a32 C603     		.sleb128 454
+ 1551 0a34 08       		.uleb128 0x8
+ 1552 0a35 83130000 		.4byte	.LASF346
+ 1553 0a39 C703     		.sleb128 455
+ 1554 0a3b 08       		.uleb128 0x8
+ 1555 0a3c 9E300000 		.4byte	.LASF347
+ 1556 0a40 C803     		.sleb128 456
+ 1557 0a42 08       		.uleb128 0x8
+ 1558 0a43 161B0000 		.4byte	.LASF348
+ 1559 0a47 C903     		.sleb128 457
+ 1560 0a49 08       		.uleb128 0x8
+ 1561 0a4a 84220000 		.4byte	.LASF349
+ 1562 0a4e CA03     		.sleb128 458
+ 1563 0a50 08       		.uleb128 0x8
+ 1564 0a51 F5150000 		.4byte	.LASF350
+ 1565 0a55 CB03     		.sleb128 459
+ 1566 0a57 08       		.uleb128 0x8
+ 1567 0a58 85270000 		.4byte	.LASF351
+ 1568 0a5c CC03     		.sleb128 460
+ 1569 0a5e 08       		.uleb128 0x8
+ 1570 0a5f 39170000 		.4byte	.LASF352
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 33
+
+
+ 1571 0a63 CD03     		.sleb128 461
+ 1572 0a65 08       		.uleb128 0x8
+ 1573 0a66 1A160000 		.4byte	.LASF353
+ 1574 0a6a CE03     		.sleb128 462
+ 1575 0a6c 08       		.uleb128 0x8
+ 1576 0a6d 3B050000 		.4byte	.LASF354
+ 1577 0a71 CF03     		.sleb128 463
+ 1578 0a73 08       		.uleb128 0x8
+ 1579 0a74 85080000 		.4byte	.LASF355
+ 1580 0a78 D003     		.sleb128 464
+ 1581 0a7a 08       		.uleb128 0x8
+ 1582 0a7b 93140000 		.4byte	.LASF356
+ 1583 0a7f D103     		.sleb128 465
+ 1584 0a81 08       		.uleb128 0x8
+ 1585 0a82 2A2A0000 		.4byte	.LASF357
+ 1586 0a86 D203     		.sleb128 466
+ 1587 0a88 08       		.uleb128 0x8
+ 1588 0a89 8C330000 		.4byte	.LASF358
+ 1589 0a8d D303     		.sleb128 467
+ 1590 0a8f 08       		.uleb128 0x8
+ 1591 0a90 58150000 		.4byte	.LASF359
+ 1592 0a94 D403     		.sleb128 468
+ 1593 0a96 08       		.uleb128 0x8
+ 1594 0a97 890B0000 		.4byte	.LASF360
+ 1595 0a9b D503     		.sleb128 469
+ 1596 0a9d 08       		.uleb128 0x8
+ 1597 0a9e 24120000 		.4byte	.LASF361
+ 1598 0aa2 D603     		.sleb128 470
+ 1599 0aa4 08       		.uleb128 0x8
+ 1600 0aa5 DD210000 		.4byte	.LASF362
+ 1601 0aa9 D703     		.sleb128 471
+ 1602 0aab 08       		.uleb128 0x8
+ 1603 0aac 58030000 		.4byte	.LASF363
+ 1604 0ab0 D803     		.sleb128 472
+ 1605 0ab2 08       		.uleb128 0x8
+ 1606 0ab3 10290000 		.4byte	.LASF364
+ 1607 0ab7 D903     		.sleb128 473
+ 1608 0ab9 08       		.uleb128 0x8
+ 1609 0aba 370C0000 		.4byte	.LASF365
+ 1610 0abe DA03     		.sleb128 474
+ 1611 0ac0 08       		.uleb128 0x8
+ 1612 0ac1 6B180000 		.4byte	.LASF366
+ 1613 0ac5 DB03     		.sleb128 475
+ 1614 0ac7 08       		.uleb128 0x8
+ 1615 0ac8 92110000 		.4byte	.LASF367
+ 1616 0acc DC03     		.sleb128 476
+ 1617 0ace 08       		.uleb128 0x8
+ 1618 0acf 072F0000 		.4byte	.LASF368
+ 1619 0ad3 DD03     		.sleb128 477
+ 1620 0ad5 08       		.uleb128 0x8
+ 1621 0ad6 88020000 		.4byte	.LASF369
+ 1622 0ada DE03     		.sleb128 478
+ 1623 0adc 08       		.uleb128 0x8
+ 1624 0add C5000000 		.4byte	.LASF370
+ 1625 0ae1 DF03     		.sleb128 479
+ 1626 0ae3 08       		.uleb128 0x8
+ 1627 0ae4 250F0000 		.4byte	.LASF371
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 34
+
+
+ 1628 0ae8 E003     		.sleb128 480
+ 1629 0aea 08       		.uleb128 0x8
+ 1630 0aeb 320D0000 		.4byte	.LASF372
+ 1631 0aef E103     		.sleb128 481
+ 1632 0af1 08       		.uleb128 0x8
+ 1633 0af2 221E0000 		.4byte	.LASF373
+ 1634 0af6 E203     		.sleb128 482
+ 1635 0af8 08       		.uleb128 0x8
+ 1636 0af9 4D2D0000 		.4byte	.LASF374
+ 1637 0afd E303     		.sleb128 483
+ 1638 0aff 08       		.uleb128 0x8
+ 1639 0b00 631C0000 		.4byte	.LASF375
+ 1640 0b04 E403     		.sleb128 484
+ 1641 0b06 08       		.uleb128 0x8
+ 1642 0b07 21280000 		.4byte	.LASF376
+ 1643 0b0b E503     		.sleb128 485
+ 1644 0b0d 08       		.uleb128 0x8
+ 1645 0b0e 070E0000 		.4byte	.LASF377
+ 1646 0b12 E603     		.sleb128 486
+ 1647 0b14 08       		.uleb128 0x8
+ 1648 0b15 BC030000 		.4byte	.LASF378
+ 1649 0b19 E703     		.sleb128 487
+ 1650 0b1b 08       		.uleb128 0x8
+ 1651 0b1c FC270000 		.4byte	.LASF379
+ 1652 0b20 E803     		.sleb128 488
+ 1653 0b22 08       		.uleb128 0x8
+ 1654 0b23 310E0000 		.4byte	.LASF380
+ 1655 0b27 E903     		.sleb128 489
+ 1656 0b29 08       		.uleb128 0x8
+ 1657 0b2a 5F190000 		.4byte	.LASF381
+ 1658 0b2e EA03     		.sleb128 490
+ 1659 0b30 08       		.uleb128 0x8
+ 1660 0b31 05270000 		.4byte	.LASF382
+ 1661 0b35 EB03     		.sleb128 491
+ 1662 0b37 08       		.uleb128 0x8
+ 1663 0b38 B6110000 		.4byte	.LASF383
+ 1664 0b3c EC03     		.sleb128 492
+ 1665 0b3e 08       		.uleb128 0x8
+ 1666 0b3f 762C0000 		.4byte	.LASF384
+ 1667 0b43 ED03     		.sleb128 493
+ 1668 0b45 08       		.uleb128 0x8
+ 1669 0b46 A00F0000 		.4byte	.LASF385
+ 1670 0b4a EE03     		.sleb128 494
+ 1671 0b4c 08       		.uleb128 0x8
+ 1672 0b4d BF080000 		.4byte	.LASF386
+ 1673 0b51 EF03     		.sleb128 495
+ 1674 0b53 08       		.uleb128 0x8
+ 1675 0b54 21230000 		.4byte	.LASF387
+ 1676 0b58 F003     		.sleb128 496
+ 1677 0b5a 08       		.uleb128 0x8
+ 1678 0b5b EF130000 		.4byte	.LASF388
+ 1679 0b5f F103     		.sleb128 497
+ 1680 0b61 08       		.uleb128 0x8
+ 1681 0b62 E0090000 		.4byte	.LASF389
+ 1682 0b66 F203     		.sleb128 498
+ 1683 0b68 08       		.uleb128 0x8
+ 1684 0b69 39140000 		.4byte	.LASF390
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 35
+
+
+ 1685 0b6d F303     		.sleb128 499
+ 1686 0b6f 08       		.uleb128 0x8
+ 1687 0b70 B9060000 		.4byte	.LASF391
+ 1688 0b74 F403     		.sleb128 500
+ 1689 0b76 08       		.uleb128 0x8
+ 1690 0b77 561D0000 		.4byte	.LASF392
+ 1691 0b7b F503     		.sleb128 501
+ 1692 0b7d 08       		.uleb128 0x8
+ 1693 0b7e 00000000 		.4byte	.LASF393
+ 1694 0b82 F603     		.sleb128 502
+ 1695 0b84 08       		.uleb128 0x8
+ 1696 0b85 00200000 		.4byte	.LASF394
+ 1697 0b89 F703     		.sleb128 503
+ 1698 0b8b 08       		.uleb128 0x8
+ 1699 0b8c EC2C0000 		.4byte	.LASF395
+ 1700 0b90 F803     		.sleb128 504
+ 1701 0b92 08       		.uleb128 0x8
+ 1702 0b93 73030000 		.4byte	.LASF396
+ 1703 0b97 F903     		.sleb128 505
+ 1704 0b99 08       		.uleb128 0x8
+ 1705 0b9a 28270000 		.4byte	.LASF397
+ 1706 0b9e FA03     		.sleb128 506
+ 1707 0ba0 08       		.uleb128 0x8
+ 1708 0ba1 F11A0000 		.4byte	.LASF398
+ 1709 0ba5 FB03     		.sleb128 507
+ 1710 0ba7 08       		.uleb128 0x8
+ 1711 0ba8 77100000 		.4byte	.LASF399
+ 1712 0bac FC03     		.sleb128 508
+ 1713 0bae 08       		.uleb128 0x8
+ 1714 0baf 6A160000 		.4byte	.LASF400
+ 1715 0bb3 FD03     		.sleb128 509
+ 1716 0bb5 08       		.uleb128 0x8
+ 1717 0bb6 750C0000 		.4byte	.LASF401
+ 1718 0bba FE03     		.sleb128 510
+ 1719 0bbc 08       		.uleb128 0x8
+ 1720 0bbd 39340000 		.4byte	.LASF402
+ 1721 0bc1 FF03     		.sleb128 511
+ 1722 0bc3 08       		.uleb128 0x8
+ 1723 0bc4 48120000 		.4byte	.LASF403
+ 1724 0bc8 8004     		.sleb128 512
+ 1725 0bca 08       		.uleb128 0x8
+ 1726 0bcb EE000000 		.4byte	.LASF404
+ 1727 0bcf 8104     		.sleb128 513
+ 1728 0bd1 08       		.uleb128 0x8
+ 1729 0bd2 23200000 		.4byte	.LASF405
+ 1730 0bd6 8204     		.sleb128 514
+ 1731 0bd8 08       		.uleb128 0x8
+ 1732 0bd9 721D0000 		.4byte	.LASF406
+ 1733 0bdd 8304     		.sleb128 515
+ 1734 0bdf 08       		.uleb128 0x8
+ 1735 0be0 50130000 		.4byte	.LASF407
+ 1736 0be4 8404     		.sleb128 516
+ 1737 0be6 08       		.uleb128 0x8
+ 1738 0be7 79290000 		.4byte	.LASF408
+ 1739 0beb 8504     		.sleb128 517
+ 1740 0bed 08       		.uleb128 0x8
+ 1741 0bee C42F0000 		.4byte	.LASF409
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 36
+
+
+ 1742 0bf2 8604     		.sleb128 518
+ 1743 0bf4 08       		.uleb128 0x8
+ 1744 0bf5 34010000 		.4byte	.LASF410
+ 1745 0bf9 8704     		.sleb128 519
+ 1746 0bfb 08       		.uleb128 0x8
+ 1747 0bfc 69230000 		.4byte	.LASF411
+ 1748 0c00 8804     		.sleb128 520
+ 1749 0c02 08       		.uleb128 0x8
+ 1750 0c03 670F0000 		.4byte	.LASF412
+ 1751 0c07 8904     		.sleb128 521
+ 1752 0c09 08       		.uleb128 0x8
+ 1753 0c0a FF100000 		.4byte	.LASF413
+ 1754 0c0e 8A04     		.sleb128 522
+ 1755 0c10 08       		.uleb128 0x8
+ 1756 0c11 34320000 		.4byte	.LASF414
+ 1757 0c15 8B04     		.sleb128 523
+ 1758 0c17 08       		.uleb128 0x8
+ 1759 0c18 520C0000 		.4byte	.LASF415
+ 1760 0c1c 8C04     		.sleb128 524
+ 1761 0c1e 08       		.uleb128 0x8
+ 1762 0c1f F30A0000 		.4byte	.LASF416
+ 1763 0c23 8D04     		.sleb128 525
+ 1764 0c25 08       		.uleb128 0x8
+ 1765 0c26 4F210000 		.4byte	.LASF417
+ 1766 0c2a 80C003   		.sleb128 57344
+ 1767 0c2d 00       		.byte	0
+ 1768 0c2e 11       		.uleb128 0x11
+ 1769 0c2f 44130000 		.4byte	.LASF420
+ 1770 0c33 01       		.byte	0x1
+ 1771 0c34 2A       		.byte	0x2a
+ 1772 0c35 00000000 		.4byte	.LFB37
+ 1773 0c39 88000000 		.4byte	.LFE37-.LFB37
+ 1774 0c3d 01       		.uleb128 0x1
+ 1775 0c3e 9C       		.byte	0x9c
+ 1776 0c3f 6E0C0000 		.4byte	0xc6e
+ 1777 0c43 12       		.uleb128 0x12
+ 1778 0c44 9D100000 		.4byte	.LASF418
+ 1779 0c48 01       		.byte	0x1
+ 1780 0c49 2A       		.byte	0x2a
+ 1781 0c4a 83000000 		.4byte	0x83
+ 1782 0c4e 02       		.uleb128 0x2
+ 1783 0c4f 91       		.byte	0x91
+ 1784 0c50 6C       		.sleb128 -20
+ 1785 0c51 12       		.uleb128 0x12
+ 1786 0c52 E5010000 		.4byte	.LASF419
+ 1787 0c56 01       		.byte	0x1
+ 1788 0c57 2A       		.byte	0x2a
+ 1789 0c58 BC000000 		.4byte	0xbc
+ 1790 0c5c 02       		.uleb128 0x2
+ 1791 0c5d 91       		.byte	0x91
+ 1792 0c5e 68       		.sleb128 -24
+ 1793 0c5f 13       		.uleb128 0x13
+ 1794 0c60 EE230000 		.4byte	.LASF422
+ 1795 0c64 01       		.byte	0x1
+ 1796 0c65 2C       		.byte	0x2c
+ 1797 0c66 6B000000 		.4byte	0x6b
+ 1798 0c6a 02       		.uleb128 0x2
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 37
+
+
+ 1799 0c6b 91       		.byte	0x91
+ 1800 0c6c 77       		.sleb128 -9
+ 1801 0c6d 00       		.byte	0
+ 1802 0c6e 14       		.uleb128 0x14
+ 1803 0c6f 631F0000 		.4byte	.LASF421
+ 1804 0c73 01       		.byte	0x1
+ 1805 0c74 61       		.byte	0x61
+ 1806 0c75 00000000 		.4byte	.LFB38
+ 1807 0c79 38000000 		.4byte	.LFE38-.LFB38
+ 1808 0c7d 01       		.uleb128 0x1
+ 1809 0c7e 9C       		.byte	0x9c
+ 1810 0c7f A00C0000 		.4byte	0xca0
+ 1811 0c83 15       		.uleb128 0x15
+ 1812 0c84 610A0000 		.4byte	.LASF434
+ 1813 0c88 01       		.byte	0x1
+ 1814 0c89 64       		.byte	0x64
+ 1815 0c8a 8F000000 		.4byte	0x8f
+ 1816 0c8e 13       		.uleb128 0x13
+ 1817 0c8f E92F0000 		.4byte	.LASF423
+ 1818 0c93 01       		.byte	0x1
+ 1819 0c94 69       		.byte	0x69
+ 1820 0c95 83000000 		.4byte	0x83
+ 1821 0c99 05       		.uleb128 0x5
+ 1822 0c9a 03       		.byte	0x3
+ 1823 0c9b 00000000 		.4byte	batteryTimer.7877
+ 1824 0c9f 00       		.byte	0
+ 1825 0ca0 14       		.uleb128 0x14
+ 1826 0ca1 E30C0000 		.4byte	.LASF424
+ 1827 0ca5 01       		.byte	0x1
+ 1828 0ca6 CE       		.byte	0xce
+ 1829 0ca7 00000000 		.4byte	.LFB39
+ 1830 0cab C8000000 		.4byte	.LFE39-.LFB39
+ 1831 0caf 01       		.uleb128 0x1
+ 1832 0cb0 9C       		.byte	0x9c
+ 1833 0cb1 E60C0000 		.4byte	0xce6
+ 1834 0cb5 13       		.uleb128 0x13
+ 1835 0cb6 E92F0000 		.4byte	.LASF423
+ 1836 0cba 01       		.byte	0x1
+ 1837 0cbb D0       		.byte	0xd0
+ 1838 0cbc 83000000 		.4byte	0x83
+ 1839 0cc0 05       		.uleb128 0x5
+ 1840 0cc1 03       		.byte	0x3
+ 1841 0cc2 04000000 		.4byte	batteryTimer.7881
+ 1842 0cc6 13       		.uleb128 0x13
+ 1843 0cc7 E9300000 		.4byte	.LASF425
+ 1844 0ccb 01       		.byte	0x1
+ 1845 0ccc D1       		.byte	0xd1
+ 1846 0ccd 6B000000 		.4byte	0x6b
+ 1847 0cd1 05       		.uleb128 0x5
+ 1848 0cd2 03       		.byte	0x3
+ 1849 0cd3 08000000 		.4byte	batteryLevel.7882
+ 1850 0cd7 13       		.uleb128 0x13
+ 1851 0cd8 F2270000 		.4byte	.LASF426
+ 1852 0cdc 01       		.byte	0x1
+ 1853 0cdd D2       		.byte	0xd2
+ 1854 0cde 4B030000 		.4byte	0x34b
+ 1855 0ce2 02       		.uleb128 0x2
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 38
+
+
+ 1856 0ce3 91       		.byte	0x91
+ 1857 0ce4 6E       		.sleb128 -18
+ 1858 0ce5 00       		.byte	0
+ 1859 0ce6 16       		.uleb128 0x16
+ 1860 0ce7 4F2A0000 		.4byte	.LASF427
+ 1861 0ceb 08       		.byte	0x8
+ 1862 0cec DB09     		.2byte	0x9db
+ 1863 0cee 81030000 		.4byte	0x381
+ 1864 0cf2 16       		.uleb128 0x16
+ 1865 0cf3 4F2E0000 		.4byte	.LASF428
+ 1866 0cf7 08       		.byte	0x8
+ 1867 0cf8 DC09     		.2byte	0x9dc
+ 1868 0cfa B0000000 		.4byte	0xb0
+ 1869 0cfe 17       		.uleb128 0x17
+ 1870 0cff A81B0000 		.4byte	.LASF429
+ 1871 0d03 01       		.byte	0x1
+ 1872 0d04 16       		.byte	0x16
+ 1873 0d05 77000000 		.4byte	0x77
+ 1874 0d09 05       		.uleb128 0x5
+ 1875 0d0a 03       		.byte	0x3
+ 1876 0d0b 00000000 		.4byte	batterySimulationNotify
+ 1877 0d0f 17       		.uleb128 0x17
+ 1878 0d10 8B0F0000 		.4byte	.LASF430
+ 1879 0d14 01       		.byte	0x1
+ 1880 0d15 17       		.byte	0x17
+ 1881 0d16 77000000 		.4byte	0x77
+ 1882 0d1a 05       		.uleb128 0x5
+ 1883 0d1b 03       		.byte	0x3
+ 1884 0d1c 00000000 		.4byte	batteryMeasureNotify
+ 1885 0d20 00       		.byte	0
+ 1886              		.section	.debug_abbrev,"",%progbits
+ 1887              	.Ldebug_abbrev0:
+ 1888 0000 01       		.uleb128 0x1
+ 1889 0001 11       		.uleb128 0x11
+ 1890 0002 01       		.byte	0x1
+ 1891 0003 25       		.uleb128 0x25
+ 1892 0004 0E       		.uleb128 0xe
+ 1893 0005 13       		.uleb128 0x13
+ 1894 0006 0B       		.uleb128 0xb
+ 1895 0007 03       		.uleb128 0x3
+ 1896 0008 0E       		.uleb128 0xe
+ 1897 0009 1B       		.uleb128 0x1b
+ 1898 000a 0E       		.uleb128 0xe
+ 1899 000b 55       		.uleb128 0x55
+ 1900 000c 17       		.uleb128 0x17
+ 1901 000d 11       		.uleb128 0x11
+ 1902 000e 01       		.uleb128 0x1
+ 1903 000f 10       		.uleb128 0x10
+ 1904 0010 17       		.uleb128 0x17
+ 1905 0011 00       		.byte	0
+ 1906 0012 00       		.byte	0
+ 1907 0013 02       		.uleb128 0x2
+ 1908 0014 24       		.uleb128 0x24
+ 1909 0015 00       		.byte	0
+ 1910 0016 0B       		.uleb128 0xb
+ 1911 0017 0B       		.uleb128 0xb
+ 1912 0018 3E       		.uleb128 0x3e
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 39
+
+
+ 1913 0019 0B       		.uleb128 0xb
+ 1914 001a 03       		.uleb128 0x3
+ 1915 001b 0E       		.uleb128 0xe
+ 1916 001c 00       		.byte	0
+ 1917 001d 00       		.byte	0
+ 1918 001e 03       		.uleb128 0x3
+ 1919 001f 24       		.uleb128 0x24
+ 1920 0020 00       		.byte	0
+ 1921 0021 0B       		.uleb128 0xb
+ 1922 0022 0B       		.uleb128 0xb
+ 1923 0023 3E       		.uleb128 0x3e
+ 1924 0024 0B       		.uleb128 0xb
+ 1925 0025 03       		.uleb128 0x3
+ 1926 0026 08       		.uleb128 0x8
+ 1927 0027 00       		.byte	0
+ 1928 0028 00       		.byte	0
+ 1929 0029 04       		.uleb128 0x4
+ 1930 002a 16       		.uleb128 0x16
+ 1931 002b 00       		.byte	0
+ 1932 002c 03       		.uleb128 0x3
+ 1933 002d 0E       		.uleb128 0xe
+ 1934 002e 3A       		.uleb128 0x3a
+ 1935 002f 0B       		.uleb128 0xb
+ 1936 0030 3B       		.uleb128 0x3b
+ 1937 0031 05       		.uleb128 0x5
+ 1938 0032 49       		.uleb128 0x49
+ 1939 0033 13       		.uleb128 0x13
+ 1940 0034 00       		.byte	0
+ 1941 0035 00       		.byte	0
+ 1942 0036 05       		.uleb128 0x5
+ 1943 0037 35       		.uleb128 0x35
+ 1944 0038 00       		.byte	0
+ 1945 0039 49       		.uleb128 0x49
+ 1946 003a 13       		.uleb128 0x13
+ 1947 003b 00       		.byte	0
+ 1948 003c 00       		.byte	0
+ 1949 003d 06       		.uleb128 0x6
+ 1950 003e 0F       		.uleb128 0xf
+ 1951 003f 00       		.byte	0
+ 1952 0040 0B       		.uleb128 0xb
+ 1953 0041 0B       		.uleb128 0xb
+ 1954 0042 00       		.byte	0
+ 1955 0043 00       		.byte	0
+ 1956 0044 07       		.uleb128 0x7
+ 1957 0045 04       		.uleb128 0x4
+ 1958 0046 01       		.byte	0x1
+ 1959 0047 0B       		.uleb128 0xb
+ 1960 0048 0B       		.uleb128 0xb
+ 1961 0049 3A       		.uleb128 0x3a
+ 1962 004a 0B       		.uleb128 0xb
+ 1963 004b 3B       		.uleb128 0x3b
+ 1964 004c 05       		.uleb128 0x5
+ 1965 004d 01       		.uleb128 0x1
+ 1966 004e 13       		.uleb128 0x13
+ 1967 004f 00       		.byte	0
+ 1968 0050 00       		.byte	0
+ 1969 0051 08       		.uleb128 0x8
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 40
+
+
+ 1970 0052 28       		.uleb128 0x28
+ 1971 0053 00       		.byte	0
+ 1972 0054 03       		.uleb128 0x3
+ 1973 0055 0E       		.uleb128 0xe
+ 1974 0056 1C       		.uleb128 0x1c
+ 1975 0057 0D       		.uleb128 0xd
+ 1976 0058 00       		.byte	0
+ 1977 0059 00       		.byte	0
+ 1978 005a 09       		.uleb128 0x9
+ 1979 005b 0F       		.uleb128 0xf
+ 1980 005c 00       		.byte	0
+ 1981 005d 0B       		.uleb128 0xb
+ 1982 005e 0B       		.uleb128 0xb
+ 1983 005f 49       		.uleb128 0x49
+ 1984 0060 13       		.uleb128 0x13
+ 1985 0061 00       		.byte	0
+ 1986 0062 00       		.byte	0
+ 1987 0063 0A       		.uleb128 0xa
+ 1988 0064 13       		.uleb128 0x13
+ 1989 0065 01       		.byte	0x1
+ 1990 0066 0B       		.uleb128 0xb
+ 1991 0067 0B       		.uleb128 0xb
+ 1992 0068 3A       		.uleb128 0x3a
+ 1993 0069 0B       		.uleb128 0xb
+ 1994 006a 3B       		.uleb128 0x3b
+ 1995 006b 05       		.uleb128 0x5
+ 1996 006c 01       		.uleb128 0x1
+ 1997 006d 13       		.uleb128 0x13
+ 1998 006e 00       		.byte	0
+ 1999 006f 00       		.byte	0
+ 2000 0070 0B       		.uleb128 0xb
+ 2001 0071 0D       		.uleb128 0xd
+ 2002 0072 00       		.byte	0
+ 2003 0073 03       		.uleb128 0x3
+ 2004 0074 0E       		.uleb128 0xe
+ 2005 0075 3A       		.uleb128 0x3a
+ 2006 0076 0B       		.uleb128 0xb
+ 2007 0077 3B       		.uleb128 0x3b
+ 2008 0078 05       		.uleb128 0x5
+ 2009 0079 49       		.uleb128 0x49
+ 2010 007a 13       		.uleb128 0x13
+ 2011 007b 38       		.uleb128 0x38
+ 2012 007c 0B       		.uleb128 0xb
+ 2013 007d 00       		.byte	0
+ 2014 007e 00       		.byte	0
+ 2015 007f 0C       		.uleb128 0xc
+ 2016 0080 0D       		.uleb128 0xd
+ 2017 0081 00       		.byte	0
+ 2018 0082 03       		.uleb128 0x3
+ 2019 0083 08       		.uleb128 0x8
+ 2020 0084 3A       		.uleb128 0x3a
+ 2021 0085 0B       		.uleb128 0xb
+ 2022 0086 3B       		.uleb128 0x3b
+ 2023 0087 05       		.uleb128 0x5
+ 2024 0088 49       		.uleb128 0x49
+ 2025 0089 13       		.uleb128 0x13
+ 2026 008a 38       		.uleb128 0x38
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 41
+
+
+ 2027 008b 0B       		.uleb128 0xb
+ 2028 008c 00       		.byte	0
+ 2029 008d 00       		.byte	0
+ 2030 008e 0D       		.uleb128 0xd
+ 2031 008f 04       		.uleb128 0x4
+ 2032 0090 01       		.byte	0x1
+ 2033 0091 0B       		.uleb128 0xb
+ 2034 0092 0B       		.uleb128 0xb
+ 2035 0093 3A       		.uleb128 0x3a
+ 2036 0094 0B       		.uleb128 0xb
+ 2037 0095 3B       		.uleb128 0x3b
+ 2038 0096 0B       		.uleb128 0xb
+ 2039 0097 01       		.uleb128 0x1
+ 2040 0098 13       		.uleb128 0x13
+ 2041 0099 00       		.byte	0
+ 2042 009a 00       		.byte	0
+ 2043 009b 0E       		.uleb128 0xe
+ 2044 009c 16       		.uleb128 0x16
+ 2045 009d 00       		.byte	0
+ 2046 009e 03       		.uleb128 0x3
+ 2047 009f 0E       		.uleb128 0xe
+ 2048 00a0 3A       		.uleb128 0x3a
+ 2049 00a1 0B       		.uleb128 0xb
+ 2050 00a2 3B       		.uleb128 0x3b
+ 2051 00a3 0B       		.uleb128 0xb
+ 2052 00a4 49       		.uleb128 0x49
+ 2053 00a5 13       		.uleb128 0x13
+ 2054 00a6 00       		.byte	0
+ 2055 00a7 00       		.byte	0
+ 2056 00a8 0F       		.uleb128 0xf
+ 2057 00a9 13       		.uleb128 0x13
+ 2058 00aa 01       		.byte	0x1
+ 2059 00ab 0B       		.uleb128 0xb
+ 2060 00ac 0B       		.uleb128 0xb
+ 2061 00ad 3A       		.uleb128 0x3a
+ 2062 00ae 0B       		.uleb128 0xb
+ 2063 00af 3B       		.uleb128 0x3b
+ 2064 00b0 0B       		.uleb128 0xb
+ 2065 00b1 01       		.uleb128 0x1
+ 2066 00b2 13       		.uleb128 0x13
+ 2067 00b3 00       		.byte	0
+ 2068 00b4 00       		.byte	0
+ 2069 00b5 10       		.uleb128 0x10
+ 2070 00b6 0D       		.uleb128 0xd
+ 2071 00b7 00       		.byte	0
+ 2072 00b8 03       		.uleb128 0x3
+ 2073 00b9 0E       		.uleb128 0xe
+ 2074 00ba 3A       		.uleb128 0x3a
+ 2075 00bb 0B       		.uleb128 0xb
+ 2076 00bc 3B       		.uleb128 0x3b
+ 2077 00bd 0B       		.uleb128 0xb
+ 2078 00be 49       		.uleb128 0x49
+ 2079 00bf 13       		.uleb128 0x13
+ 2080 00c0 38       		.uleb128 0x38
+ 2081 00c1 0B       		.uleb128 0xb
+ 2082 00c2 00       		.byte	0
+ 2083 00c3 00       		.byte	0
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 42
+
+
+ 2084 00c4 11       		.uleb128 0x11
+ 2085 00c5 2E       		.uleb128 0x2e
+ 2086 00c6 01       		.byte	0x1
+ 2087 00c7 3F       		.uleb128 0x3f
+ 2088 00c8 19       		.uleb128 0x19
+ 2089 00c9 03       		.uleb128 0x3
+ 2090 00ca 0E       		.uleb128 0xe
+ 2091 00cb 3A       		.uleb128 0x3a
+ 2092 00cc 0B       		.uleb128 0xb
+ 2093 00cd 3B       		.uleb128 0x3b
+ 2094 00ce 0B       		.uleb128 0xb
+ 2095 00cf 27       		.uleb128 0x27
+ 2096 00d0 19       		.uleb128 0x19
+ 2097 00d1 11       		.uleb128 0x11
+ 2098 00d2 01       		.uleb128 0x1
+ 2099 00d3 12       		.uleb128 0x12
+ 2100 00d4 06       		.uleb128 0x6
+ 2101 00d5 40       		.uleb128 0x40
+ 2102 00d6 18       		.uleb128 0x18
+ 2103 00d7 9742     		.uleb128 0x2117
+ 2104 00d9 19       		.uleb128 0x19
+ 2105 00da 01       		.uleb128 0x1
+ 2106 00db 13       		.uleb128 0x13
+ 2107 00dc 00       		.byte	0
+ 2108 00dd 00       		.byte	0
+ 2109 00de 12       		.uleb128 0x12
+ 2110 00df 05       		.uleb128 0x5
+ 2111 00e0 00       		.byte	0
+ 2112 00e1 03       		.uleb128 0x3
+ 2113 00e2 0E       		.uleb128 0xe
+ 2114 00e3 3A       		.uleb128 0x3a
+ 2115 00e4 0B       		.uleb128 0xb
+ 2116 00e5 3B       		.uleb128 0x3b
+ 2117 00e6 0B       		.uleb128 0xb
+ 2118 00e7 49       		.uleb128 0x49
+ 2119 00e8 13       		.uleb128 0x13
+ 2120 00e9 02       		.uleb128 0x2
+ 2121 00ea 18       		.uleb128 0x18
+ 2122 00eb 00       		.byte	0
+ 2123 00ec 00       		.byte	0
+ 2124 00ed 13       		.uleb128 0x13
+ 2125 00ee 34       		.uleb128 0x34
+ 2126 00ef 00       		.byte	0
+ 2127 00f0 03       		.uleb128 0x3
+ 2128 00f1 0E       		.uleb128 0xe
+ 2129 00f2 3A       		.uleb128 0x3a
+ 2130 00f3 0B       		.uleb128 0xb
+ 2131 00f4 3B       		.uleb128 0x3b
+ 2132 00f5 0B       		.uleb128 0xb
+ 2133 00f6 49       		.uleb128 0x49
+ 2134 00f7 13       		.uleb128 0x13
+ 2135 00f8 02       		.uleb128 0x2
+ 2136 00f9 18       		.uleb128 0x18
+ 2137 00fa 00       		.byte	0
+ 2138 00fb 00       		.byte	0
+ 2139 00fc 14       		.uleb128 0x14
+ 2140 00fd 2E       		.uleb128 0x2e
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 43
+
+
+ 2141 00fe 01       		.byte	0x1
+ 2142 00ff 3F       		.uleb128 0x3f
+ 2143 0100 19       		.uleb128 0x19
+ 2144 0101 03       		.uleb128 0x3
+ 2145 0102 0E       		.uleb128 0xe
+ 2146 0103 3A       		.uleb128 0x3a
+ 2147 0104 0B       		.uleb128 0xb
+ 2148 0105 3B       		.uleb128 0x3b
+ 2149 0106 0B       		.uleb128 0xb
+ 2150 0107 27       		.uleb128 0x27
+ 2151 0108 19       		.uleb128 0x19
+ 2152 0109 11       		.uleb128 0x11
+ 2153 010a 01       		.uleb128 0x1
+ 2154 010b 12       		.uleb128 0x12
+ 2155 010c 06       		.uleb128 0x6
+ 2156 010d 40       		.uleb128 0x40
+ 2157 010e 18       		.uleb128 0x18
+ 2158 010f 9642     		.uleb128 0x2116
+ 2159 0111 19       		.uleb128 0x19
+ 2160 0112 01       		.uleb128 0x1
+ 2161 0113 13       		.uleb128 0x13
+ 2162 0114 00       		.byte	0
+ 2163 0115 00       		.byte	0
+ 2164 0116 15       		.uleb128 0x15
+ 2165 0117 34       		.uleb128 0x34
+ 2166 0118 00       		.byte	0
+ 2167 0119 03       		.uleb128 0x3
+ 2168 011a 0E       		.uleb128 0xe
+ 2169 011b 3A       		.uleb128 0x3a
+ 2170 011c 0B       		.uleb128 0xb
+ 2171 011d 3B       		.uleb128 0x3b
+ 2172 011e 0B       		.uleb128 0xb
+ 2173 011f 49       		.uleb128 0x49
+ 2174 0120 13       		.uleb128 0x13
+ 2175 0121 00       		.byte	0
+ 2176 0122 00       		.byte	0
+ 2177 0123 16       		.uleb128 0x16
+ 2178 0124 34       		.uleb128 0x34
+ 2179 0125 00       		.byte	0
+ 2180 0126 03       		.uleb128 0x3
+ 2181 0127 0E       		.uleb128 0xe
+ 2182 0128 3A       		.uleb128 0x3a
+ 2183 0129 0B       		.uleb128 0xb
+ 2184 012a 3B       		.uleb128 0x3b
+ 2185 012b 05       		.uleb128 0x5
+ 2186 012c 49       		.uleb128 0x49
+ 2187 012d 13       		.uleb128 0x13
+ 2188 012e 3F       		.uleb128 0x3f
+ 2189 012f 19       		.uleb128 0x19
+ 2190 0130 3C       		.uleb128 0x3c
+ 2191 0131 19       		.uleb128 0x19
+ 2192 0132 00       		.byte	0
+ 2193 0133 00       		.byte	0
+ 2194 0134 17       		.uleb128 0x17
+ 2195 0135 34       		.uleb128 0x34
+ 2196 0136 00       		.byte	0
+ 2197 0137 03       		.uleb128 0x3
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 44
+
+
+ 2198 0138 0E       		.uleb128 0xe
+ 2199 0139 3A       		.uleb128 0x3a
+ 2200 013a 0B       		.uleb128 0xb
+ 2201 013b 3B       		.uleb128 0x3b
+ 2202 013c 0B       		.uleb128 0xb
+ 2203 013d 49       		.uleb128 0x49
+ 2204 013e 13       		.uleb128 0x13
+ 2205 013f 3F       		.uleb128 0x3f
+ 2206 0140 19       		.uleb128 0x19
+ 2207 0141 02       		.uleb128 0x2
+ 2208 0142 18       		.uleb128 0x18
+ 2209 0143 00       		.byte	0
+ 2210 0144 00       		.byte	0
+ 2211 0145 00       		.byte	0
+ 2212              		.section	.debug_aranges,"",%progbits
+ 2213 0000 2C000000 		.4byte	0x2c
+ 2214 0004 0200     		.2byte	0x2
+ 2215 0006 00000000 		.4byte	.Ldebug_info0
+ 2216 000a 04       		.byte	0x4
+ 2217 000b 00       		.byte	0
+ 2218 000c 0000     		.2byte	0
+ 2219 000e 0000     		.2byte	0
+ 2220 0010 00000000 		.4byte	.LFB37
+ 2221 0014 88000000 		.4byte	.LFE37-.LFB37
+ 2222 0018 00000000 		.4byte	.LFB38
+ 2223 001c 38000000 		.4byte	.LFE38-.LFB38
+ 2224 0020 00000000 		.4byte	.LFB39
+ 2225 0024 C8000000 		.4byte	.LFE39-.LFB39
+ 2226 0028 00000000 		.4byte	0
+ 2227 002c 00000000 		.4byte	0
+ 2228              		.section	.debug_ranges,"",%progbits
+ 2229              	.Ldebug_ranges0:
+ 2230 0000 00000000 		.4byte	.LFB37
+ 2231 0004 88000000 		.4byte	.LFE37
+ 2232 0008 00000000 		.4byte	.LFB38
+ 2233 000c 38000000 		.4byte	.LFE38
+ 2234 0010 00000000 		.4byte	.LFB39
+ 2235 0014 C8000000 		.4byte	.LFE39
+ 2236 0018 00000000 		.4byte	0
+ 2237 001c 00000000 		.4byte	0
+ 2238              		.section	.debug_line,"",%progbits
+ 2239              	.Ldebug_line0:
+ 2240 0000 09010000 		.section	.debug_str,"MS",%progbits,1
+ 2240      0200A100 
+ 2240      00000201 
+ 2240      FB0E0D00 
+ 2240      01010101 
+ 2241              	.LASF393:
+ 2242 0000 4359424C 		.ascii	"CYBLE_EVT_UDSC_READ_CHAR_RESPONSE\000"
+ 2242      455F4556 
+ 2242      545F5544 
+ 2242      53435F52 
+ 2242      4541445F 
+ 2243              	.LASF312:
+ 2244 0022 4359424C 		.ascii	"CYBLE_EVT_HTSS_NOTIFICATION_DISABLED\000"
+ 2244      455F4556 
+ 2244      545F4854 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 45
+
+
+ 2244      53535F4E 
+ 2244      4F544946 
+ 2245              	.LASF138:
+ 2246 0047 4359424C 		.ascii	"CYBLE_DIS_CHAR_COUNT\000"
+ 2246      455F4449 
+ 2246      535F4348 
+ 2246      41525F43 
+ 2246      4F554E54 
+ 2247              	.LASF16:
+ 2248 005c 73697A65 		.ascii	"sizetype\000"
+ 2248      74797065 
+ 2248      00
+ 2249              	.LASF192:
+ 2250 0065 4359424C 		.ascii	"CYBLE_EVT_BCSC_READ_CHAR_RESPONSE\000"
+ 2250      455F4556 
+ 2250      545F4243 
+ 2250      53435F52 
+ 2250      4541445F 
+ 2251              	.LASF215:
+ 2252 0087 4359424C 		.ascii	"CYBLE_EVT_CGMSC_INDICATION\000"
+ 2252      455F4556 
+ 2252      545F4347 
+ 2252      4D53435F 
+ 2252      494E4449 
+ 2253              	.LASF233:
+ 2254 00a2 4359424C 		.ascii	"CYBLE_EVT_CPSC_READ_DESCR_RESPONSE\000"
+ 2254      455F4556 
+ 2254      545F4350 
+ 2254      53435F52 
+ 2254      4541445F 
+ 2255              	.LASF370:
+ 2256 00c5 4359424C 		.ascii	"CYBLE_EVT_RTUSS_WRITE_CHAR_CMD\000"
+ 2256      455F4556 
+ 2256      545F5254 
+ 2256      5553535F 
+ 2256      57524954 
+ 2257              	.LASF126:
+ 2258 00e4 63686172 		.ascii	"charIndex\000"
+ 2258      496E6465 
+ 2258      7800
+ 2259              	.LASF404:
+ 2260 00ee 4359424C 		.ascii	"CYBLE_EVT_WPTSC_NOTIFICATION\000"
+ 2260      455F4556 
+ 2260      545F5750 
+ 2260      5453435F 
+ 2260      4E4F5449 
+ 2261              	.LASF37:
+ 2262 010b 4359424C 		.ascii	"CYBLE_EVT_GAP_NUMERIC_COMPARISON_REQUEST\000"
+ 2262      455F4556 
+ 2262      545F4741 
+ 2262      505F4E55 
+ 2262      4D455249 
+ 2263              	.LASF410:
+ 2264 0134 4359424C 		.ascii	"CYBLE_EVT_WSSS_INDICATION_ENABLED\000"
+ 2264      455F4556 
+ 2264      545F5753 
+ 2264      53535F49 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 46
+
+
+ 2264      4E444943 
+ 2265              	.LASF231:
+ 2266 0156 4359424C 		.ascii	"CYBLE_EVT_CPSC_READ_CHAR_RESPONSE\000"
+ 2266      455F4556 
+ 2266      545F4350 
+ 2266      53435F52 
+ 2266      4541445F 
+ 2267              	.LASF244:
+ 2268 0178 4359424C 		.ascii	"CYBLE_EVT_CSCSC_READ_CHAR_RESPONSE\000"
+ 2268      455F4556 
+ 2268      545F4353 
+ 2268      4353435F 
+ 2268      52454144 
+ 2269              	.LASF220:
+ 2270 019b 4359424C 		.ascii	"CYBLE_EVT_CGMSC_WRITE_DESCR_RESPONSE\000"
+ 2270      455F4556 
+ 2270      545F4347 
+ 2270      4D53435F 
+ 2270      57524954 
+ 2271              	.LASF275:
+ 2272 01c0 4359424C 		.ascii	"CYBLE_EVT_GLSS_NOTIFICATION_DISABLED\000"
+ 2272      455F4556 
+ 2272      545F474C 
+ 2272      53535F4E 
+ 2272      4F544946 
+ 2273              	.LASF419:
+ 2274 01e5 6576656E 		.ascii	"eventParam\000"
+ 2274      74506172 
+ 2274      616D00
+ 2275              	.LASF202:
+ 2276 01f0 4359424C 		.ascii	"CYBLE_EVT_BLSC_READ_CHAR_RESPONSE\000"
+ 2276      455F4556 
+ 2276      545F424C 
+ 2276      53435F52 
+ 2276      4541445F 
+ 2277              	.LASF31:
+ 2278 0212 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_CONNECTED\000"
+ 2278      455F4556 
+ 2278      545F4741 
+ 2278      505F4445 
+ 2278      56494345 
+ 2279              	.LASF45:
+ 2280 0231 4359424C 		.ascii	"CYBLE_EVT_GATT_CONNECT_IND\000"
+ 2280      455F4556 
+ 2280      545F4741 
+ 2280      54545F43 
+ 2280      4F4E4E45 
+ 2281              	.LASF145:
+ 2282 024c 4359424C 		.ascii	"CYBLE_HTS_VRD\000"
+ 2282      455F4854 
+ 2282      535F5652 
+ 2282      4400
+ 2283              	.LASF11:
+ 2284 025a 75696E74 		.ascii	"uint32\000"
+ 2284      333200
+ 2285              	.LASF157:
+ 2286 0261 4359424C 		.ascii	"CYBLE_EVT_GATTC_DESCR_DISCOVERY_FAILED\000"
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 47
+
+
+ 2286      455F4556 
+ 2286      545F4741 
+ 2286      5454435F 
+ 2286      44455343 
+ 2287              	.LASF369:
+ 2288 0288 4359424C 		.ascii	"CYBLE_EVT_RSCSC_WRITE_DESCR_RESPONSE\000"
+ 2288      455F4556 
+ 2288      545F5253 
+ 2288      4353435F 
+ 2288      57524954 
+ 2289              	.LASF190:
+ 2290 02ad 4359424C 		.ascii	"CYBLE_EVT_BCSS_INDICATION_CONFIRMED\000"
+ 2290      455F4556 
+ 2290      545F4243 
+ 2290      53535F49 
+ 2290      4E444943 
+ 2291              	.LASF191:
+ 2292 02d1 4359424C 		.ascii	"CYBLE_EVT_BCSC_INDICATION\000"
+ 2292      455F4556 
+ 2292      545F4243 
+ 2292      53435F49 
+ 2292      4E444943 
+ 2293              	.LASF338:
+ 2294 02eb 4359424C 		.ascii	"CYBLE_EVT_LNSS_INDICATION_DISABLED\000"
+ 2294      455F4556 
+ 2294      545F4C4E 
+ 2294      53535F49 
+ 2294      4E444943 
+ 2295              	.LASF252:
+ 2296 030e 4359424C 		.ascii	"CYBLE_EVT_CTSC_READ_CHAR_RESPONSE\000"
+ 2296      455F4556 
+ 2296      545F4354 
+ 2296      53435F52 
+ 2296      4541445F 
+ 2297              	.LASF161:
+ 2298 0330 4359424C 		.ascii	"CYBLE_EVT_GATTC_SRVC_DISCOVERY_COMPLETE\000"
+ 2298      455F4556 
+ 2298      545F4741 
+ 2298      5454435F 
+ 2298      53525643 
+ 2299              	.LASF363:
+ 2300 0358 4359424C 		.ascii	"CYBLE_EVT_RSCSS_CHAR_WRITE\000"
+ 2300      455F4556 
+ 2300      545F5253 
+ 2300      4353535F 
+ 2300      43484152 
+ 2301              	.LASF396:
+ 2302 0373 4359424C 		.ascii	"CYBLE_EVT_UDSC_WRITE_DESCR_RESPONSE\000"
+ 2302      455F4556 
+ 2302      545F5544 
+ 2302      53435F57 
+ 2302      52495445 
+ 2303              	.LASF294:
+ 2304 0397 4359424C 		.ascii	"CYBLE_EVT_HIDSC_WRITE_DESCR_RESPONSE\000"
+ 2304      455F4556 
+ 2304      545F4849 
+ 2304      4453435F 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 48
+
+
+ 2304      57524954 
+ 2305              	.LASF378:
+ 2306 03bc 4359424C 		.ascii	"CYBLE_EVT_TPSS_NOTIFICATION_ENABLED\000"
+ 2306      455F4556 
+ 2306      545F5450 
+ 2306      53535F4E 
+ 2306      4F544946 
+ 2307              	.LASF180:
+ 2308 03e0 4359424C 		.ascii	"CYBLE_EVT_ANSC_READ_DESCR_RESPONSE\000"
+ 2308      455F4556 
+ 2308      545F414E 
+ 2308      53435F52 
+ 2308      4541445F 
+ 2309              	.LASF144:
+ 2310 0403 4359424C 		.ascii	"CYBLE_HTS_CCCD\000"
+ 2310      455F4854 
+ 2310      535F4343 
+ 2310      434400
+ 2311              	.LASF188:
+ 2312 0412 4359424C 		.ascii	"CYBLE_EVT_BCSS_INDICATION_ENABLED\000"
+ 2312      455F4556 
+ 2312      545F4243 
+ 2312      53535F49 
+ 2312      4E444943 
+ 2313              	.LASF99:
+ 2314 0434 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_CONNECTION_ENTITY_NOT_FOUND\000"
+ 2314      455F4552 
+ 2314      524F525F 
+ 2314      4C324341 
+ 2314      505F434F 
+ 2315              	.LASF105:
+ 2316 0462 4359424C 		.ascii	"CYBLE_ERROR_MIC_AUTH_FAILED\000"
+ 2316      455F4552 
+ 2316      524F525F 
+ 2316      4D49435F 
+ 2316      41555448 
+ 2317              	.LASF156:
+ 2318 047e 4359424C 		.ascii	"CYBLE_EVT_GATTC_CHAR_DISCOVERY_FAILED\000"
+ 2318      455F4556 
+ 2318      545F4741 
+ 2318      5454435F 
+ 2318      43484152 
+ 2319              	.LASF65:
+ 2320 04a4 4359424C 		.ascii	"CYBLE_EVT_GATTS_DATA_SIGNED_CMD_REQ\000"
+ 2320      455F4556 
+ 2320      545F4741 
+ 2320      5454535F 
+ 2320      44415441 
+ 2321              	.LASF77:
+ 2322 04c8 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_RX_CREDIT_IND\000"
+ 2322      455F4556 
+ 2322      545F4C32 
+ 2322      4341505F 
+ 2322      43424643 
+ 2323              	.LASF120:
+ 2324 04eb 4359424C 		.ascii	"CYBLE_GATT_VALUE_T\000"
+ 2324      455F4741 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 49
+
+
+ 2324      54545F56 
+ 2324      414C5545 
+ 2324      5F5400
+ 2325              	.LASF238:
+ 2326 04fe 4359424C 		.ascii	"CYBLE_EVT_CSCSS_INDICATION_ENABLED\000"
+ 2326      455F4556 
+ 2326      545F4353 
+ 2326      4353535F 
+ 2326      494E4449 
+ 2327              	.LASF343:
+ 2328 0521 4359424C 		.ascii	"CYBLE_EVT_LNSC_INDICATION\000"
+ 2328      455F4556 
+ 2328      545F4C4E 
+ 2328      53435F49 
+ 2328      4E444943 
+ 2329              	.LASF354:
+ 2330 053b 4359424C 		.ascii	"CYBLE_EVT_PASSC_READ_CHAR_RESPONSE\000"
+ 2330      455F4556 
+ 2330      545F5041 
+ 2330      5353435F 
+ 2330      52454144 
+ 2331              	.LASF195:
+ 2332 055e 4359424C 		.ascii	"CYBLE_EVT_BLSS_INDICATION_ENABLED\000"
+ 2332      455F4556 
+ 2332      545F424C 
+ 2332      53535F49 
+ 2332      4E444943 
+ 2333              	.LASF201:
+ 2334 0580 4359424C 		.ascii	"CYBLE_EVT_BLSC_NOTIFICATION\000"
+ 2334      455F4556 
+ 2334      545F424C 
+ 2334      53435F4E 
+ 2334      4F544946 
+ 2335              	.LASF243:
+ 2336 059c 4359424C 		.ascii	"CYBLE_EVT_CSCSC_INDICATION\000"
+ 2336      455F4556 
+ 2336      545F4353 
+ 2336      4353435F 
+ 2336      494E4449 
+ 2337              	.LASF123:
+ 2338 05b7 4359424C 		.ascii	"CYBLE_BAS_CHAR_INDEX_T\000"
+ 2338      455F4241 
+ 2338      535F4348 
+ 2338      41525F49 
+ 2338      4E444558 
+ 2339              	.LASF133:
+ 2340 05ce 4359424C 		.ascii	"CYBLE_DIS_FIRMWARE_REV\000"
+ 2340      455F4449 
+ 2340      535F4649 
+ 2340      524D5741 
+ 2340      52455F52 
+ 2341              	.LASF62:
+ 2342 05e5 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_NTF\000"
+ 2342      455F4556 
+ 2342      545F4741 
+ 2342      5454435F 
+ 2342      48414E44 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 50
+
+
+ 2343              	.LASF25:
+ 2344 0606 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_REQ\000"
+ 2344      455F4556 
+ 2344      545F4741 
+ 2344      505F4155 
+ 2344      54485F52 
+ 2345              	.LASF163:
+ 2346 061d 4359424C 		.ascii	"CYBLE_EVT_GATTC_CHAR_DISCOVERY_COMPLETE\000"
+ 2346      455F4556 
+ 2346      545F4741 
+ 2346      5454435F 
+ 2346      43484152 
+ 2347              	.LASF118:
+ 2348 0645 4359424C 		.ascii	"CYBLE_CONN_HANDLE_T\000"
+ 2348      455F434F 
+ 2348      4E4E5F48 
+ 2348      414E444C 
+ 2348      455F5400 
+ 2349              	.LASF308:
+ 2350 0659 4359424C 		.ascii	"CYBLE_EVT_HRSC_WRITE_CHAR_RESPONSE\000"
+ 2350      455F4556 
+ 2350      545F4852 
+ 2350      53435F57 
+ 2350      52495445 
+ 2351              	.LASF94:
+ 2352 067c 4359424C 		.ascii	"CYBLE_ERROR_BT_ON_NOT_COMPLETED\000"
+ 2352      455F4552 
+ 2352      524F525F 
+ 2352      42545F4F 
+ 2352      4E5F4E4F 
+ 2353              	.LASF242:
+ 2354 069c 4359424C 		.ascii	"CYBLE_EVT_CSCSC_NOTIFICATION\000"
+ 2354      455F4556 
+ 2354      545F4353 
+ 2354      4353435F 
+ 2354      4E4F5449 
+ 2355              	.LASF391:
+ 2356 06b9 4359424C 		.ascii	"CYBLE_EVT_UDSC_INDICATION\000"
+ 2356      455F4556 
+ 2356      545F5544 
+ 2356      53435F49 
+ 2356      4E444943 
+ 2357              	.LASF325:
+ 2358 06d3 4359424C 		.ascii	"CYBLE_EVT_IPSS_WRITE_CHAR\000"
+ 2358      455F4556 
+ 2358      545F4950 
+ 2358      53535F57 
+ 2358      52495445 
+ 2359              	.LASF206:
+ 2360 06ed 4359424C 		.ascii	"CYBLE_EVT_BMSC_READ_CHAR_RESPONSE\000"
+ 2360      455F4556 
+ 2360      545F424D 
+ 2360      53435F52 
+ 2360      4541445F 
+ 2361              	.LASF39:
+ 2362 070f 4359424C 		.ascii	"CYBLE_EVT_GAP_OOB_GENERATED_NOTIFICATION\000"
+ 2362      455F4556 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 51
+
+
+ 2362      545F4741 
+ 2362      505F4F4F 
+ 2362      425F4745 
+ 2363              	.LASF116:
+ 2364 0738 62644861 		.ascii	"bdHandle\000"
+ 2364      6E646C65 
+ 2364      00
+ 2365              	.LASF211:
+ 2366 0741 4359424C 		.ascii	"CYBLE_EVT_CGMSS_INDICATION_CONFIRMED\000"
+ 2366      455F4556 
+ 2366      545F4347 
+ 2366      4D53535F 
+ 2366      494E4449 
+ 2367              	.LASF203:
+ 2368 0766 4359424C 		.ascii	"CYBLE_EVT_BLSC_READ_DESCR_RESPONSE\000"
+ 2368      455F4556 
+ 2368      545F424C 
+ 2368      53435F52 
+ 2368      4541445F 
+ 2369              	.LASF224:
+ 2370 0789 4359424C 		.ascii	"CYBLE_EVT_CPSS_INDICATION_DISABLED\000"
+ 2370      455F4556 
+ 2370      545F4350 
+ 2370      53535F49 
+ 2370      4E444943 
+ 2371              	.LASF223:
+ 2372 07ac 4359424C 		.ascii	"CYBLE_EVT_CPSS_INDICATION_ENABLED\000"
+ 2372      455F4556 
+ 2372      545F4350 
+ 2372      53535F49 
+ 2372      4E444943 
+ 2373              	.LASF340:
+ 2374 07ce 4359424C 		.ascii	"CYBLE_EVT_LNSS_NOTIFICATION_ENABLED\000"
+ 2374      455F4556 
+ 2374      545F4C4E 
+ 2374      53535F4E 
+ 2374      4F544946 
+ 2375              	.LASF58:
+ 2376 07f2 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_CMD_REQ\000"
+ 2376      455F4556 
+ 2376      545F4741 
+ 2376      5454535F 
+ 2376      57524954 
+ 2377              	.LASF234:
+ 2378 0810 4359424C 		.ascii	"CYBLE_EVT_CPSC_WRITE_DESCR_RESPONSE\000"
+ 2378      455F4556 
+ 2378      545F4350 
+ 2378      53435F57 
+ 2378      52495445 
+ 2379              	.LASF4:
+ 2380 0834 6C6F6E67 		.ascii	"long int\000"
+ 2380      20696E74 
+ 2380      00
+ 2381              	.LASF341:
+ 2382 083d 4359424C 		.ascii	"CYBLE_EVT_LNSS_NOTIFICATION_DISABLED\000"
+ 2382      455F4556 
+ 2382      545F4C4E 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 52
+
+
+ 2382      53535F4E 
+ 2382      4F544946 
+ 2383              	.LASF169:
+ 2384 0862 4359424C 		.ascii	"CYBLE_EVT_ANCSC_READ_CHAR_RESPONSE\000"
+ 2384      455F4556 
+ 2384      545F414E 
+ 2384      4353435F 
+ 2384      52454144 
+ 2385              	.LASF355:
+ 2386 0885 4359424C 		.ascii	"CYBLE_EVT_PASSC_WRITE_CHAR_RESPONSE\000"
+ 2386      455F4556 
+ 2386      545F5041 
+ 2386      5353435F 
+ 2386      57524954 
+ 2387              	.LASF141:
+ 2388 08a9 4359424C 		.ascii	"CYBLE_HTS_INTERM_TEMP\000"
+ 2388      455F4854 
+ 2388      535F494E 
+ 2388      5445524D 
+ 2388      5F54454D 
+ 2389              	.LASF386:
+ 2390 08bf 4359424C 		.ascii	"CYBLE_EVT_UDSS_INDICATION_CONFIRMED\000"
+ 2390      455F4556 
+ 2390      545F5544 
+ 2390      53535F49 
+ 2390      4E444943 
+ 2391              	.LASF149:
+ 2392 08e3 4359424C 		.ascii	"CYBLE_LONG_TERM_KEY_REQUEST_REPLY\000"
+ 2392      455F4C4F 
+ 2392      4E475F54 
+ 2392      45524D5F 
+ 2392      4B45595F 
+ 2393              	.LASF18:
+ 2394 0905 4359424C 		.ascii	"CYBLE_EVT_STACK_ON\000"
+ 2394      455F4556 
+ 2394      545F5354 
+ 2394      41434B5F 
+ 2394      4F4E00
+ 2395              	.LASF101:
+ 2396 0918 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_NOT_IN_RANGE\000"
+ 2396      455F4552 
+ 2396      524F525F 
+ 2396      4C324341 
+ 2396      505F5053 
+ 2397              	.LASF132:
+ 2398 093b 4359424C 		.ascii	"CYBLE_DIS_HARDWARE_REV\000"
+ 2398      455F4449 
+ 2398      535F4841 
+ 2398      52445741 
+ 2398      52455F52 
+ 2399              	.LASF270:
+ 2400 0952 4359424C 		.ascii	"CYBLE_EVT_ESSC_WRITE_DESCR_RESPONSE\000"
+ 2400      455F4556 
+ 2400      545F4553 
+ 2400      53435F57 
+ 2400      52495445 
+ 2401              	.LASF329:
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 53
+
+
+ 2402 0976 4359424C 		.ascii	"CYBLE_EVT_IPSC_WRITE_CHAR_RESPONSE\000"
+ 2402      455F4556 
+ 2402      545F4950 
+ 2402      53435F57 
+ 2402      52495445 
+ 2403              	.LASF311:
+ 2404 0999 4359424C 		.ascii	"CYBLE_EVT_HTSS_NOTIFICATION_ENABLED\000"
+ 2404      455F4556 
+ 2404      545F4854 
+ 2404      53535F4E 
+ 2404      4F544946 
+ 2405              	.LASF113:
+ 2406 09bd 4359424C 		.ascii	"CYBLE_ERROR_CHAR_IS_NOT_DISCOVERED\000"
+ 2406      455F4552 
+ 2406      524F525F 
+ 2406      43484152 
+ 2406      5F49535F 
+ 2407              	.LASF389:
+ 2408 09e0 4359424C 		.ascii	"CYBLE_EVT_UDSS_READ_CHAR\000"
+ 2408      455F4556 
+ 2408      545F5544 
+ 2408      53535F52 
+ 2408      4541445F 
+ 2409              	.LASF125:
+ 2410 09f9 73657276 		.ascii	"serviceIndex\000"
+ 2410      69636549 
+ 2410      6E646578 
+ 2410      00
+ 2411              	.LASF267:
+ 2412 0a06 4359424C 		.ascii	"CYBLE_EVT_ESSC_READ_CHAR_RESPONSE\000"
+ 2412      455F4556 
+ 2412      545F4553 
+ 2412      53435F52 
+ 2412      4541445F 
+ 2413              	.LASF290:
+ 2414 0a28 4359424C 		.ascii	"CYBLE_EVT_HIDSC_NOTIFICATION\000"
+ 2414      455F4556 
+ 2414      545F4849 
+ 2414      4453435F 
+ 2414      4E4F5449 
+ 2415              	.LASF71:
+ 2416 0a45 4359424C 		.ascii	"CYBLE_EVT_L2CAP_COMMAND_REJ\000"
+ 2416      455F4556 
+ 2416      545F4C32 
+ 2416      4341505F 
+ 2416      434F4D4D 
+ 2417              	.LASF434:
+ 2418 0a61 6D766F6C 		.ascii	"mvolts\000"
+ 2418      747300
+ 2419              	.LASF324:
+ 2420 0a68 4359424C 		.ascii	"CYBLE_EVT_IPSS_READ_CHAR\000"
+ 2420      455F4556 
+ 2420      545F4950 
+ 2420      53535F52 
+ 2420      4541445F 
+ 2421              	.LASF154:
+ 2422 0a81 4359424C 		.ascii	"CYBLE_EVT_GATTC_SRVC_DISCOVERY_FAILED\000"
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 54
+
+
+ 2422      455F4556 
+ 2422      545F4741 
+ 2422      5454435F 
+ 2422      53525643 
+ 2423              	.LASF287:
+ 2424 0aa7 4359424C 		.ascii	"CYBLE_EVT_HIDSS_SUSPEND\000"
+ 2424      455F4556 
+ 2424      545F4849 
+ 2424      4453535F 
+ 2424      53555350 
+ 2425              	.LASF102:
+ 2426 0abf 4359424C 		.ascii	"CYBLE_ERROR_GATT_DB_INVALID_ATTR_HANDLE\000"
+ 2426      455F4552 
+ 2426      524F525F 
+ 2426      47415454 
+ 2426      5F44425F 
+ 2427              	.LASF0:
+ 2428 0ae7 7369676E 		.ascii	"signed char\000"
+ 2428      65642063 
+ 2428      68617200 
+ 2429              	.LASF416:
+ 2430 0af3 4359424C 		.ascii	"CYBLE_EVT_WSSC_WRITE_DESCR_RESPONSE\000"
+ 2430      455F4556 
+ 2430      545F5753 
+ 2430      53435F57 
+ 2430      52495445 
+ 2431              	.LASF186:
+ 2432 0b17 4359424C 		.ascii	"CYBLE_EVT_BASC_READ_DESCR_RESPONSE\000"
+ 2432      455F4556 
+ 2432      545F4241 
+ 2432      53435F52 
+ 2432      4541445F 
+ 2433              	.LASF20:
+ 2434 0b3a 4359424C 		.ascii	"CYBLE_EVT_HARDWARE_ERROR\000"
+ 2434      455F4556 
+ 2434      545F4841 
+ 2434      52445741 
+ 2434      52455F45 
+ 2435              	.LASF83:
+ 2436 0b53 4359424C 		.ascii	"CYBLE_ERROR_OK\000"
+ 2436      455F4552 
+ 2436      524F525F 
+ 2436      4F4B00
+ 2437              	.LASF49:
+ 2438 0b62 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_GROUP_TYPE_RSP\000"
+ 2438      455F4556 
+ 2438      545F4741 
+ 2438      5454435F 
+ 2438      52454144 
+ 2439              	.LASF360:
+ 2440 0b89 4359424C 		.ascii	"CYBLE_EVT_RSCSS_INDICATION_ENABLED\000"
+ 2440      455F4556 
+ 2440      545F5253 
+ 2440      4353535F 
+ 2440      494E4449 
+ 2441              	.LASF1:
+ 2442 0bac 756E7369 		.ascii	"unsigned char\000"
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 55
+
+
+ 2442      676E6564 
+ 2442      20636861 
+ 2442      7200
+ 2443              	.LASF48:
+ 2444 0bba 4359424C 		.ascii	"CYBLE_EVT_GATTC_XCHNG_MTU_RSP\000"
+ 2444      455F4556 
+ 2444      545F4741 
+ 2444      5454435F 
+ 2444      5843484E 
+ 2445              	.LASF225:
+ 2446 0bd8 4359424C 		.ascii	"CYBLE_EVT_CPSS_INDICATION_CONFIRMED\000"
+ 2446      455F4556 
+ 2446      545F4350 
+ 2446      53535F49 
+ 2446      4E444943 
+ 2447              	.LASF146:
+ 2448 0bfc 4359424C 		.ascii	"CYBLE_HTS_DESCR_COUNT\000"
+ 2448      455F4854 
+ 2448      535F4445 
+ 2448      5343525F 
+ 2448      434F554E 
+ 2449              	.LASF222:
+ 2450 0c12 4359424C 		.ascii	"CYBLE_EVT_CPSS_NOTIFICATION_DISABLED\000"
+ 2450      455F4556 
+ 2450      545F4350 
+ 2450      53535F4E 
+ 2450      4F544946 
+ 2451              	.LASF365:
+ 2452 0c37 4359424C 		.ascii	"CYBLE_EVT_RSCSC_INDICATION\000"
+ 2452      455F4556 
+ 2452      545F5253 
+ 2452      4353435F 
+ 2452      494E4449 
+ 2453              	.LASF415:
+ 2454 0c52 4359424C 		.ascii	"CYBLE_EVT_WSSC_READ_DESCR_RESPONSE\000"
+ 2454      455F4556 
+ 2454      545F5753 
+ 2454      53435F52 
+ 2454      4541445F 
+ 2455              	.LASF401:
+ 2456 0c75 4359424C 		.ascii	"CYBLE_EVT_WPTSS_INDICATION_DISABLED\000"
+ 2456      455F4556 
+ 2456      545F5750 
+ 2456      5453535F 
+ 2456      494E4449 
+ 2457              	.LASF43:
+ 2458 0c99 4359424C 		.ascii	"CYBLE_EVT_GAP_SMP_NEGOTIATED_AUTH_INFO\000"
+ 2458      455F4556 
+ 2458      545F4741 
+ 2458      505F534D 
+ 2458      505F4E45 
+ 2459              	.LASF78:
+ 2460 0cc0 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_TX_CREDIT_IND\000"
+ 2460      455F4556 
+ 2460      545F4C32 
+ 2460      4341505F 
+ 2460      43424643 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 56
+
+
+ 2461              	.LASF424:
+ 2462 0ce3 53696D75 		.ascii	"SimulateBattery\000"
+ 2462      6C617465 
+ 2462      42617474 
+ 2462      65727900 
+ 2463              	.LASF153:
+ 2464 0cf3 4359424C 		.ascii	"CYBLE_EVT_GATTC_INDICATION\000"
+ 2464      455F4556 
+ 2464      545F4741 
+ 2464      5454435F 
+ 2464      494E4449 
+ 2465              	.LASF295:
+ 2466 0d0e 4359424C 		.ascii	"CYBLE_EVT_HPSS_NOTIFICATION_ENABLED\000"
+ 2466      455F4556 
+ 2466      545F4850 
+ 2466      53535F4E 
+ 2466      4F544946 
+ 2467              	.LASF372:
+ 2468 0d32 4359424C 		.ascii	"CYBLE_EVT_SCPSS_NOTIFICATION_ENABLED\000"
+ 2468      455F4556 
+ 2468      545F5343 
+ 2468      5053535F 
+ 2468      4E4F5449 
+ 2469              	.LASF327:
+ 2470 0d57 4359424C 		.ascii	"CYBLE_EVT_IPSC_READ_CHAR_RESPONSE\000"
+ 2470      455F4556 
+ 2470      545F4950 
+ 2470      53435F52 
+ 2470      4541445F 
+ 2471              	.LASF75:
+ 2472 0d79 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_CNF\000"
+ 2472      455F4556 
+ 2472      545F4C32 
+ 2472      4341505F 
+ 2472      43424643 
+ 2473              	.LASF52:
+ 2474 0d9a 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_BY_TYPE_VALUE_RSP\000"
+ 2474      455F4556 
+ 2474      545F4741 
+ 2474      5454435F 
+ 2474      46494E44 
+ 2475              	.LASF165:
+ 2476 0dc1 4359424C 		.ascii	"CYBLE_EVT_ANCSS_NOTIFICATION_ENABLED\000"
+ 2476      455F4556 
+ 2476      545F414E 
+ 2476      4353535F 
+ 2476      4E4F5449 
+ 2477              	.LASF40:
+ 2478 0de6 4359424C 		.ascii	"CYBLE_EVT_GAP_DATA_LENGTH_CHANGE\000"
+ 2478      455F4556 
+ 2478      545F4741 
+ 2478      505F4441 
+ 2478      54415F4C 
+ 2479              	.LASF377:
+ 2480 0e07 4359424C 		.ascii	"CYBLE_EVT_SCPSC_WRITE_DESCR_RESPONSE\000"
+ 2480      455F4556 
+ 2480      545F5343 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 57
+
+
+ 2480      5053435F 
+ 2480      57524954 
+ 2481              	.LASF15:
+ 2482 0e2c 63686172 		.ascii	"char\000"
+ 2482      00
+ 2483              	.LASF380:
+ 2484 0e31 4359424C 		.ascii	"CYBLE_EVT_TPSC_NOTIFICATION\000"
+ 2484      455F4556 
+ 2484      545F5450 
+ 2484      53435F4E 
+ 2484      4F544946 
+ 2485              	.LASF55:
+ 2486 0e4d 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_MULTI_RSP\000"
+ 2486      455F4556 
+ 2486      545F4741 
+ 2486      5454435F 
+ 2486      52454144 
+ 2487              	.LASF17:
+ 2488 0e6c 4359424C 		.ascii	"CYBLE_EVT_HOST_INVALID\000"
+ 2488      455F4556 
+ 2488      545F484F 
+ 2488      53545F49 
+ 2488      4E56414C 
+ 2489              	.LASF42:
+ 2490 0e83 4359424C 		.ascii	"CYBLE_EVT_GAPC_DIRECT_ADV_REPORT\000"
+ 2490      455F4556 
+ 2490      545F4741 
+ 2490      50435F44 
+ 2490      49524543 
+ 2491              	.LASF281:
+ 2492 0ea4 4359424C 		.ascii	"CYBLE_EVT_GLSC_READ_DESCR_RESPONSE\000"
+ 2492      455F4556 
+ 2492      545F474C 
+ 2492      53435F52 
+ 2492      4541445F 
+ 2493              	.LASF90:
+ 2494 0ec7 4359424C 		.ascii	"CYBLE_ERROR_NO_DEVICE_ENTITY\000"
+ 2494      455F4552 
+ 2494      524F525F 
+ 2494      4E4F5F44 
+ 2494      45564943 
+ 2495              	.LASF54:
+ 2496 0ee4 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BLOB_RSP\000"
+ 2496      455F4556 
+ 2496      545F4741 
+ 2496      5454435F 
+ 2496      52454144 
+ 2497              	.LASF314:
+ 2498 0f02 4359424C 		.ascii	"CYBLE_EVT_HTSS_INDICATION_DISABLED\000"
+ 2498      455F4556 
+ 2498      545F4854 
+ 2498      53535F49 
+ 2498      4E444943 
+ 2499              	.LASF371:
+ 2500 0f25 4359424C 		.ascii	"CYBLE_EVT_RTUSC_READ_CHAR_RESPONSE\000"
+ 2500      455F4556 
+ 2500      545F5254 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 58
+
+
+ 2500      5553435F 
+ 2500      52454144 
+ 2501              	.LASF61:
+ 2502 0f48 4359424C 		.ascii	"CYBLE_EVT_GATTC_EXEC_WRITE_RSP\000"
+ 2502      455F4556 
+ 2502      545F4741 
+ 2502      5454435F 
+ 2502      45584543 
+ 2503              	.LASF412:
+ 2504 0f67 4359424C 		.ascii	"CYBLE_EVT_WSSS_INDICATION_CONFIRMED\000"
+ 2504      455F4556 
+ 2504      545F5753 
+ 2504      53535F49 
+ 2504      4E444943 
+ 2505              	.LASF430:
+ 2506 0f8b 62617474 		.ascii	"batteryMeasureNotify\000"
+ 2506      6572794D 
+ 2506      65617375 
+ 2506      72654E6F 
+ 2506      74696679 
+ 2507              	.LASF385:
+ 2508 0fa0 4359424C 		.ascii	"CYBLE_EVT_UDSS_INDICATION_DISABLED\000"
+ 2508      455F4556 
+ 2508      545F5544 
+ 2508      53535F49 
+ 2508      4E444943 
+ 2509              	.LASF134:
+ 2510 0fc3 4359424C 		.ascii	"CYBLE_DIS_SOFTWARE_REV\000"
+ 2510      455F4449 
+ 2510      535F534F 
+ 2510      46545741 
+ 2510      52455F52 
+ 2511              	.LASF66:
+ 2512 0fda 4359424C 		.ascii	"CYBLE_EVT_GATTC_STOP_CMD_COMPLETE\000"
+ 2512      455F4556 
+ 2512      545F4741 
+ 2512      5454435F 
+ 2512      53544F50 
+ 2513              	.LASF228:
+ 2514 0ffc 4359424C 		.ascii	"CYBLE_EVT_CPSS_CHAR_WRITE\000"
+ 2514      455F4556 
+ 2514      545F4350 
+ 2514      53535F43 
+ 2514      4841525F 
+ 2515              	.LASF303:
+ 2516 1016 4359424C 		.ascii	"CYBLE_EVT_HRSS_ENERGY_EXPENDED_RESET\000"
+ 2516      455F4556 
+ 2516      545F4852 
+ 2516      53535F45 
+ 2516      4E455247 
+ 2517              	.LASF130:
+ 2518 103b 4359424C 		.ascii	"CYBLE_DIS_MODEL_NUMBER\000"
+ 2518      455F4449 
+ 2518      535F4D4F 
+ 2518      44454C5F 
+ 2518      4E554D42 
+ 2519              	.LASF258:
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 59
+
+
+ 2520 1052 4359424C 		.ascii	"CYBLE_EVT_ESSS_NOTIFICATION_DISABLED\000"
+ 2520      455F4556 
+ 2520      545F4553 
+ 2520      53535F4E 
+ 2520      4F544946 
+ 2521              	.LASF399:
+ 2522 1077 4359424C 		.ascii	"CYBLE_EVT_WPTSS_NOTIFICATION_DISABLED\000"
+ 2522      455F4556 
+ 2522      545F5750 
+ 2522      5453535F 
+ 2522      4E4F5449 
+ 2523              	.LASF418:
+ 2524 109d 6576656E 		.ascii	"event\000"
+ 2524      7400
+ 2525              	.LASF198:
+ 2526 10a3 4359424C 		.ascii	"CYBLE_EVT_BLSS_NOTIFICATION_ENABLED\000"
+ 2526      455F4556 
+ 2526      545F424C 
+ 2526      53535F4E 
+ 2526      4F544946 
+ 2527              	.LASF135:
+ 2528 10c7 4359424C 		.ascii	"CYBLE_DIS_SYSTEM_ID\000"
+ 2528      455F4449 
+ 2528      535F5359 
+ 2528      5354454D 
+ 2528      5F494400 
+ 2529              	.LASF301:
+ 2530 10db 4359424C 		.ascii	"CYBLE_EVT_HPSC_WRITE_DESCR_RESPONSE\000"
+ 2530      455F4556 
+ 2530      545F4850 
+ 2530      53435F57 
+ 2530      52495445 
+ 2531              	.LASF413:
+ 2532 10ff 4359424C 		.ascii	"CYBLE_EVT_WSSC_INDICATION\000"
+ 2532      455F4556 
+ 2532      545F5753 
+ 2532      53435F49 
+ 2532      4E444943 
+ 2533              	.LASF109:
+ 2534 1119 4359424C 		.ascii	"CYBLE_ERROR_CONTROLLER_BUSY\000"
+ 2534      455F4552 
+ 2534      524F525F 
+ 2534      434F4E54 
+ 2534      524F4C4C 
+ 2535              	.LASF84:
+ 2536 1135 4359424C 		.ascii	"CYBLE_ERROR_INVALID_PARAMETER\000"
+ 2536      455F4552 
+ 2536      524F525F 
+ 2536      494E5641 
+ 2536      4C49445F 
+ 2537              	.LASF266:
+ 2538 1153 4359424C 		.ascii	"CYBLE_EVT_ESSC_INDICATION\000"
+ 2538      455F4556 
+ 2538      545F4553 
+ 2538      53435F49 
+ 2538      4E444943 
+ 2539              	.LASF172:
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 60
+
+
+ 2540 116d 4359424C 		.ascii	"CYBLE_EVT_ANCSC_WRITE_DESCR_RESPONSE\000"
+ 2540      455F4556 
+ 2540      545F414E 
+ 2540      4353435F 
+ 2540      57524954 
+ 2541              	.LASF367:
+ 2542 1192 4359424C 		.ascii	"CYBLE_EVT_RSCSC_WRITE_CHAR_RESPONSE\000"
+ 2542      455F4556 
+ 2542      545F5253 
+ 2542      4353435F 
+ 2542      57524954 
+ 2543              	.LASF383:
+ 2544 11b6 4359424C 		.ascii	"CYBLE_EVT_TPSC_WRITE_DESCR_RESPONSE\000"
+ 2544      455F4556 
+ 2544      545F5450 
+ 2544      53435F57 
+ 2544      52495445 
+ 2545              	.LASF237:
+ 2546 11da 4359424C 		.ascii	"CYBLE_EVT_CSCSS_NOTIFICATION_DISABLED\000"
+ 2546      455F4556 
+ 2546      545F4353 
+ 2546      4353535F 
+ 2546      4E4F5449 
+ 2547              	.LASF248:
+ 2548 1200 4359424C 		.ascii	"CYBLE_EVT_CTSS_NOTIFICATION_ENABLED\000"
+ 2548      455F4556 
+ 2548      545F4354 
+ 2548      53535F4E 
+ 2548      4F544946 
+ 2549              	.LASF361:
+ 2550 1224 4359424C 		.ascii	"CYBLE_EVT_RSCSS_INDICATION_DISABLED\000"
+ 2550      455F4556 
+ 2550      545F5253 
+ 2550      4353535F 
+ 2550      494E4449 
+ 2551              	.LASF403:
+ 2552 1248 4359424C 		.ascii	"CYBLE_EVT_WPTSS_WRITE_CHAR\000"
+ 2552      455F4556 
+ 2552      545F5750 
+ 2552      5453535F 
+ 2552      57524954 
+ 2553              	.LASF334:
+ 2554 1263 4359424C 		.ascii	"CYBLE_EVT_LLSS_WRITE_CHAR_REQ\000"
+ 2554      455F4556 
+ 2554      545F4C4C 
+ 2554      53535F57 
+ 2554      52495445 
+ 2555              	.LASF86:
+ 2556 1281 4359424C 		.ascii	"CYBLE_ERROR_MEMORY_ALLOCATION_FAILED\000"
+ 2556      455F4552 
+ 2556      524F525F 
+ 2556      4D454D4F 
+ 2556      52595F41 
+ 2557              	.LASF309:
+ 2558 12a6 4359424C 		.ascii	"CYBLE_EVT_HRSC_READ_DESCR_RESPONSE\000"
+ 2558      455F4556 
+ 2558      545F4852 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 61
+
+
+ 2558      53435F52 
+ 2558      4541445F 
+ 2559              	.LASF236:
+ 2560 12c9 4359424C 		.ascii	"CYBLE_EVT_CSCSS_NOTIFICATION_ENABLED\000"
+ 2560      455F4556 
+ 2560      545F4353 
+ 2560      4353535F 
+ 2560      4E4F5449 
+ 2561              	.LASF200:
+ 2562 12ee 4359424C 		.ascii	"CYBLE_EVT_BLSC_INDICATION\000"
+ 2562      455F4556 
+ 2562      545F424C 
+ 2562      53435F49 
+ 2562      4E444943 
+ 2563              	.LASF297:
+ 2564 1308 4359424C 		.ascii	"CYBLE_EVT_HPSS_CHAR_WRITE\000"
+ 2564      455F4556 
+ 2564      545F4850 
+ 2564      53535F43 
+ 2564      4841525F 
+ 2565              	.LASF289:
+ 2566 1322 4359424C 		.ascii	"CYBLE_EVT_HIDSS_REPORT_CHAR_WRITE\000"
+ 2566      455F4556 
+ 2566      545F4849 
+ 2566      4453535F 
+ 2566      5245504F 
+ 2567              	.LASF420:
+ 2568 1344 42617343 		.ascii	"BasCallBack\000"
+ 2568      616C6C42 
+ 2568      61636B00 
+ 2569              	.LASF407:
+ 2570 1350 4359424C 		.ascii	"CYBLE_EVT_WPTSC_READ_CHAR_RESPONSE\000"
+ 2570      455F4556 
+ 2570      545F5750 
+ 2570      5453435F 
+ 2570      52454144 
+ 2571              	.LASF110:
+ 2572 1373 4359424C 		.ascii	"CYBLE_ERROR_MAX\000"
+ 2572      455F4552 
+ 2572      524F525F 
+ 2572      4D415800 
+ 2573              	.LASF346:
+ 2574 1383 4359424C 		.ascii	"CYBLE_EVT_LNSC_WRITE_CHAR_RESPONSE\000"
+ 2574      455F4556 
+ 2574      545F4C4E 
+ 2574      53435F57 
+ 2574      52495445 
+ 2575              	.LASF70:
+ 2576 13a6 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_RSP\000"
+ 2576      455F4556 
+ 2576      545F4C32 
+ 2576      4341505F 
+ 2576      434F4E4E 
+ 2577              	.LASF179:
+ 2578 13cc 4359424C 		.ascii	"CYBLE_EVT_ANSC_WRITE_CHAR_RESPONSE\000"
+ 2578      455F4556 
+ 2578      545F414E 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 62
+
+
+ 2578      53435F57 
+ 2578      52495445 
+ 2579              	.LASF388:
+ 2580 13ef 4359424C 		.ascii	"CYBLE_EVT_UDSS_NOTIFICATION_DISABLED\000"
+ 2580      455F4556 
+ 2580      545F5544 
+ 2580      53535F4E 
+ 2580      4F544946 
+ 2581              	.LASF247:
+ 2582 1414 4359424C 		.ascii	"CYBLE_EVT_CSCSC_WRITE_DESCR_RESPONSE\000"
+ 2582      455F4556 
+ 2582      545F4353 
+ 2582      4353435F 
+ 2582      57524954 
+ 2583              	.LASF390:
+ 2584 1439 4359424C 		.ascii	"CYBLE_EVT_UDSS_WRITE_CHAR\000"
+ 2584      455F4556 
+ 2584      545F5544 
+ 2584      53535F57 
+ 2584      52495445 
+ 2585              	.LASF304:
+ 2586 1453 4359424C 		.ascii	"CYBLE_EVT_HRSS_NOTIFICATION_ENABLED\000"
+ 2586      455F4556 
+ 2586      545F4852 
+ 2586      53535F4E 
+ 2586      4F544946 
+ 2587              	.LASF28:
+ 2588 1477 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_COMPLETE\000"
+ 2588      455F4556 
+ 2588      545F4741 
+ 2588      505F4155 
+ 2588      54485F43 
+ 2589              	.LASF356:
+ 2590 1493 4359424C 		.ascii	"CYBLE_EVT_PASSC_READ_DESCR_RESPONSE\000"
+ 2590      455F4556 
+ 2590      545F5041 
+ 2590      5353435F 
+ 2590      52454144 
+ 2591              	.LASF269:
+ 2592 14b7 4359424C 		.ascii	"CYBLE_EVT_ESSC_READ_DESCR_RESPONSE\000"
+ 2592      455F4556 
+ 2592      545F4553 
+ 2592      53435F52 
+ 2592      4541445F 
+ 2593              	.LASF29:
+ 2594 14da 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_FAILED\000"
+ 2594      455F4556 
+ 2594      545F4741 
+ 2594      505F4155 
+ 2594      54485F46 
+ 2595              	.LASF288:
+ 2596 14f4 4359424C 		.ascii	"CYBLE_EVT_HIDSS_EXIT_SUSPEND\000"
+ 2596      455F4556 
+ 2596      545F4849 
+ 2596      4453535F 
+ 2596      45584954 
+ 2597              	.LASF254:
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 63
+
+
+ 2598 1511 4359424C 		.ascii	"CYBLE_EVT_CTSC_WRITE_DESCR_RESPONSE\000"
+ 2598      455F4556 
+ 2598      545F4354 
+ 2598      53435F57 
+ 2598      52495445 
+ 2599              	.LASF87:
+ 2600 1535 4359424C 		.ascii	"CYBLE_ERROR_INSUFFICIENT_RESOURCES\000"
+ 2600      455F4552 
+ 2600      524F525F 
+ 2600      494E5355 
+ 2600      46464943 
+ 2601              	.LASF359:
+ 2602 1558 4359424C 		.ascii	"CYBLE_EVT_RSCSS_NOTIFICATION_DISABLED\000"
+ 2602      455F4556 
+ 2602      545F5253 
+ 2602      4353535F 
+ 2602      4E4F5449 
+ 2603              	.LASF292:
+ 2604 157e 4359424C 		.ascii	"CYBLE_EVT_HIDSC_WRITE_CHAR_RESPONSE\000"
+ 2604      455F4556 
+ 2604      545F4849 
+ 2604      4453435F 
+ 2604      57524954 
+ 2605              	.LASF5:
+ 2606 15a2 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2606      20756E73 
+ 2606      69676E65 
+ 2606      6420696E 
+ 2606      7400
+ 2607              	.LASF330:
+ 2608 15b4 4359424C 		.ascii	"CYBLE_EVT_IPSC_READ_DESCR_RESPONSE\000"
+ 2608      455F4556 
+ 2608      545F4950 
+ 2608      53435F52 
+ 2608      4541445F 
+ 2609              	.LASF323:
+ 2610 15d7 4359424C 		.ascii	"CYBLE_EVT_IASS_WRITE_CHAR_CMD\000"
+ 2610      455F4556 
+ 2610      545F4941 
+ 2610      53535F57 
+ 2610      52495445 
+ 2611              	.LASF350:
+ 2612 15f5 4359424C 		.ascii	"CYBLE_EVT_PASSS_NOTIFICATION_ENABLED\000"
+ 2612      455F4556 
+ 2612      545F5041 
+ 2612      5353535F 
+ 2612      4E4F5449 
+ 2613              	.LASF353:
+ 2614 161a 4359424C 		.ascii	"CYBLE_EVT_PASSC_NOTIFICATION\000"
+ 2614      455F4556 
+ 2614      545F5041 
+ 2614      5353435F 
+ 2614      4E4F5449 
+ 2615              	.LASF107:
+ 2616 1637 4359424C 		.ascii	"CYBLE_ERROR_UNSUPPORTED_FEATURE_OR_PARAMETER_VALUE\000"
+ 2616      455F4552 
+ 2616      524F525F 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 64
+
+
+ 2616      554E5355 
+ 2616      50504F52 
+ 2617              	.LASF400:
+ 2618 166a 4359424C 		.ascii	"CYBLE_EVT_WPTSS_INDICATION_ENABLED\000"
+ 2618      455F4556 
+ 2618      545F5750 
+ 2618      5453535F 
+ 2618      494E4449 
+ 2619              	.LASF178:
+ 2620 168d 4359424C 		.ascii	"CYBLE_EVT_ANSC_READ_CHAR_RESPONSE\000"
+ 2620      455F4556 
+ 2620      545F414E 
+ 2620      53435F52 
+ 2620      4541445F 
+ 2621              	.LASF97:
+ 2622 16af 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_ALREADY_REGISTERED\000"
+ 2622      455F4552 
+ 2622      524F525F 
+ 2622      4C324341 
+ 2622      505F5053 
+ 2623              	.LASF316:
+ 2624 16d8 4359424C 		.ascii	"CYBLE_EVT_HTSS_CHAR_WRITE\000"
+ 2624      455F4556 
+ 2624      545F4854 
+ 2624      53535F43 
+ 2624      4841525F 
+ 2625              	.LASF182:
+ 2626 16f2 4359424C 		.ascii	"CYBLE_EVT_BASS_NOTIFICATION_ENABLED\000"
+ 2626      455F4556 
+ 2626      545F4241 
+ 2626      53535F4E 
+ 2626      4F544946 
+ 2627              	.LASF255:
+ 2628 1716 4359424C 		.ascii	"CYBLE_EVT_CTSC_WRITE_CHAR_RESPONSE\000"
+ 2628      455F4556 
+ 2628      545F4354 
+ 2628      53435F57 
+ 2628      52495445 
+ 2629              	.LASF352:
+ 2630 1739 4359424C 		.ascii	"CYBLE_EVT_PASSS_WRITE_CHAR\000"
+ 2630      455F4556 
+ 2630      545F5041 
+ 2630      5353535F 
+ 2630      57524954 
+ 2631              	.LASF232:
+ 2632 1754 4359424C 		.ascii	"CYBLE_EVT_CPSC_WRITE_CHAR_RESPONSE\000"
+ 2632      455F4556 
+ 2632      545F4350 
+ 2632      53435F57 
+ 2632      52495445 
+ 2633              	.LASF131:
+ 2634 1777 4359424C 		.ascii	"CYBLE_DIS_SERIAL_NUMBER\000"
+ 2634      455F4449 
+ 2634      535F5345 
+ 2634      5249414C 
+ 2634      5F4E554D 
+ 2635              	.LASF142:
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 65
+
+
+ 2636 178f 4359424C 		.ascii	"CYBLE_HTS_MEASURE_INTERVAL\000"
+ 2636      455F4854 
+ 2636      535F4D45 
+ 2636      41535552 
+ 2636      455F494E 
+ 2637              	.LASF34:
+ 2638 17aa 4359424C 		.ascii	"CYBLE_EVT_GAP_CONNECTION_UPDATE_COMPLETE\000"
+ 2638      455F4556 
+ 2638      545F4741 
+ 2638      505F434F 
+ 2638      4E4E4543 
+ 2639              	.LASF217:
+ 2640 17d3 4359424C 		.ascii	"CYBLE_EVT_CGMSC_READ_CHAR_RESPONSE\000"
+ 2640      455F4556 
+ 2640      545F4347 
+ 2640      4D53435F 
+ 2640      52454144 
+ 2641              	.LASF245:
+ 2642 17f6 4359424C 		.ascii	"CYBLE_EVT_CSCSC_WRITE_CHAR_RESPONSE\000"
+ 2642      455F4556 
+ 2642      545F4353 
+ 2642      4353435F 
+ 2642      57524954 
+ 2643              	.LASF74:
+ 2644 181a 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_IND\000"
+ 2644      455F4556 
+ 2644      545F4C32 
+ 2644      4341505F 
+ 2644      43424643 
+ 2645              	.LASF241:
+ 2646 183b 4359424C 		.ascii	"CYBLE_EVT_CSCSS_CHAR_WRITE\000"
+ 2646      455F4556 
+ 2646      545F4353 
+ 2646      4353535F 
+ 2646      43484152 
+ 2647              	.LASF122:
+ 2648 1856 4359424C 		.ascii	"CYBLE_BAS_CHAR_COUNT\000"
+ 2648      455F4241 
+ 2648      535F4348 
+ 2648      41525F43 
+ 2648      4F554E54 
+ 2649              	.LASF366:
+ 2650 186b 4359424C 		.ascii	"CYBLE_EVT_RSCSC_READ_CHAR_RESPONSE\000"
+ 2650      455F4556 
+ 2650      545F5253 
+ 2650      4353435F 
+ 2650      52454144 
+ 2651              	.LASF26:
+ 2652 188e 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_ENTRY_REQUEST\000"
+ 2652      455F4556 
+ 2652      545F4741 
+ 2652      505F5041 
+ 2652      53534B45 
+ 2653              	.LASF298:
+ 2654 18b2 4359424C 		.ascii	"CYBLE_EVT_HPSC_NOTIFICATION\000"
+ 2654      455F4556 
+ 2654      545F4850 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 66
+
+
+ 2654      53435F4E 
+ 2654      4F544946 
+ 2655              	.LASF226:
+ 2656 18ce 4359424C 		.ascii	"CYBLE_EVT_CPSS_BROADCAST_ENABLED\000"
+ 2656      455F4556 
+ 2656      545F4350 
+ 2656      53535F42 
+ 2656      524F4144 
+ 2657              	.LASF331:
+ 2658 18ef 4359424C 		.ascii	"CYBLE_EVT_IPSC_WRITE_DESCR_RESPONSE\000"
+ 2658      455F4556 
+ 2658      545F4950 
+ 2658      53435F57 
+ 2658      52495445 
+ 2659              	.LASF279:
+ 2660 1913 4359424C 		.ascii	"CYBLE_EVT_GLSC_READ_CHAR_RESPONSE\000"
+ 2660      455F4556 
+ 2660      545F474C 
+ 2660      53435F52 
+ 2660      4541445F 
+ 2661              	.LASF317:
+ 2662 1935 4359424C 		.ascii	"CYBLE_EVT_HTSC_NOTIFICATION\000"
+ 2662      455F4556 
+ 2662      545F4854 
+ 2662      53435F4E 
+ 2662      4F544946 
+ 2663              	.LASF6:
+ 2664 1951 6C6F6E67 		.ascii	"long long int\000"
+ 2664      206C6F6E 
+ 2664      6720696E 
+ 2664      7400
+ 2665              	.LASF381:
+ 2666 195f 4359424C 		.ascii	"CYBLE_EVT_TPSC_READ_CHAR_RESPONSE\000"
+ 2666      455F4556 
+ 2666      545F5450 
+ 2666      53435F52 
+ 2666      4541445F 
+ 2667              	.LASF137:
+ 2668 1981 4359424C 		.ascii	"CYBLE_DIS_PNP_ID\000"
+ 2668      455F4449 
+ 2668      535F504E 
+ 2668      505F4944 
+ 2668      00
+ 2669              	.LASF159:
+ 2670 1992 4359424C 		.ascii	"CYBLE_EVT_GATTC_CHAR_DUPLICATION\000"
+ 2670      455F4556 
+ 2670      545F4741 
+ 2670      5454435F 
+ 2670      43484152 
+ 2671              	.LASF274:
+ 2672 19b3 4359424C 		.ascii	"CYBLE_EVT_GLSS_NOTIFICATION_ENABLED\000"
+ 2672      455F4556 
+ 2672      545F474C 
+ 2672      53535F4E 
+ 2672      4F544946 
+ 2673              	.LASF299:
+ 2674 19d7 4359424C 		.ascii	"CYBLE_EVT_HPSC_READ_CHAR_RESPONSE\000"
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 67
+
+
+ 2674      455F4556 
+ 2674      545F4850 
+ 2674      53435F52 
+ 2674      4541445F 
+ 2675              	.LASF98:
+ 2676 19f9 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_NOT_REGISTERED\000"
+ 2676      455F4552 
+ 2676      524F525F 
+ 2676      4C324341 
+ 2676      505F5053 
+ 2677              	.LASF88:
+ 2678 1a1e 4359424C 		.ascii	"CYBLE_ERROR_OOB_NOT_AVAILABLE\000"
+ 2678      455F4552 
+ 2678      524F525F 
+ 2678      4F4F425F 
+ 2678      4E4F545F 
+ 2679              	.LASF209:
+ 2680 1a3c 4359424C 		.ascii	"CYBLE_EVT_CGMSS_INDICATION_ENABLED\000"
+ 2680      455F4556 
+ 2680      545F4347 
+ 2680      4D53535F 
+ 2680      494E4449 
+ 2681              	.LASF14:
+ 2682 1a5f 646F7562 		.ascii	"double\000"
+ 2682      6C6500
+ 2683              	.LASF103:
+ 2684 1a66 4359424C 		.ascii	"CYBLE_ERROR_DEVICE_ALREADY_EXISTS\000"
+ 2684      455F4552 
+ 2684      524F525F 
+ 2684      44455649 
+ 2684      43455F41 
+ 2685              	.LASF260:
+ 2686 1a88 4359424C 		.ascii	"CYBLE_EVT_ESSS_INDICATION_DISABLED\000"
+ 2686      455F4556 
+ 2686      545F4553 
+ 2686      53535F49 
+ 2686      4E444943 
+ 2687              	.LASF80:
+ 2688 1aab 4359424C 		.ascii	"CYBLE_EVT_PENDING_FLASH_WRITE\000"
+ 2688      455F4556 
+ 2688      545F5045 
+ 2688      4E44494E 
+ 2688      475F464C 
+ 2689              	.LASF162:
+ 2690 1ac9 4359424C 		.ascii	"CYBLE_EVT_GATTC_INCL_DISCOVERY_COMPLETE\000"
+ 2690      455F4556 
+ 2690      545F4741 
+ 2690      5454435F 
+ 2690      494E434C 
+ 2691              	.LASF398:
+ 2692 1af1 4359424C 		.ascii	"CYBLE_EVT_WPTSS_NOTIFICATION_ENABLED\000"
+ 2692      455F4556 
+ 2692      545F5750 
+ 2692      5453535F 
+ 2692      4E4F5449 
+ 2693              	.LASF348:
+ 2694 1b16 4359424C 		.ascii	"CYBLE_EVT_LNSC_WRITE_DESCR_RESPONSE\000"
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 68
+
+
+ 2694      455F4556 
+ 2694      545F4C4E 
+ 2694      53435F57 
+ 2694      52495445 
+ 2695              	.LASF41:
+ 2696 1b3a 4359424C 		.ascii	"CYBLE_EVT_GAP_ENHANCE_CONN_COMPLETE\000"
+ 2696      455F4556 
+ 2696      545F4741 
+ 2696      505F454E 
+ 2696      48414E43 
+ 2697              	.LASF335:
+ 2698 1b5e 4359424C 		.ascii	"CYBLE_EVT_LLSC_READ_CHAR_RESPONSE\000"
+ 2698      455F4556 
+ 2698      545F4C4C 
+ 2698      53435F52 
+ 2698      4541445F 
+ 2699              	.LASF240:
+ 2700 1b80 4359424C 		.ascii	"CYBLE_EVT_CSCSS_INDICATION_CONFIRMATION\000"
+ 2700      455F4556 
+ 2700      545F4353 
+ 2700      4353535F 
+ 2700      494E4449 
+ 2701              	.LASF429:
+ 2702 1ba8 62617474 		.ascii	"batterySimulationNotify\000"
+ 2702      65727953 
+ 2702      696D756C 
+ 2702      6174696F 
+ 2702      6E4E6F74 
+ 2703              	.LASF100:
+ 2704 1bc0 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_CHANNEL_NOT_FOUND\000"
+ 2704      455F4552 
+ 2704      524F525F 
+ 2704      4C324341 
+ 2704      505F4348 
+ 2705              	.LASF91:
+ 2706 1be4 4359424C 		.ascii	"CYBLE_ERROR_REPEATED_ATTEMPTS\000"
+ 2706      455F4552 
+ 2706      524F525F 
+ 2706      52455045 
+ 2706      41544544 
+ 2707              	.LASF264:
+ 2708 1c02 4359424C 		.ascii	"CYBLE_EVT_ESSS_DESCR_WRITE\000"
+ 2708      455F4556 
+ 2708      545F4553 
+ 2708      53535F44 
+ 2708      45534352 
+ 2709              	.LASF259:
+ 2710 1c1d 4359424C 		.ascii	"CYBLE_EVT_ESSS_INDICATION_ENABLED\000"
+ 2710      455F4556 
+ 2710      545F4553 
+ 2710      53535F49 
+ 2710      4E444943 
+ 2711              	.LASF263:
+ 2712 1c3f 4359424C 		.ascii	"CYBLE_EVT_ESSS_EXEC_WRITE_REQ\000"
+ 2712      455F4556 
+ 2712      545F4553 
+ 2712      53535F45 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 69
+
+
+ 2712      5845435F 
+ 2713              	.LASF13:
+ 2714 1c5d 666C6F61 		.ascii	"float\000"
+ 2714      7400
+ 2715              	.LASF375:
+ 2716 1c63 4359424C 		.ascii	"CYBLE_EVT_SCPSC_NOTIFICATION\000"
+ 2716      455F4556 
+ 2716      545F5343 
+ 2716      5053435F 
+ 2716      4E4F5449 
+ 2717              	.LASF286:
+ 2718 1c80 4359424C 		.ascii	"CYBLE_EVT_HIDSS_REPORT_MODE_ENTER\000"
+ 2718      455F4556 
+ 2718      545F4849 
+ 2718      4453535F 
+ 2718      5245504F 
+ 2719              	.LASF265:
+ 2720 1ca2 4359424C 		.ascii	"CYBLE_EVT_ESSC_NOTIFICATION\000"
+ 2720      455F4556 
+ 2720      545F4553 
+ 2720      53435F4E 
+ 2720      4F544946 
+ 2721              	.LASF104:
+ 2722 1cbe 4359424C 		.ascii	"CYBLE_ERROR_FLASH_WRITE_NOT_PERMITED\000"
+ 2722      455F4552 
+ 2722      524F525F 
+ 2722      464C4153 
+ 2722      485F5752 
+ 2723              	.LASF284:
+ 2724 1ce3 4359424C 		.ascii	"CYBLE_EVT_HIDSS_NOTIFICATION_DISABLED\000"
+ 2724      455F4556 
+ 2724      545F4849 
+ 2724      4453535F 
+ 2724      4E4F5449 
+ 2725              	.LASF67:
+ 2726 1d09 4359424C 		.ascii	"CYBLE_EVT_GATTS_READ_CHAR_VAL_ACCESS_REQ\000"
+ 2726      455F4556 
+ 2726      545F4741 
+ 2726      5454535F 
+ 2726      52454144 
+ 2727              	.LASF171:
+ 2728 1d32 4359424C 		.ascii	"CYBLE_EVT_ANCSC_READ_DESCR_RESPONSE\000"
+ 2728      455F4556 
+ 2728      545F414E 
+ 2728      4353435F 
+ 2728      52454144 
+ 2729              	.LASF392:
+ 2730 1d56 4359424C 		.ascii	"CYBLE_EVT_UDSC_NOTIFICATION\000"
+ 2730      455F4556 
+ 2730      545F5544 
+ 2730      53435F4E 
+ 2730      4F544946 
+ 2731              	.LASF406:
+ 2732 1d72 4359424C 		.ascii	"CYBLE_EVT_WPTSC_WRITE_CHAR_RESPONSE\000"
+ 2732      455F4556 
+ 2732      545F5750 
+ 2732      5453435F 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 70
+
+
+ 2732      57524954 
+ 2733              	.LASF8:
+ 2734 1d96 756E7369 		.ascii	"unsigned int\000"
+ 2734      676E6564 
+ 2734      20696E74 
+ 2734      00
+ 2735              	.LASF59:
+ 2736 1da3 4359424C 		.ascii	"CYBLE_EVT_GATTS_PREP_WRITE_REQ\000"
+ 2736      455F4556 
+ 2736      545F4741 
+ 2736      5454535F 
+ 2736      50524550 
+ 2737              	.LASF249:
+ 2738 1dc2 4359424C 		.ascii	"CYBLE_EVT_CTSS_NOTIFICATION_DISABLED\000"
+ 2738      455F4556 
+ 2738      545F4354 
+ 2738      53535F4E 
+ 2738      4F544946 
+ 2739              	.LASF196:
+ 2740 1de7 4359424C 		.ascii	"CYBLE_EVT_BLSS_INDICATION_DISABLED\000"
+ 2740      455F4556 
+ 2740      545F424C 
+ 2740      53535F49 
+ 2740      4E444943 
+ 2741              	.LASF136:
+ 2742 1e0a 4359424C 		.ascii	"CYBLE_DIS_REG_CERT_DATA\000"
+ 2742      455F4449 
+ 2742      535F5245 
+ 2742      475F4345 
+ 2742      52545F44 
+ 2743              	.LASF373:
+ 2744 1e22 4359424C 		.ascii	"CYBLE_EVT_SCPSS_NOTIFICATION_DISABLED\000"
+ 2744      455F4556 
+ 2744      545F5343 
+ 2744      5053535F 
+ 2744      4E4F5449 
+ 2745              	.LASF261:
+ 2746 1e48 4359424C 		.ascii	"CYBLE_EVT_ESSS_INDICATION_CONFIRMATION\000"
+ 2746      455F4556 
+ 2746      545F4553 
+ 2746      53535F49 
+ 2746      4E444943 
+ 2747              	.LASF433:
+ 2748 1e6f 483A5C4A 		.ascii	"H:\\Jr Year\\343TermProject\\BLE_Temperature_Measur"
+ 2748      72205965 
+ 2748      61725C33 
+ 2748      34335465 
+ 2748      726D5072 
+ 2749 1e9f 656D656E 		.ascii	"ement01\\BLE_Temperature_Measurement01.cydsn\000"
+ 2749      7430315C 
+ 2749      424C455F 
+ 2749      54656D70 
+ 2749      65726174 
+ 2750              	.LASF147:
+ 2751 1ecb 4359424C 		.ascii	"CYBLE_AUTHENTICATION_REQUEST_REPLY\000"
+ 2751      455F4155 
+ 2751      5448454E 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 71
+
+
+ 2751      54494341 
+ 2751      54494F4E 
+ 2752              	.LASF96:
+ 2753 1eee 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_WRONG_ENCODING\000"
+ 2753      455F4552 
+ 2753      524F525F 
+ 2753      4C324341 
+ 2753      505F5053 
+ 2754              	.LASF199:
+ 2755 1f13 4359424C 		.ascii	"CYBLE_EVT_BLSS_NOTIFICATION_DISABLED\000"
+ 2755      455F4556 
+ 2755      545F424C 
+ 2755      53535F4E 
+ 2755      4F544946 
+ 2756              	.LASF320:
+ 2757 1f38 4359424C 		.ascii	"CYBLE_EVT_HTSC_WRITE_CHAR_RESPONSE\000"
+ 2757      455F4556 
+ 2757      545F4854 
+ 2757      53435F57 
+ 2757      52495445 
+ 2758              	.LASF432:
+ 2759 1f5b 2E5C6261 		.ascii	".\\bas.c\000"
+ 2759      732E6300 
+ 2760              	.LASF421:
+ 2761 1f63 4D656173 		.ascii	"MeasureBattery\000"
+ 2761      75726542 
+ 2761      61747465 
+ 2761      727900
+ 2762              	.LASF302:
+ 2763 1f72 4359424C 		.ascii	"CYBLE_EVT_HPSC_WRITE_CHAR_RESPONSE\000"
+ 2763      455F4556 
+ 2763      545F4850 
+ 2763      53435F57 
+ 2763      52495445 
+ 2764              	.LASF82:
+ 2765 1f95 4359424C 		.ascii	"CYBLE_EVT_MAX\000"
+ 2765      455F4556 
+ 2765      545F4D41 
+ 2765      5800
+ 2766              	.LASF35:
+ 2767 1fa3 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_START_STOP\000"
+ 2767      455F4556 
+ 2767      545F4741 
+ 2767      50435F53 
+ 2767      43414E5F 
+ 2768              	.LASF174:
+ 2769 1fc2 4359424C 		.ascii	"CYBLE_EVT_ANSS_NOTIFICATION_ENABLED\000"
+ 2769      455F4556 
+ 2769      545F414E 
+ 2769      53535F4E 
+ 2769      4F544946 
+ 2770              	.LASF56:
+ 2771 1fe6 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_REQ\000"
+ 2771      455F4556 
+ 2771      545F4741 
+ 2771      5454535F 
+ 2771      57524954 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 72
+
+
+ 2772              	.LASF394:
+ 2773 2000 4359424C 		.ascii	"CYBLE_EVT_UDSC_WRITE_CHAR_RESPONSE\000"
+ 2773      455F4556 
+ 2773      545F5544 
+ 2773      53435F57 
+ 2773      52495445 
+ 2774              	.LASF405:
+ 2775 2023 4359424C 		.ascii	"CYBLE_EVT_WPTSC_INDICATION\000"
+ 2775      455F4556 
+ 2775      545F5750 
+ 2775      5453435F 
+ 2775      494E4449 
+ 2776              	.LASF27:
+ 2777 203e 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_DISPLAY_REQUEST\000"
+ 2777      455F4556 
+ 2777      545F4741 
+ 2777      505F5041 
+ 2777      53534B45 
+ 2778              	.LASF112:
+ 2779 2064 4359424C 		.ascii	"CYBLE_ERROR_IND_DISABLED\000"
+ 2779      455F4552 
+ 2779      524F525F 
+ 2779      494E445F 
+ 2779      44495341 
+ 2780              	.LASF111:
+ 2781 207d 4359424C 		.ascii	"CYBLE_ERROR_NTF_DISABLED\000"
+ 2781      455F4552 
+ 2781      524F525F 
+ 2781      4E54465F 
+ 2781      44495341 
+ 2782              	.LASF53:
+ 2783 2096 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_RSP\000"
+ 2783      455F4556 
+ 2783      545F4741 
+ 2783      5454435F 
+ 2783      52454144 
+ 2784              	.LASF230:
+ 2785 20af 4359424C 		.ascii	"CYBLE_EVT_CPSC_INDICATION\000"
+ 2785      455F4556 
+ 2785      545F4350 
+ 2785      53435F49 
+ 2785      4E444943 
+ 2786              	.LASF256:
+ 2787 20c9 4359424C 		.ascii	"CYBLE_EVT_DISC_READ_CHAR_RESPONSE\000"
+ 2787      455F4556 
+ 2787      545F4449 
+ 2787      53435F52 
+ 2787      4541445F 
+ 2788              	.LASF73:
+ 2789 20eb 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_CNF\000"
+ 2789      455F4556 
+ 2789      545F4C32 
+ 2789      4341505F 
+ 2789      43424643 
+ 2790              	.LASF207:
+ 2791 2109 4359424C 		.ascii	"CYBLE_EVT_BMSC_WRITE_CHAR_RESPONSE\000"
+ 2791      455F4556 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 73
+
+
+ 2791      545F424D 
+ 2791      53435F57 
+ 2791      52495445 
+ 2792              	.LASF321:
+ 2793 212c 4359424C 		.ascii	"CYBLE_EVT_HTSC_READ_DESCR_RESPONSE\000"
+ 2793      455F4556 
+ 2793      545F4854 
+ 2793      53435F52 
+ 2793      4541445F 
+ 2794              	.LASF417:
+ 2795 214f 4359424C 		.ascii	"CYBLE_DEBUG_EVT_BLESS_INT\000"
+ 2795      455F4445 
+ 2795      4255475F 
+ 2795      4556545F 
+ 2795      424C4553 
+ 2796              	.LASF276:
+ 2797 2169 4359424C 		.ascii	"CYBLE_EVT_GLSS_WRITE_CHAR\000"
+ 2797      455F4556 
+ 2797      545F474C 
+ 2797      53535F57 
+ 2797      52495445 
+ 2798              	.LASF212:
+ 2799 2183 4359424C 		.ascii	"CYBLE_EVT_CGMSS_NOTIFICATION_ENABLED\000"
+ 2799      455F4556 
+ 2799      545F4347 
+ 2799      4D53535F 
+ 2799      4E4F5449 
+ 2800              	.LASF306:
+ 2801 21a8 4359424C 		.ascii	"CYBLE_EVT_HRSC_NOTIFICATION\000"
+ 2801      455F4556 
+ 2801      545F4852 
+ 2801      53435F4E 
+ 2801      4F544946 
+ 2802              	.LASF23:
+ 2803 21c4 4359424C 		.ascii	"CYBLE_EVT_MEMORY_REQUEST\000"
+ 2803      455F4556 
+ 2803      545F4D45 
+ 2803      4D4F5259 
+ 2803      5F524551 
+ 2804              	.LASF362:
+ 2805 21dd 4359424C 		.ascii	"CYBLE_EVT_RSCSS_INDICATION_CONFIRMATION\000"
+ 2805      455F4556 
+ 2805      545F5253 
+ 2805      4353535F 
+ 2805      494E4449 
+ 2806              	.LASF293:
+ 2807 2205 4359424C 		.ascii	"CYBLE_EVT_HIDSC_READ_DESCR_RESPONSE\000"
+ 2807      455F4556 
+ 2807      545F4849 
+ 2807      4453435F 
+ 2807      52454144 
+ 2808              	.LASF307:
+ 2809 2229 4359424C 		.ascii	"CYBLE_EVT_HRSC_READ_CHAR_RESPONSE\000"
+ 2809      455F4556 
+ 2809      545F4852 
+ 2809      53435F52 
+ 2809      4541445F 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 74
+
+
+ 2810              	.LASF184:
+ 2811 224b 4359424C 		.ascii	"CYBLE_EVT_BASC_NOTIFICATION\000"
+ 2811      455F4556 
+ 2811      545F4241 
+ 2811      53435F4E 
+ 2811      4F544946 
+ 2812              	.LASF33:
+ 2813 2267 4359424C 		.ascii	"CYBLE_EVT_GAP_ENCRYPT_CHANGE\000"
+ 2813      455F4556 
+ 2813      545F4741 
+ 2813      505F454E 
+ 2813      43525950 
+ 2814              	.LASF349:
+ 2815 2284 4359424C 		.ascii	"CYBLE_EVT_NDCSC_READ_CHAR_RESPONSE\000"
+ 2815      455F4556 
+ 2815      545F4E44 
+ 2815      4353435F 
+ 2815      52454144 
+ 2816              	.LASF160:
+ 2817 22a7 4359424C 		.ascii	"CYBLE_EVT_GATTC_DESCR_DUPLICATION\000"
+ 2817      455F4556 
+ 2817      545F4741 
+ 2817      5454435F 
+ 2817      44455343 
+ 2818              	.LASF143:
+ 2819 22c9 4359424C 		.ascii	"CYBLE_HTS_CHAR_COUNT\000"
+ 2819      455F4854 
+ 2819      535F4348 
+ 2819      41525F43 
+ 2819      4F554E54 
+ 2820              	.LASF47:
+ 2821 22de 4359424C 		.ascii	"CYBLE_EVT_GATTS_XCNHG_MTU_REQ\000"
+ 2821      455F4556 
+ 2821      545F4741 
+ 2821      5454535F 
+ 2821      58434E48 
+ 2822              	.LASF296:
+ 2823 22fc 4359424C 		.ascii	"CYBLE_EVT_HPSS_NOTIFICATION_DISABLED\000"
+ 2823      455F4556 
+ 2823      545F4850 
+ 2823      53535F4E 
+ 2823      4F544946 
+ 2824              	.LASF387:
+ 2825 2321 4359424C 		.ascii	"CYBLE_EVT_UDSS_NOTIFICATION_ENABLED\000"
+ 2825      455F4556 
+ 2825      545F5544 
+ 2825      53535F4E 
+ 2825      4F544946 
+ 2826              	.LASF339:
+ 2827 2345 4359424C 		.ascii	"CYBLE_EVT_LNSS_INDICATION_CONFIRMED\000"
+ 2827      455F4556 
+ 2827      545F4C4E 
+ 2827      53535F49 
+ 2827      4E444943 
+ 2828              	.LASF411:
+ 2829 2369 4359424C 		.ascii	"CYBLE_EVT_WSSS_INDICATION_DISABLED\000"
+ 2829      455F4556 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 75
+
+
+ 2829      545F5753 
+ 2829      53535F49 
+ 2829      4E444943 
+ 2830              	.LASF181:
+ 2831 238c 4359424C 		.ascii	"CYBLE_EVT_ANSC_WRITE_DESCR_RESPONSE\000"
+ 2831      455F4556 
+ 2831      545F414E 
+ 2831      53435F57 
+ 2831      52495445 
+ 2832              	.LASF345:
+ 2833 23b0 4359424C 		.ascii	"CYBLE_EVT_LNSC_READ_CHAR_RESPONSE\000"
+ 2833      455F4556 
+ 2833      545F4C4E 
+ 2833      53435F52 
+ 2833      4541445F 
+ 2834              	.LASF129:
+ 2835 23d2 4359424C 		.ascii	"CYBLE_DIS_MANUFACTURER_NAME\000"
+ 2835      455F4449 
+ 2835      535F4D41 
+ 2835      4E554641 
+ 2835      43545552 
+ 2836              	.LASF422:
+ 2837 23ee 6C6F6353 		.ascii	"locServiceIndex\000"
+ 2837      65727669 
+ 2837      6365496E 
+ 2837      64657800 
+ 2838              	.LASF273:
+ 2839 23fe 4359424C 		.ascii	"CYBLE_EVT_GLSS_INDICATION_CONFIRMED\000"
+ 2839      455F4556 
+ 2839      545F474C 
+ 2839      53535F49 
+ 2839      4E444943 
+ 2840              	.LASF151:
+ 2841 2422 4359424C 		.ascii	"CYBLE_EVT_GATTS_INDICATION_ENABLED\000"
+ 2841      455F4556 
+ 2841      545F4741 
+ 2841      5454535F 
+ 2841      494E4449 
+ 2842              	.LASF7:
+ 2843 2445 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2843      206C6F6E 
+ 2843      6720756E 
+ 2843      7369676E 
+ 2843      65642069 
+ 2844              	.LASF19:
+ 2845 245c 4359424C 		.ascii	"CYBLE_EVT_TIMEOUT\000"
+ 2845      455F4556 
+ 2845      545F5449 
+ 2845      4D454F55 
+ 2845      5400
+ 2846              	.LASF253:
+ 2847 246e 4359424C 		.ascii	"CYBLE_EVT_CTSC_READ_DESCR_RESPONSE\000"
+ 2847      455F4556 
+ 2847      545F4354 
+ 2847      53435F52 
+ 2847      4541445F 
+ 2848              	.LASF114:
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 76
+
+
+ 2849 2491 4359424C 		.ascii	"CYBLE_ERROR_INVALID_STATE\000"
+ 2849      455F4552 
+ 2849      524F525F 
+ 2849      494E5641 
+ 2849      4C49445F 
+ 2850              	.LASF76:
+ 2851 24ab 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_READ\000"
+ 2851      455F4556 
+ 2851      545F4C32 
+ 2851      4341505F 
+ 2851      43424643 
+ 2852              	.LASF193:
+ 2853 24ca 4359424C 		.ascii	"CYBLE_EVT_BCSC_READ_DESCR_RESPONSE\000"
+ 2853      455F4556 
+ 2853      545F4243 
+ 2853      53435F52 
+ 2853      4541445F 
+ 2854              	.LASF127:
+ 2855 24ed 76616C75 		.ascii	"value\000"
+ 2855      6500
+ 2856              	.LASF229:
+ 2857 24f3 4359424C 		.ascii	"CYBLE_EVT_CPSC_NOTIFICATION\000"
+ 2857      455F4556 
+ 2857      545F4350 
+ 2857      53435F4E 
+ 2857      4F544946 
+ 2858              	.LASF204:
+ 2859 250f 4359424C 		.ascii	"CYBLE_EVT_BLSC_WRITE_DESCR_RESPONSE\000"
+ 2859      455F4556 
+ 2859      545F424C 
+ 2859      53435F57 
+ 2859      52495445 
+ 2860              	.LASF140:
+ 2861 2533 4359424C 		.ascii	"CYBLE_HTS_TEMP_TYPE\000"
+ 2861      455F4854 
+ 2861      535F5445 
+ 2861      4D505F54 
+ 2861      59504500 
+ 2862              	.LASF344:
+ 2863 2547 4359424C 		.ascii	"CYBLE_EVT_LNSC_NOTIFICATION\000"
+ 2863      455F4556 
+ 2863      545F4C4E 
+ 2863      53435F4E 
+ 2863      4F544946 
+ 2864              	.LASF251:
+ 2865 2563 4359424C 		.ascii	"CYBLE_EVT_CTSC_NOTIFICATION\000"
+ 2865      455F4556 
+ 2865      545F4354 
+ 2865      53435F4E 
+ 2865      4F544946 
+ 2866              	.LASF108:
+ 2867 257f 4359424C 		.ascii	"CYBLE_ERROR_FLASH_WRITE\000"
+ 2867      455F4552 
+ 2867      524F525F 
+ 2867      464C4153 
+ 2867      485F5752 
+ 2868              	.LASF272:
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 77
+
+
+ 2869 2597 4359424C 		.ascii	"CYBLE_EVT_GLSS_INDICATION_DISABLED\000"
+ 2869      455F4556 
+ 2869      545F474C 
+ 2869      53535F49 
+ 2869      4E444943 
+ 2870              	.LASF158:
+ 2871 25ba 4359424C 		.ascii	"CYBLE_EVT_GATTC_SRVC_DUPLICATION\000"
+ 2871      455F4556 
+ 2871      545F4741 
+ 2871      5454435F 
+ 2871      53525643 
+ 2872              	.LASF337:
+ 2873 25db 4359424C 		.ascii	"CYBLE_EVT_LNSS_INDICATION_ENABLED\000"
+ 2873      455F4556 
+ 2873      545F4C4E 
+ 2873      53535F49 
+ 2873      4E444943 
+ 2874              	.LASF431:
+ 2875 25fd 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 2875      4320342E 
+ 2875      392E3320 
+ 2875      32303135 
+ 2875      30333033 
+ 2876 2630 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m0 -mthumb -g -O"
+ 2876      20726576 
+ 2876      6973696F 
+ 2876      6E203232 
+ 2876      31323230 
+ 2877 2663 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 2877      66756E63 
+ 2877      74696F6E 
+ 2877      2D736563 
+ 2877      74696F6E 
+ 2878              	.LASF166:
+ 2879 268b 4359424C 		.ascii	"CYBLE_EVT_ANCSS_NOTIFICATION_DISABLED\000"
+ 2879      455F4556 
+ 2879      545F414E 
+ 2879      4353535F 
+ 2879      4E4F5449 
+ 2880              	.LASF124:
+ 2881 26b1 636F6E6E 		.ascii	"connHandle\000"
+ 2881      48616E64 
+ 2881      6C6500
+ 2882              	.LASF183:
+ 2883 26bc 4359424C 		.ascii	"CYBLE_EVT_BASS_NOTIFICATION_DISABLED\000"
+ 2883      455F4556 
+ 2883      545F4241 
+ 2883      53535F4E 
+ 2883      4F544946 
+ 2884              	.LASF221:
+ 2885 26e1 4359424C 		.ascii	"CYBLE_EVT_CPSS_NOTIFICATION_ENABLED\000"
+ 2885      455F4556 
+ 2885      545F4350 
+ 2885      53535F4E 
+ 2885      4F544946 
+ 2886              	.LASF382:
+ 2887 2705 4359424C 		.ascii	"CYBLE_EVT_TPSC_READ_DESCR_RESPONSE\000"
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 78
+
+
+ 2887      455F4556 
+ 2887      545F5450 
+ 2887      53435F52 
+ 2887      4541445F 
+ 2888              	.LASF397:
+ 2889 2728 4359424C 		.ascii	"CYBLE_EVT_UDSC_ERROR_RESPONSE\000"
+ 2889      455F4556 
+ 2889      545F5544 
+ 2889      53435F45 
+ 2889      52524F52 
+ 2890              	.LASF51:
+ 2891 2746 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_INFO_RSP\000"
+ 2891      455F4556 
+ 2891      545F4741 
+ 2891      5454435F 
+ 2891      46494E44 
+ 2892              	.LASF50:
+ 2893 2764 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_TYPE_RSP\000"
+ 2893      455F4556 
+ 2893      545F4741 
+ 2893      5454435F 
+ 2893      52454144 
+ 2894              	.LASF351:
+ 2895 2785 4359424C 		.ascii	"CYBLE_EVT_PASSS_NOTIFICATION_DISABLED\000"
+ 2895      455F4556 
+ 2895      545F5041 
+ 2895      5353535F 
+ 2895      4E4F5449 
+ 2896              	.LASF219:
+ 2897 27ab 4359424C 		.ascii	"CYBLE_EVT_CGMSC_READ_DESCR_RESPONSE\000"
+ 2897      455F4556 
+ 2897      545F4347 
+ 2897      4D53435F 
+ 2897      52454144 
+ 2898              	.LASF291:
+ 2899 27cf 4359424C 		.ascii	"CYBLE_EVT_HIDSC_READ_CHAR_RESPONSE\000"
+ 2899      455F4556 
+ 2899      545F4849 
+ 2899      4453435F 
+ 2899      52454144 
+ 2900              	.LASF426:
+ 2901 27f2 61706952 		.ascii	"apiResult\000"
+ 2901      6573756C 
+ 2901      7400
+ 2902              	.LASF379:
+ 2903 27fc 4359424C 		.ascii	"CYBLE_EVT_TPSS_NOTIFICATION_DISABLED\000"
+ 2903      455F4556 
+ 2903      545F5450 
+ 2903      53535F4E 
+ 2903      4F544946 
+ 2904              	.LASF376:
+ 2905 2821 4359424C 		.ascii	"CYBLE_EVT_SCPSC_READ_DESCR_RESPONSE\000"
+ 2905      455F4556 
+ 2905      545F5343 
+ 2905      5053435F 
+ 2905      52454144 
+ 2906              	.LASF310:
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 79
+
+
+ 2907 2845 4359424C 		.ascii	"CYBLE_EVT_HRSC_WRITE_DESCR_RESPONSE\000"
+ 2907      455F4556 
+ 2907      545F4852 
+ 2907      53435F57 
+ 2907      52495445 
+ 2908              	.LASF342:
+ 2909 2869 4359424C 		.ascii	"CYBLE_EVT_LNSS_WRITE_CHAR\000"
+ 2909      455F4556 
+ 2909      545F4C4E 
+ 2909      53535F57 
+ 2909      52495445 
+ 2910              	.LASF262:
+ 2911 2883 4359424C 		.ascii	"CYBLE_EVT_ESSS_CHAR_WRITE\000"
+ 2911      455F4556 
+ 2911      545F4553 
+ 2911      53535F43 
+ 2911      4841525F 
+ 2912              	.LASF57:
+ 2913 289d 4359424C 		.ascii	"CYBLE_EVT_GATTC_WRITE_RSP\000"
+ 2913      455F4556 
+ 2913      545F4741 
+ 2913      5454435F 
+ 2913      57524954 
+ 2914              	.LASF257:
+ 2915 28b7 4359424C 		.ascii	"CYBLE_EVT_ESSS_NOTIFICATION_ENABLED\000"
+ 2915      455F4556 
+ 2915      545F4553 
+ 2915      53535F4E 
+ 2915      4F544946 
+ 2916              	.LASF326:
+ 2917 28db 4359424C 		.ascii	"CYBLE_EVT_IPSS_WRITE_CHAR_CMD\000"
+ 2917      455F4556 
+ 2917      545F4950 
+ 2917      53535F57 
+ 2917      52495445 
+ 2918              	.LASF128:
+ 2919 28f9 4359424C 		.ascii	"CYBLE_BAS_CHAR_VALUE_T\000"
+ 2919      455F4241 
+ 2919      535F4348 
+ 2919      41525F56 
+ 2919      414C5545 
+ 2920              	.LASF364:
+ 2921 2910 4359424C 		.ascii	"CYBLE_EVT_RSCSC_NOTIFICATION\000"
+ 2921      455F4556 
+ 2921      545F5253 
+ 2921      4353435F 
+ 2921      4E4F5449 
+ 2922              	.LASF30:
+ 2923 292d 4359424C 		.ascii	"CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP\000"
+ 2923      455F4556 
+ 2923      545F4741 
+ 2923      50505F41 
+ 2923      44564552 
+ 2924              	.LASF197:
+ 2925 2955 4359424C 		.ascii	"CYBLE_EVT_BLSS_INDICATION_CONFIRMED\000"
+ 2925      455F4556 
+ 2925      545F424C 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 80
+
+
+ 2925      53535F49 
+ 2925      4E444943 
+ 2926              	.LASF408:
+ 2927 2979 4359424C 		.ascii	"CYBLE_EVT_WPTSC_READ_DESCR_RESPONSE\000"
+ 2927      455F4556 
+ 2927      545F5750 
+ 2927      5453435F 
+ 2927      52454144 
+ 2928              	.LASF168:
+ 2929 299d 4359424C 		.ascii	"CYBLE_EVT_ANCSC_NOTIFICATION\000"
+ 2929      455F4556 
+ 2929      545F414E 
+ 2929      4353435F 
+ 2929      4E4F5449 
+ 2930              	.LASF218:
+ 2931 29ba 4359424C 		.ascii	"CYBLE_EVT_CGMSC_WRITE_CHAR_RESPONSE\000"
+ 2931      455F4556 
+ 2931      545F4347 
+ 2931      4D53435F 
+ 2931      57524954 
+ 2932              	.LASF9:
+ 2933 29de 75696E74 		.ascii	"uint8\000"
+ 2933      3800
+ 2934              	.LASF319:
+ 2935 29e4 4359424C 		.ascii	"CYBLE_EVT_HTSC_READ_CHAR_RESPONSE\000"
+ 2935      455F4556 
+ 2935      545F4854 
+ 2935      53435F52 
+ 2935      4541445F 
+ 2936              	.LASF38:
+ 2937 2a06 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYPRESS_NOTIFICATION\000"
+ 2937      455F4556 
+ 2937      545F4741 
+ 2937      505F4B45 
+ 2937      59505245 
+ 2938              	.LASF357:
+ 2939 2a2a 4359424C 		.ascii	"CYBLE_EVT_PASSC_WRITE_DESCR_RESPONSE\000"
+ 2939      455F4556 
+ 2939      545F5041 
+ 2939      5353435F 
+ 2939      57524954 
+ 2940              	.LASF427:
+ 2941 2a4f 6379426C 		.ascii	"cyBle_connHandle\000"
+ 2941      655F636F 
+ 2941      6E6E4861 
+ 2941      6E646C65 
+ 2941      00
+ 2942              	.LASF2:
+ 2943 2a60 73686F72 		.ascii	"short int\000"
+ 2943      7420696E 
+ 2943      7400
+ 2944              	.LASF205:
+ 2945 2a6a 4359424C 		.ascii	"CYBLE_EVT_BMSS_WRITE_CHAR\000"
+ 2945      455F4556 
+ 2945      545F424D 
+ 2945      53535F57 
+ 2945      52495445 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 81
+
+
+ 2946              	.LASF152:
+ 2947 2a84 4359424C 		.ascii	"CYBLE_EVT_GATTS_INDICATION_DISABLED\000"
+ 2947      455F4556 
+ 2947      545F4741 
+ 2947      5454535F 
+ 2947      494E4449 
+ 2948              	.LASF106:
+ 2949 2aa8 4359424C 		.ascii	"CYBLE_ERROR_HARDWARE_FAILURE\000"
+ 2949      455F4552 
+ 2949      524F525F 
+ 2949      48415244 
+ 2949      57415245 
+ 2950              	.LASF189:
+ 2951 2ac5 4359424C 		.ascii	"CYBLE_EVT_BCSS_INDICATION_DISABLED\000"
+ 2951      455F4556 
+ 2951      545F4243 
+ 2951      53535F49 
+ 2951      4E444943 
+ 2952              	.LASF216:
+ 2953 2ae8 4359424C 		.ascii	"CYBLE_EVT_CGMSC_NOTIFICATION\000"
+ 2953      455F4556 
+ 2953      545F4347 
+ 2953      4D53435F 
+ 2953      4E4F5449 
+ 2954              	.LASF139:
+ 2955 2b05 4359424C 		.ascii	"CYBLE_HTS_TEMP_MEASURE\000"
+ 2955      455F4854 
+ 2955      535F5445 
+ 2955      4D505F4D 
+ 2955      45415355 
+ 2956              	.LASF44:
+ 2957 2b1c 4359424C 		.ascii	"CYBLE_EVT_GATTC_ERROR_RSP\000"
+ 2957      455F4556 
+ 2957      545F4741 
+ 2957      5454435F 
+ 2957      4552524F 
+ 2958              	.LASF268:
+ 2959 2b36 4359424C 		.ascii	"CYBLE_EVT_ESSC_WRITE_CHAR_RESPONSE\000"
+ 2959      455F4556 
+ 2959      545F4553 
+ 2959      53435F57 
+ 2959      52495445 
+ 2960              	.LASF173:
+ 2961 2b59 4359424C 		.ascii	"CYBLE_EVT_ANCSC_ERROR_RESPONSE\000"
+ 2961      455F4556 
+ 2961      545F414E 
+ 2961      4353435F 
+ 2961      4552524F 
+ 2962              	.LASF187:
+ 2963 2b78 4359424C 		.ascii	"CYBLE_EVT_BASC_WRITE_DESCR_RESPONSE\000"
+ 2963      455F4556 
+ 2963      545F4241 
+ 2963      53435F57 
+ 2963      52495445 
+ 2964              	.LASF271:
+ 2965 2b9c 4359424C 		.ascii	"CYBLE_EVT_GLSS_INDICATION_ENABLED\000"
+ 2965      455F4556 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 82
+
+
+ 2965      545F474C 
+ 2965      53535F49 
+ 2965      4E444943 
+ 2966              	.LASF176:
+ 2967 2bbe 4359424C 		.ascii	"CYBLE_EVT_ANSS_CHAR_WRITE\000"
+ 2967      455F4556 
+ 2967      545F414E 
+ 2967      53535F43 
+ 2967      4841525F 
+ 2968              	.LASF72:
+ 2969 2bd8 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_IND\000"
+ 2969      455F4556 
+ 2969      545F4C32 
+ 2969      4341505F 
+ 2969      43424643 
+ 2970              	.LASF60:
+ 2971 2bf6 4359424C 		.ascii	"CYBLE_EVT_GATTS_EXEC_WRITE_REQ\000"
+ 2971      455F4556 
+ 2971      545F4741 
+ 2971      5454535F 
+ 2971      45584543 
+ 2972              	.LASF24:
+ 2973 2c15 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT\000"
+ 2973      455F4556 
+ 2973      545F4741 
+ 2973      50435F53 
+ 2973      43414E5F 
+ 2974              	.LASF300:
+ 2975 2c39 4359424C 		.ascii	"CYBLE_EVT_HPSC_READ_DESCR_RESPONSE\000"
+ 2975      455F4556 
+ 2975      545F4850 
+ 2975      53435F52 
+ 2975      4541445F 
+ 2976              	.LASF250:
+ 2977 2c5c 4359424C 		.ascii	"CYBLE_EVT_CTSS_CHAR_WRITE\000"
+ 2977      455F4556 
+ 2977      545F4354 
+ 2977      53535F43 
+ 2977      4841525F 
+ 2978              	.LASF384:
+ 2979 2c76 4359424C 		.ascii	"CYBLE_EVT_UDSS_INDICATION_ENABLED\000"
+ 2979      455F4556 
+ 2979      545F5544 
+ 2979      53535F49 
+ 2979      4E444943 
+ 2980              	.LASF333:
+ 2981 2c98 4359424C 		.ascii	"CYBLE_EVT_IPSC_READ_BLOB_RSP\000"
+ 2981      455F4556 
+ 2981      545F4950 
+ 2981      53435F52 
+ 2981      4541445F 
+ 2982              	.LASF92:
+ 2983 2cb5 4359424C 		.ascii	"CYBLE_ERROR_GAP_ROLE\000"
+ 2983      455F4552 
+ 2983      524F525F 
+ 2983      4741505F 
+ 2983      524F4C45 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 83
+
+
+ 2984              	.LASF313:
+ 2985 2cca 4359424C 		.ascii	"CYBLE_EVT_HTSS_INDICATION_ENABLED\000"
+ 2985      455F4556 
+ 2985      545F4854 
+ 2985      53535F49 
+ 2985      4E444943 
+ 2986              	.LASF395:
+ 2987 2cec 4359424C 		.ascii	"CYBLE_EVT_UDSC_READ_DESCR_RESPONSE\000"
+ 2987      455F4556 
+ 2987      545F5544 
+ 2987      53435F52 
+ 2987      4541445F 
+ 2988              	.LASF185:
+ 2989 2d0f 4359424C 		.ascii	"CYBLE_EVT_BASC_READ_CHAR_RESPONSE\000"
+ 2989      455F4556 
+ 2989      545F4241 
+ 2989      53435F52 
+ 2989      4541445F 
+ 2990              	.LASF278:
+ 2991 2d31 4359424C 		.ascii	"CYBLE_EVT_GLSC_NOTIFICATION\000"
+ 2991      455F4556 
+ 2991      545F474C 
+ 2991      53435F4E 
+ 2991      4F544946 
+ 2992              	.LASF374:
+ 2993 2d4d 4359424C 		.ascii	"CYBLE_EVT_SCPSS_SCAN_INT_WIN_CHAR_WRITE\000"
+ 2993      455F4556 
+ 2993      545F5343 
+ 2993      5053535F 
+ 2993      5343414E 
+ 2994              	.LASF336:
+ 2995 2d75 4359424C 		.ascii	"CYBLE_EVT_LLSC_WRITE_CHAR_RESPONSE\000"
+ 2995      455F4556 
+ 2995      545F4C4C 
+ 2995      53435F57 
+ 2995      52495445 
+ 2996              	.LASF89:
+ 2997 2d98 4359424C 		.ascii	"CYBLE_ERROR_NO_CONNECTION\000"
+ 2997      455F4552 
+ 2997      524F525F 
+ 2997      4E4F5F43 
+ 2997      4F4E4E45 
+ 2998              	.LASF239:
+ 2999 2db2 4359424C 		.ascii	"CYBLE_EVT_CSCSS_INDICATION_DISABLED\000"
+ 2999      455F4556 
+ 2999      545F4353 
+ 2999      4353535F 
+ 2999      494E4449 
+ 3000              	.LASF208:
+ 3001 2dd6 4359424C 		.ascii	"CYBLE_EVT_BMSC_READ_DESCR_RESPONSE\000"
+ 3001      455F4556 
+ 3001      545F424D 
+ 3001      53435F52 
+ 3001      4541445F 
+ 3002              	.LASF81:
+ 3003 2df9 4359424C 		.ascii	"CYBLE_EVT_LE_PING_AUTH_TIMEOUT\000"
+ 3003      455F4556 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 84
+
+
+ 3003      545F4C45 
+ 3003      5F50494E 
+ 3003      475F4155 
+ 3004              	.LASF115:
+ 3005 2e18 4359424C 		.ascii	"CYBLE_API_RESULT_T\000"
+ 3005      455F4150 
+ 3005      495F5245 
+ 3005      53554C54 
+ 3005      5F5400
+ 3006              	.LASF210:
+ 3007 2e2b 4359424C 		.ascii	"CYBLE_EVT_CGMSS_INDICATION_DISABLED\000"
+ 3007      455F4556 
+ 3007      545F4347 
+ 3007      4D53535F 
+ 3007      494E4449 
+ 3008              	.LASF428:
+ 3009 2e4f 6379426C 		.ascii	"cyBle_busyStatus\000"
+ 3009      655F6275 
+ 3009      73795374 
+ 3009      61747573 
+ 3009      00
+ 3010              	.LASF164:
+ 3011 2e60 4359424C 		.ascii	"CYBLE_EVT_GATTC_DISCOVERY_COMPLETE\000"
+ 3011      455F4556 
+ 3011      545F4741 
+ 3011      5454435F 
+ 3011      44495343 
+ 3012              	.LASF214:
+ 3013 2e83 4359424C 		.ascii	"CYBLE_EVT_CGMSS_WRITE_CHAR\000"
+ 3013      455F4556 
+ 3013      545F4347 
+ 3013      4D53535F 
+ 3013      57524954 
+ 3014              	.LASF282:
+ 3015 2e9e 4359424C 		.ascii	"CYBLE_EVT_GLSC_WRITE_DESCR_RESPONSE\000"
+ 3015      455F4556 
+ 3015      545F474C 
+ 3015      53435F57 
+ 3015      52495445 
+ 3016              	.LASF63:
+ 3017 2ec2 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_IND\000"
+ 3017      455F4556 
+ 3017      545F4741 
+ 3017      5454435F 
+ 3017      48414E44 
+ 3018              	.LASF235:
+ 3019 2ee3 4359424C 		.ascii	"CYBLE_EVT_CPSC_SCAN_PROGRESS_RESULT\000"
+ 3019      455F4556 
+ 3019      545F4350 
+ 3019      53435F53 
+ 3019      43414E5F 
+ 3020              	.LASF368:
+ 3021 2f07 4359424C 		.ascii	"CYBLE_EVT_RSCSC_READ_DESCR_RESPONSE\000"
+ 3021      455F4556 
+ 3021      545F5253 
+ 3021      4353435F 
+ 3021      52454144 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 85
+
+
+ 3022              	.LASF95:
+ 3023 2f2b 4359424C 		.ascii	"CYBLE_ERROR_SEC_FAILED\000"
+ 3023      455F4552 
+ 3023      524F525F 
+ 3023      5345435F 
+ 3023      4641494C 
+ 3024              	.LASF22:
+ 3025 2f42 4359424C 		.ascii	"CYBLE_EVT_STACK_BUSY_STATUS\000"
+ 3025      455F4556 
+ 3025      545F5354 
+ 3025      41434B5F 
+ 3025      42555359 
+ 3026              	.LASF332:
+ 3027 2f5e 4359424C 		.ascii	"CYBLE_EVT_IPSC_ERROR_RESPONSE\000"
+ 3027      455F4556 
+ 3027      545F4950 
+ 3027      53435F45 
+ 3027      52524F52 
+ 3028              	.LASF322:
+ 3029 2f7c 4359424C 		.ascii	"CYBLE_EVT_HTSC_WRITE_DESCR_RESPONSE\000"
+ 3029      455F4556 
+ 3029      545F4854 
+ 3029      53435F57 
+ 3029      52495445 
+ 3030              	.LASF36:
+ 3031 2fa0 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYINFO_EXCHNGE_CMPLT\000"
+ 3031      455F4556 
+ 3031      545F4741 
+ 3031      505F4B45 
+ 3031      59494E46 
+ 3032              	.LASF409:
+ 3033 2fc4 4359424C 		.ascii	"CYBLE_EVT_WPTSC_WRITE_DESCR_RESPONSE\000"
+ 3033      455F4556 
+ 3033      545F5750 
+ 3033      5453435F 
+ 3033      57524954 
+ 3034              	.LASF423:
+ 3035 2fe9 62617474 		.ascii	"batteryTimer\000"
+ 3035      65727954 
+ 3035      696D6572 
+ 3035      00
+ 3036              	.LASF69:
+ 3037 2ff6 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_REQ\000"
+ 3037      455F4556 
+ 3037      545F4C32 
+ 3037      4341505F 
+ 3037      434F4E4E 
+ 3038              	.LASF213:
+ 3039 301c 4359424C 		.ascii	"CYBLE_EVT_CGMSS_NOTIFICATION_DISABLED\000"
+ 3039      455F4556 
+ 3039      545F4347 
+ 3039      4D53535F 
+ 3039      4E4F5449 
+ 3040              	.LASF155:
+ 3041 3042 4359424C 		.ascii	"CYBLE_EVT_GATTC_INCL_DISCOVERY_FAILED\000"
+ 3041      455F4556 
+ 3041      545F4741 
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 86
+
+
+ 3041      5454435F 
+ 3041      494E434C 
+ 3042              	.LASF3:
+ 3043 3068 73686F72 		.ascii	"short unsigned int\000"
+ 3043      7420756E 
+ 3043      7369676E 
+ 3043      65642069 
+ 3043      6E7400
+ 3044              	.LASF280:
+ 3045 307b 4359424C 		.ascii	"CYBLE_EVT_GLSC_WRITE_CHAR_RESPONSE\000"
+ 3045      455F4556 
+ 3045      545F474C 
+ 3045      53435F57 
+ 3045      52495445 
+ 3046              	.LASF347:
+ 3047 309e 4359424C 		.ascii	"CYBLE_EVT_LNSC_READ_DESCR_RESPONSE\000"
+ 3047      455F4556 
+ 3047      545F4C4E 
+ 3047      53435F52 
+ 3047      4541445F 
+ 3048              	.LASF121:
+ 3049 30c1 4359424C 		.ascii	"CYBLE_BAS_BATTERY_LEVEL\000"
+ 3049      455F4241 
+ 3049      535F4241 
+ 3049      54544552 
+ 3049      595F4C45 
+ 3050              	.LASF12:
+ 3051 30d9 696E7433 		.ascii	"int32\000"
+ 3051      3200
+ 3052              	.LASF119:
+ 3053 30df 61637475 		.ascii	"actualLen\000"
+ 3053      616C4C65 
+ 3053      6E00
+ 3054              	.LASF425:
+ 3055 30e9 62617474 		.ascii	"batteryLevel\000"
+ 3055      6572794C 
+ 3055      6576656C 
+ 3055      00
+ 3056              	.LASF167:
+ 3057 30f6 4359424C 		.ascii	"CYBLE_EVT_ANCSS_WRITE_CHAR\000"
+ 3057      455F4556 
+ 3057      545F414E 
+ 3057      4353535F 
+ 3057      57524954 
+ 3058              	.LASF277:
+ 3059 3111 4359424C 		.ascii	"CYBLE_EVT_GLSC_INDICATION\000"
+ 3059      455F4556 
+ 3059      545F474C 
+ 3059      53435F49 
+ 3059      4E444943 
+ 3060              	.LASF227:
+ 3061 312b 4359424C 		.ascii	"CYBLE_EVT_CPSS_BROADCAST_DISABLED\000"
+ 3061      455F4556 
+ 3061      545F4350 
+ 3061      53535F42 
+ 3061      524F4144 
+ 3062              	.LASF117:
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 87
+
+
+ 3063 314d 61747449 		.ascii	"attId\000"
+ 3063      6400
+ 3064              	.LASF85:
+ 3065 3153 4359424C 		.ascii	"CYBLE_ERROR_INVALID_OPERATION\000"
+ 3065      455F4552 
+ 3065      524F525F 
+ 3065      494E5641 
+ 3065      4C49445F 
+ 3066              	.LASF21:
+ 3067 3171 4359424C 		.ascii	"CYBLE_EVT_HCI_STATUS\000"
+ 3067      455F4556 
+ 3067      545F4843 
+ 3067      495F5354 
+ 3067      41545553 
+ 3068              	.LASF46:
+ 3069 3186 4359424C 		.ascii	"CYBLE_EVT_GATT_DISCONNECT_IND\000"
+ 3069      455F4556 
+ 3069      545F4741 
+ 3069      54545F44 
+ 3069      4953434F 
+ 3070              	.LASF150:
+ 3071 31a4 4359424C 		.ascii	"CYBLE_KEY_EXCHANGE_INFO_REQUEST_REPLY\000"
+ 3071      455F4B45 
+ 3071      595F4558 
+ 3071      4348414E 
+ 3071      47455F49 
+ 3072              	.LASF79:
+ 3073 31ca 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_WRITE_IND\000"
+ 3073      455F4556 
+ 3073      545F4C32 
+ 3073      4341505F 
+ 3073      43424643 
+ 3074              	.LASF148:
+ 3075 31ee 4359424C 		.ascii	"CYBLE_PASSKEY_ENTRY_REQUEST_REPLY\000"
+ 3075      455F5041 
+ 3075      53534B45 
+ 3075      595F454E 
+ 3075      5452595F 
+ 3076              	.LASF194:
+ 3077 3210 4359424C 		.ascii	"CYBLE_EVT_BCSC_WRITE_DESCR_RESPONSE\000"
+ 3077      455F4556 
+ 3077      545F4243 
+ 3077      53435F57 
+ 3077      52495445 
+ 3078              	.LASF414:
+ 3079 3234 4359424C 		.ascii	"CYBLE_EVT_WSSC_READ_CHAR_RESPONSE\000"
+ 3079      455F4556 
+ 3079      545F5753 
+ 3079      53435F52 
+ 3079      4541445F 
+ 3080              	.LASF68:
+ 3081 3256 4359424C 		.ascii	"CYBLE_EVT_GATTC_LONG_PROCEDURE_END\000"
+ 3081      455F4556 
+ 3081      545F4741 
+ 3081      5454435F 
+ 3081      4C4F4E47 
+ 3082              	.LASF177:
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 88
+
+
+ 3083 3279 4359424C 		.ascii	"CYBLE_EVT_ANSC_NOTIFICATION\000"
+ 3083      455F4556 
+ 3083      545F414E 
+ 3083      53435F4E 
+ 3083      4F544946 
+ 3084              	.LASF32:
+ 3085 3295 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_DISCONNECTED\000"
+ 3085      455F4556 
+ 3085      545F4741 
+ 3085      505F4445 
+ 3085      56494345 
+ 3086              	.LASF285:
+ 3087 32b7 4359424C 		.ascii	"CYBLE_EVT_HIDSS_BOOT_MODE_ENTER\000"
+ 3087      455F4556 
+ 3087      545F4849 
+ 3087      4453535F 
+ 3087      424F4F54 
+ 3088              	.LASF64:
+ 3089 32d7 4359424C 		.ascii	"CYBLE_EVT_GATTS_HANDLE_VALUE_CNF\000"
+ 3089      455F4556 
+ 3089      545F4741 
+ 3089      5454535F 
+ 3089      48414E44 
+ 3090              	.LASF328:
+ 3091 32f8 4359424C 		.ascii	"CYBLE_EVT_IPSC_READ_MULTIPLE_CHAR_RESPONSE\000"
+ 3091      455F4556 
+ 3091      545F4950 
+ 3091      53435F52 
+ 3091      4541445F 
+ 3092              	.LASF246:
+ 3093 3323 4359424C 		.ascii	"CYBLE_EVT_CSCSC_READ_DESCR_RESPONSE\000"
+ 3093      455F4556 
+ 3093      545F4353 
+ 3093      4353435F 
+ 3093      52454144 
+ 3094              	.LASF10:
+ 3095 3347 75696E74 		.ascii	"uint16\000"
+ 3095      313600
+ 3096              	.LASF170:
+ 3097 334e 4359424C 		.ascii	"CYBLE_EVT_ANCSC_WRITE_CHAR_RESPONSE\000"
+ 3097      455F4556 
+ 3097      545F414E 
+ 3097      4353435F 
+ 3097      57524954 
+ 3098              	.LASF93:
+ 3099 3372 4359424C 		.ascii	"CYBLE_ERROR_TX_POWER_READ\000"
+ 3099      455F4552 
+ 3099      524F525F 
+ 3099      54585F50 
+ 3099      4F574552 
+ 3100              	.LASF358:
+ 3101 338c 4359424C 		.ascii	"CYBLE_EVT_RSCSS_NOTIFICATION_ENABLED\000"
+ 3101      455F4556 
+ 3101      545F5253 
+ 3101      4353535F 
+ 3101      4E4F5449 
+ 3102              	.LASF175:
+ARM GAS  C:\Users\behrenb2\AppData\Local\Temp\cczJpBK5.s 			page 89
+
+
+ 3103 33b1 4359424C 		.ascii	"CYBLE_EVT_ANSS_NOTIFICATION_DISABLED\000"
+ 3103      455F4556 
+ 3103      545F414E 
+ 3103      53535F4E 
+ 3103      4F544946 
+ 3104              	.LASF318:
+ 3105 33d6 4359424C 		.ascii	"CYBLE_EVT_HTSC_INDICATION\000"
+ 3105      455F4556 
+ 3105      545F4854 
+ 3105      53435F49 
+ 3105      4E444943 
+ 3106              	.LASF283:
+ 3107 33f0 4359424C 		.ascii	"CYBLE_EVT_HIDSS_NOTIFICATION_ENABLED\000"
+ 3107      455F4556 
+ 3107      545F4849 
+ 3107      4453535F 
+ 3107      4E4F5449 
+ 3108              	.LASF315:
+ 3109 3415 4359424C 		.ascii	"CYBLE_EVT_HTSS_INDICATION_CONFIRMED\000"
+ 3109      455F4556 
+ 3109      545F4854 
+ 3109      53535F49 
+ 3109      4E444943 
+ 3110              	.LASF402:
+ 3111 3439 4359424C 		.ascii	"CYBLE_EVT_WPTSS_INDICATION_CONFIRMED\000"
+ 3111      455F4556 
+ 3111      545F5750 
+ 3111      5453535F 
+ 3111      494E4449 
+ 3112              	.LASF305:
+ 3113 345e 4359424C 		.ascii	"CYBLE_EVT_HRSS_NOTIFICATION_DISABLED\000"
+ 3113      455F4556 
+ 3113      545F4852 
+ 3113      53535F4E 
+ 3113      4F544946 
+ 3114              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br
