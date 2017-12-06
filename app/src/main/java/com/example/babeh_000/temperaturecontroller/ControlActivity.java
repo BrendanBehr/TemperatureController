@@ -40,6 +40,7 @@ public class ControlActivity extends AppCompatActivity {
     private static final String TAG = ControlActivity.class.getSimpleName();
 
     private static int temperature;
+    private static int actualTemp = 0;
 
     private static String mDeviceAddress;
     private static CapSenseTemperatureControllerService mTemperatureController;
@@ -60,6 +61,7 @@ public class ControlActivity extends AppCompatActivity {
             }
             // Automatically connects to the car database upon successful start-up initialization.
             mTemperatureController.connect(mDeviceAddress);
+
         }
 
         @Override
@@ -85,41 +87,41 @@ public class ControlActivity extends AppCompatActivity {
 
         // Bind to the BLE service
         Log.i(TAG, "Binding Service");
-        Intent RobotServiceIntent = new Intent(this, CapSenseTemperatureControllerService.class);
-        bindService(RobotServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        Intent TemperatureControllerServiceIntent = new Intent(this, CapSenseTemperatureControllerService.class);
+        bindService(TemperatureControllerServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
 
         /* This will be called when the right motor enable switch is changed */
-        mSetTemperatureButton.setOnClickListener(new Button.OnClickListener() {
+        mSetTemperatureButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                if(view.getId() == R.id.SetTemeratureBtn) {
+                    String temp = mDesiredTemperatureNum.getText().toString();
+                    int value = Integer.parseInt(temp);
+                    temperature = value;
+                };
                 mTemperatureController.setTemperature(temperature);
             }
         });
 
-        /* This will be called when the left speed seekbar is moved */
-        mDesiredTemperatureNum.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            public boolean onEditorAction(TextView desiredTemperature, int temp, KeyEvent event) {
-                /* Scale the speed from what the seek bar provides to what the PSoC FW expects */
-                Log.i(TAG, temp + " is from input");
-                temperature = temp;
-                return true;
-            }
-        });
+        //mActualTemperatureNum.setText(mTemperatureController.getTempValue());
+
     } /* End of onCreate method */
 
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(mRobotUpdateReceiver, makeRobotUpdateIntentFilter());
+        registerReceiver(mTemperatureUpdateReceiver, makeTemperatureUpdateIntentFilter());
         if (mTemperatureController != null) {
             final boolean result = mTemperatureController.connect(mDeviceAddress);
             Log.i(TAG, "Connect request result=" + result);
         }
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(mRobotUpdateReceiver);
+        unregisterReceiver(mTemperatureUpdateReceiver);
     }
 
     @Override
@@ -136,7 +138,7 @@ public class ControlActivity extends AppCompatActivity {
      * ACTION_DATA_AVAILABLE: received data from the car.  This can be a result of a read
      * or notify operation.
      */
-    private final BroadcastReceiver mRobotUpdateReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mTemperatureUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
@@ -150,7 +152,8 @@ public class ControlActivity extends AppCompatActivity {
                 case CapSenseTemperatureControllerService.ACTION_DATA_AVAILABLE:
                     // This is called after a Notify completes
                     mActualTemperatureText.setText("Actual Temperature");
-                    mActualTemperatureNum.setText(CapSenseTemperatureControllerService.getTempValue());
+                    int value = mTemperatureController.getTempValue();
+                    mActualTemperatureNum.setText(value);
                     mDesiredTemperatureText.setText("Desired Temperature");
                     break;
             }
@@ -163,7 +166,7 @@ public class ControlActivity extends AppCompatActivity {
      *
      * @return intentFilter
      */
-    private static IntentFilter makeRobotUpdateIntentFilter() {
+    private static IntentFilter makeTemperatureUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(CapSenseTemperatureControllerService.ACTION_CONNECTED);
         intentFilter.addAction(CapSenseTemperatureControllerService.ACTION_DISCONNECTED);

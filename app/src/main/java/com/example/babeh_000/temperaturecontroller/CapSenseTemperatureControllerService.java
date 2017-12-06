@@ -49,8 +49,8 @@ public class CapSenseTemperatureControllerService extends Service {
 
     // UUID for the custom motor characteristics
     private static final String TemperatureControllerUUID = "6AC07F87-E95C-4B65-8550-909F0D46D4E4";
-    private static final String ActualTempUUID = "CC8D0CEE-1BF0-4250-85C4-9C2C0232AD38";
-    private static final String DesiredTempUUID = "5644F242-F6E0-429B-97ED-810A9445BB51";
+    private static final String ActualTempUUID = "346DB8A5-5A9C-4327-A9B3-28D5EF2120F3";
+    private static final String DesiredTempUUID = "55224302-BAA0-4B1A-921B-29DF2B63DE01";
     private static final String CCCD_UUID =          "00002902-0000-1000-8000-00805f9b34fb";
 
     // Bluetooth Characteristics that we need to read/write
@@ -58,10 +58,6 @@ public class CapSenseTemperatureControllerService extends Service {
     private static BluetoothGattCharacteristic mActualTemperature;
 
     // State (on/off), speed of the motors, and tach values
-    private static boolean motorLeftState;
-    private static boolean motorRightState;
-    private static int motorLeftSpeed;
-    private static int motorRightSpeed;
     private static int actualTemperature;
     private static int desiredTemperature;
 
@@ -213,8 +209,9 @@ public class CapSenseTemperatureControllerService extends Service {
 
             if(uuid != ActualTempUUID)
                 return;
-            actualTemperature = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_SINT32,0);
             // Tell the activity that new car data is available
+            actualTemperature = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16,0);
+            Log.d(TAG, actualTemperature + "");
             broadcastUpdate(ACTION_DATA_AVAILABLE);
         }
     };
@@ -254,10 +251,6 @@ public class CapSenseTemperatureControllerService extends Service {
         }
 
         // Initialize car state variables
-        motorLeftState = false;
-        motorRightState = false;
-        motorLeftSpeed = 0;
-        motorRightSpeed = 0;
 
         return true;
     }
@@ -294,6 +287,7 @@ public class CapSenseTemperatureControllerService extends Service {
         mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         Log.i(TAG, "Trying to create a new connection.");
         mBluetoothDeviceAddress = address;
+
         return true;
     }
 
@@ -331,8 +325,8 @@ public class CapSenseTemperatureControllerService extends Service {
      */
     private void updateGattTemperature()
     {
-        Log.d(TAG, desiredTemperature + ", degrees");
         mDesiredTemperature.setValue(desiredTemperature, BluetoothGattCharacteristic.FORMAT_SINT8, 0);
+
         writeCharacteristic(mDesiredTemperature);
     }
 
@@ -404,9 +398,9 @@ public class CapSenseTemperatureControllerService extends Service {
      * Get the tach reading for one of the motors
      *
      */
-    public static int getTempValue() {
-        Log.d(TAG, actualTemperature + " degrees");
+    public int getTempValue() {
         return actualTemperature;
+        //return 60;
     }
 
     public static UUID getTemperatureControllerServiceUUID() {
