@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file CYBLE.c
-* \version 3.10
+* \version 3.30
 * 
 * \brief
 *  This file contains the source code for the Common APIs of the BLE Component.
@@ -71,11 +71,11 @@ CYBLE_GAPP_DISC_PARAM_T cyBle_discoveryParam =
 
 CYBLE_GAPP_DISC_DATA_T cyBle_discoveryData =
 {
-    { 0x02u, 0x01u, 0x06u, 0x0Cu, 0x09u, 0x54u, 0x68u,
-    0x65u, 0x72u, 0x6Du, 0x6Fu, 0x6Du, 0x65u, 0x74u, 0x65u,
-    0x72u, 0x03u, 0x02u, 0x09u, 0x18u, 0x00u, 0x00u, 0x00u,
+    { 0x02u, 0x01u, 0x06u, 0x11u, 0x07u, 0xE4u, 0xD4u,
+    0x46u, 0x0Du, 0x9Fu, 0x90u, 0x50u, 0x85u, 0x65u, 0x4Bu,
+    0x5Cu, 0xE9u, 0x87u, 0x7Fu, 0xC0u, 0x6Au, 0x00u, 0x00u,
     0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u }, /* uint8 advertising_data[CYBLE_MAX_ADV_DATA_LEN] */
-    0x14u,      /* uint8 adv_data_length */
+    0x15u,      /* uint8 adv_data_length */
 };
 
 CYBLE_GAPP_SCAN_RSP_DATA_T cyBle_scanRspData =
@@ -100,7 +100,7 @@ CYBLE_GAPP_DISC_MODE_INFO_T cyBle_discoveryModeInfo =
     &cyBle_discoveryParam,
     &cyBle_discoveryData,
     &cyBle_scanRspData,
-    0x001Eu,    /* uint16 advTo */
+    0x0000u,    /* uint16 advTo */
 };
 
 
@@ -211,7 +211,11 @@ void CyBle_ServiceInit(void)
             (void)memset(&cyBle_gattc, 0, sizeof(cyBle_gattc));
         }
     #endif /* CYBLE_GATT_ROLE_CLIENT */
-    
+
+   	#ifdef CYBLE_AIOS
+        CyBle_AiosInit();
+    #endif /* CYBLE_AIOS */
+
 	#ifdef CYBLE_ANCS
         CyBle_AncsInit();
     #endif /* CYBLE_ANCS */
@@ -308,6 +312,10 @@ void CyBle_ServiceInit(void)
         CyBle_PassInit();
     #endif /* CYBLE_PASS */
     
+    #ifdef CYBLE_PLXS
+        CyBle_PlxsInit();
+    #endif /* CYBLE_PLXS */
+    
     #ifdef CYBLE_RSCS
         CyBle_RscsInit();
     #endif /* CYBLE_RSCS */
@@ -374,8 +382,8 @@ void CyBle_ServiceInit(void)
 *     </tr>
 *     <tr>
 *       <td>CYBLE_ERROR_INVALID_PARAMETER</td>
-*       <td>On passing a NULL pointer to the function when the BLE stack is not built in HCI mode. 
-*			CYBLE_ERROR_INVALID_PARAMETER is never returned in HCI mode.</td>
+*       <td>On passing a NULL pointer to the function. 
+*		</td>
 *     </tr>
 *     <tr>
 *       <td>CYBLE_ERROR_REPEATED_ATTEMPTS</td>
@@ -467,7 +475,7 @@ CYBLE_API_RESULT_T CyBle_Start(CYBLE_CALLBACK_T callbackFunc)
     
         if(apiResult == CYBLE_ERROR_OK)
         {
-            
+        
         #if(CYBLE_MODE_PROFILE)
             #if(CYBLE_BONDING_REQUIREMENT == CYBLE_BONDING_YES)
                 apiResult = CyBle_StackInit(&CyBle_EventHandler, cyBle_stackMemoryRam, 
@@ -478,7 +486,18 @@ CYBLE_API_RESULT_T CyBle_Start(CYBLE_CALLBACK_T callbackFunc)
                     CYBLE_STACK_RAM_SIZE - CYBLE_GATT_PREPARE_WRITE_BUFF_LEN, cyBle_stackDataBuff, 
                     CYBLE_STACK_APP_MIN_POOL, NULL, 0u);
             #endif  /* CYBLE_BONDING_REQUIREMENT == CYBLE_BONDING_YES */
-        #else
+        #else /* HCI mode */
+            /* The following will perform preparation to use HCI over UART or over
+               software. But the following fucntions will not initialize the HCI
+               Transport. This will be done as part of Stack initialization, so
+               the functions should be called prior CyBle_StackInit().
+            */
+            #if (CYBLE_HCI_TYPE == CYBLE_HCI_OVER_UART)
+                CyBle_HciUartTransportEnable();
+            #else
+                CyBle_HciSoftTransportEnable();
+            #endif /* (CYBLE_HCI_TYPE == CYBLE_HCI_OVER_UART) */
+            /* This will initialize BLE stack for HCI mode operation */
             apiResult = CyBle_StackInit(&CyBle_EventHandler, cyBle_stackMemoryRam, CYBLE_STACK_RAM_SIZE,
                 NULL, 0u, NULL, 0u);
         #endif /* CYBLE_MODE_PROFILE */
@@ -556,7 +575,9 @@ void CyBle_Stop(void)
 *   ----------------------------------   | ------------------------------------
 *   CYBLE_ERROR_OK                       | On successful operation
 *   CYBLE_ERROR_FLASH_WRITE_NOT_PERMITED | Flash Write is not complete
-*    
+*   CYBLE_ERROR_INVALID_PARAMETER        | Invalid input parameter  
+*   CYBLE_ERROR_FLASH_WRITE              | Error in flash Write	
+    
 *  \sideeffect
 *   For BLE devices with 128K of Flash memory this API will automatically 
 *   modify the clock settings for the device.
@@ -697,15 +718,11 @@ CYBLE_API_RESULT_T CyBle_GapRemoveBondedDevice(CYBLE_GAP_BD_ADDR_T* bdAddr)
                 cyBle_pendingFlashClearCccdHandle = bDevHandle;
             }
         }
+    #endif /* CYBLE_GATT_DB_CCCD_COUNT != 0u */
         if(apiResult == CYBLE_ERROR_OK)
         {
-            #if(CYBLE_AUTO_POPULATE_WHITELIST != 0u)
-                apiResult = CyBle_GapRemoveDeviceFromWhiteList(bdAddr);
-            #else
-                apiResult = CyBle_GapRemDeviceFromBondList(bdAddr);
-            #endif
+            apiResult = CyBle_GapRemoveDeviceFromWhiteList(bdAddr);
         }
-    #endif /* CYBLE_GATT_DB_CCCD_COUNT != 0u */
     }
     else
     {
@@ -798,7 +815,7 @@ CYBLE_API_RESULT_T CyBle_GapRemoveBondedDevice(CYBLE_GAP_BD_ADDR_T* bdAddr)
             cyBle_advertisingIntervalType = advertisingIntervalType;
             apiResult = CyBle_GappEnterDiscoveryMode(&cyBle_discoveryModeInfo);
         
-            if(CYBLE_ERROR_OK == apiResult)
+            if(apiResult == CYBLE_ERROR_OK)
             {
                 cyBle_eventHandlerFlag |= CYBLE_START_FLAG;
             }
@@ -988,7 +1005,7 @@ CYBLE_API_RESULT_T CyBle_GapRemoveBondedDevice(CYBLE_GAP_BD_ADDR_T* bdAddr)
             cyBle_scanningIntervalType = scanningIntervalType;
             apiResult = CyBle_GapcStartDiscovery(&cyBle_discoveryInfo);
         
-            if(CYBLE_ERROR_OK == apiResult)
+            if(apiResult == CYBLE_ERROR_OK)
             {
                 cyBle_eventHandlerFlag |= CYBLE_START_FLAG;
             }
@@ -1192,7 +1209,7 @@ CYBLE_API_RESULT_T CyBle_GapRemoveBondedDevice(CYBLE_GAP_BD_ADDR_T* bdAddr)
                 maxLength = cyBle_scanRspData.scanRspDataLen;
             }
             
-            while((byteCounter < maxLength) && (0u == flag))
+            while((byteCounter < maxLength) && (flag == 0u))
             {
                 adLength = destBuffer[byteCounter];
                 
@@ -1201,8 +1218,8 @@ CYBLE_API_RESULT_T CyBle_GapRemoveBondedDevice(CYBLE_GAP_BD_ADDR_T* bdAddr)
                     /* Increment byte counter so it can point to AD type */
                     byteCounter++;
                     
-                    if((CYBLE_SHORT_LOCAL_NAME == destBuffer[byteCounter]) || 
-                       (CYBLE_COMPLETE_LOCAL_NAME == destBuffer[byteCounter]))
+                    if((destBuffer[byteCounter] == CYBLE_SHORT_LOCAL_NAME) || 
+                       (destBuffer[byteCounter] == CYBLE_COMPLETE_LOCAL_NAME))
                     {
                         /* Start of the Local Name AD type was fount. Set flag and exit the loop. */
                         flag = 1u;
@@ -1283,13 +1300,13 @@ CYBLE_API_RESULT_T CyBle_GapRemoveBondedDevice(CYBLE_GAP_BD_ADDR_T* bdAddr)
         if(NULL != name)
         {
             /* Get the pointer to the Device Name characteristic  */
-            ptr = (char8 *) CYBLE_GATT_DB_ATTR_GET_ATTR_GEN_PTR(CYBLE_GAP_DEVICE_NAME_INDEX + 1u);
+            ptr = (char8 *) CYBLE_GATT_DB_ATTR_GET_ATTR_GEN_PTR(cyBle_gaps.deviceNameCharHandle);
 
             /* First need to get the maximum length of the characteristic data in the GATT
                 database to make sure there is enough place for the data. The length
                 can't be longer than 248, so only the LSB of 16 bit of length is to
                 be used. */
-            charLen = (uint8)CYBLE_GATT_DB_ATTR_GET_ATTR_GEN_MAX_LEN(CYBLE_GAP_DEVICE_NAME_INDEX + 1u);
+            charLen = (uint8)CYBLE_GATT_DB_ATTR_GET_ATTR_GEN_MAX_LEN(cyBle_gaps.deviceNameCharHandle);
 
             /* Copy name into characteristic */
             for(i = 0u; ((i < charLen) && (CYBLE_NULL_CHARCTER != name[i])); i++)
@@ -1355,13 +1372,13 @@ CYBLE_API_RESULT_T CyBle_GapRemoveBondedDevice(CYBLE_GAP_BD_ADDR_T* bdAddr)
         if(NULL != name)
         {
             /* Get the pointer to the Device Name characteristic  */
-            ptr = (char8 *) CYBLE_GATT_DB_ATTR_GET_ATTR_GEN_PTR(CYBLE_GAP_DEVICE_NAME_INDEX + 1u);
+            ptr = (char8 *) CYBLE_GATT_DB_ATTR_GET_ATTR_GEN_PTR(cyBle_gaps.deviceNameCharHandle);
 
             /* First need to get the length of the characteristic data in the GATT
                 database to make sure there is enough place for the data. The length
                 can't be longer than 248, so only the LSB of 16 bit of length is to
                 be used. */
-            charLen = (uint8)CYBLE_GATT_DB_ATTR_GET_ATTR_GEN_LEN(CYBLE_GAP_DEVICE_NAME_INDEX + 1u);
+            charLen = (uint8)CYBLE_GATT_DB_ATTR_GET_ATTR_GEN_LEN(cyBle_gaps.deviceNameCharHandle);
 
             /* Copy name from characteristic */
             for(i = 0u; ((i < charLen) && (CYBLE_NULL_CHARCTER != ptr[i])); i++)

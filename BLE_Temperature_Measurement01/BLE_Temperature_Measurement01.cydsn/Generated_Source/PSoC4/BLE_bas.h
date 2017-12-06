@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file CYBLE_bas.h
-* \version 3.10
+* \version 3.30
 * 
 * \brief
 *  Contains the function prototypes and constants for Battery Service.

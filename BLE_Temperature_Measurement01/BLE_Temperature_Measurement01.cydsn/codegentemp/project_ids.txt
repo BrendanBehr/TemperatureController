@@ -1,0 +1,6 @@
+C:\Users\babeh_000\Documents\PSoC Creator\BLE_Temperature_Measurement01\BLE_Temperature_Measurement01.cydsn\BLE_Temperature_Measurement01.cyprj|dda3ab7b-0487-4d9e-9e40-a4256ac3d91a
+C:\Program Files (x86)\Cypress\PSoC Creator\4.1\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|adbd0817-9073-486b-9d78-8a96eb5b3214
+C:\Users\babeh_000\Documents\PSoC Creator\4.1\Downloads ( 4.1).cylib\Downloads ( 4.1).cyprj|8b0c4799-2a49-4206-a77e-3f2075f62ba2
+C:\Program Files (x86)\Cypress\PSoC Creator\4.1\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|9188d36c-7d40-465c-8c15-d43bf4cbc5c5
+C:\Program Files (x86)\Cypress\PSoC Creator\4.1\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|8cf54277-f0fe-40e0-b8f8-13fdea27a2b6
+C:\Program Files (x86)\Cypress\PSoC Creator\4.1\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|7e2efbfb-d435-4425-97a1-98d41ab231ef

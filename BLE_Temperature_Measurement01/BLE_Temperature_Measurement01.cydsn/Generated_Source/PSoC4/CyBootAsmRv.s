@@ -1,11 +1,11 @@
 ;-------------------------------------------------------------------------------
 ; \file CyBootAsmRv.s
-; \version 5.40
+; \version 5.60
 ;
 ;  \brief Assembly routines for RealView.
 ;
 ;-------------------------------------------------------------------------------
-; Copyright 2010-2016, Cypress Semiconductor Corporation.  All rights reserved.
+; Copyright 2010-2017, Cypress Semiconductor Corporation.  All rights reserved.
 ; You may use this file only in accordance with the license, terms, conditions,
 ; disclaimers, and limitations in the end user license agreement accompanying
 ; the software package with which this file was provided.

@@ -1,7 +1,9 @@
 /***************************************************************************//**
-* \file CYBLE_StackGatt.h
-* \version 3.10
+* \file CyBle_Gatt.h
 * 
+* \file CYBLE_StackGatt.h
+* \version 3.30
+*
 * \brief
 *  This file contains the GATT APIs of the BLE Host Stack IP
 * 
@@ -17,16 +19,8 @@
 *******************************************************************************/
 
 
-#ifndef CY_BLE_CYBLE_GATT_STACK_H
-#define CY_BLE_CYBLE_GATT_STACK_H
-
-    
-/***************************************
-* Common stack includes
-***************************************/
-
-#include "BLE_Stack.h"
-#include "cytypes.h"
+#ifndef CYBLE_GATT_H_
+#define CYBLE_GATT_H_
 
 
 /***************************************
@@ -263,6 +257,9 @@ typedef enum
      * Common Profile & Service Error Code : 0xE0 to 0xFF 
      */
 
+    /** Trigger condition value not supported.*/
+    CYBLE_GATT_ERR_TRIGGER_CODITION_VALUE_NOT_SUPPORTED = 0x80u,
+    
     /** Heart Rate Control Point Not Supported error code is used when a unsupported
        code is written into Heart Rate service Control Point characteristic. */
     CYBLE_GATT_ERR_HEART_RATE_CONTROL_POINT_NOT_SUPPORTED = 0x80u,
@@ -367,8 +364,6 @@ typedef enum
 /** GATT 16 Bit UUID */
 typedef uint16 		CYBLE_UUID16;
 
-#ifdef GATT_SUPPORT_128_BIT_UUID
-
 /** GATT 128 Bit UUID type */
 typedef struct
 {
@@ -376,18 +371,14 @@ typedef struct
     uint8   value[CYBLE_GATT_128_BIT_UUID_SIZE];
 }CYBLE_UUID128_T;
 
-#endif /*GATT_SUPPORT_128_BIT_UUID*/
-
 /** GATT UUID type*/
 typedef union
 {
 	/** 16 Bit UUID */
     CYBLE_UUID16    	uuid16;
 
-#ifdef GATT_SUPPORT_128_BIT_UUID
 	/** 128 Bit UUID */
     CYBLE_UUID128_T   	uuid128;
-#endif /*GATT_SUPPORT_128_BIT_UUID*/
 
 }CYBLE_UUID_T;
 
@@ -433,7 +424,7 @@ typedef struct
  @{
 */
 
-/* Abstracts Variable Length Values for GATT.
+/** Abstracts Variable Length Values for GATT.
 
     Apart from data, and length, 'actual length' is needed so that GATT can
     indicate to the application actual length of data processed for a PDU.
@@ -513,7 +504,7 @@ typedef struct
 
 }CYBLE_GATT_HANDLE_VALUE_OFFSET_PARAM_T;
 
-/* memory request parameters for prepare write request*/
+/** memory request parameters for prepare write request*/
 typedef struct
 {
     /** buffer to which prepare write queue request will be stored 
@@ -569,7 +560,7 @@ CYBLE_API_RESULT_T CyBle_GattGetMtuSize(uint16* mtu);
 
 /** @} */
 
-#endif /* CY_BLE_CYBLE_GATT_STACK_H */
+#endif /* CYBLE_GATT_H_ */
 
 
 /*EOF*/

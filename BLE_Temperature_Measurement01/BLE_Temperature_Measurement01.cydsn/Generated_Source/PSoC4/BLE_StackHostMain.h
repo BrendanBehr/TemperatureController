@@ -1,7 +1,9 @@
 /***************************************************************************//**
+* \file CyBle_HostMain.h
+*
 * \file CYBLE_StackHostMain.h
-* \version 3.10
-* 
+* \version 3.30
+*
 * \brief
 *  This file contains the constants of the BLE Host Stack IP
 * 
@@ -17,8 +19,9 @@
 *******************************************************************************/
 
 
-#ifndef CY_BLE_CYBLE_STACK_HOST_MAIN_H
-#define CY_BLE_CYBLE_STACK_HOST_MAIN_H
+#ifndef CYBLE_HOST_MAIN_H_
+#define CYBLE_HOST_MAIN_H_
+
 
     
 /***************************************
@@ -26,7 +29,7 @@
 ***************************************/
 
 #include "BLE_Stack.h"
-    
+
 
 /***************************************
 * Exported structures
@@ -59,7 +62,7 @@ typedef enum
 /** @} */
 
 /**Event callback function prototype to receive events from stack */
-typedef void (*CYBLE_STACK_EV_CB_PF)(CYBLE_EVENT_T event, void* evParam);
+typedef void (*CYBLE_STACK_EV_CB_PF)(CYBLE_EVT_HOST_STACK_T event, void* evParam);
 
 
 /***************************************
@@ -144,7 +147,12 @@ CYBLE_API_RESULT_T CyBle_StoreAppData
 *  updated only when there are LL activities. BLE stack internally takes care for 
 *  timing requirement for GATT, GAP and L2CAP signaling on going procedures.
 * 
-*  \param timeout: Timeout for which timer to be started in seconds.
+*  \param timeout: Timeout for which timer to be started.
+*                  IF MSBit of timeout == 1 then resolution is in millisecs,
+*                  ELSE resolution is seconds.
+*  
+*  This takes the assumption that no one would call timeout of,
+*  say, 32000 seconds.
 * 	
 * \return
 *  CYBLE_API_RESULT_T : Return value indicates if the function succeeded or
@@ -187,7 +195,7 @@ CYBLE_API_RESULT_T CyBle_StopTimer (void);
 
 /** @} */
 
-#endif /* CY_BLE_CYBLE_STACK_HOST_MAIN_H */
+#endif /* CYBLE_HOST_MAIN_H_ */
 
 
 /*EOF*/

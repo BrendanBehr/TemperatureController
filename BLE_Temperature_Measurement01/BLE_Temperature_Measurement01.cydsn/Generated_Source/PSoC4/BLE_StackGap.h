@@ -1,7 +1,9 @@
 /***************************************************************************//**
-* \file CYBLE_StackGap.h
-* \version 3.10
+* \file CyBle_Gap.h
 * 
+* \file CYBLE_StackGap.h
+* \version 3.30
+*
 * \brief
 *  This file contains the GAP APIs of the BLE Host Stack IP
 * 
@@ -17,8 +19,8 @@
 *******************************************************************************/
 
 
-#ifndef CY_BLE_CYBLE_GAP_H
-#define CY_BLE_CYBLE_GAP_H
+#ifndef CYBLE_GAP_H_
+#define CYBLE_GAP_H_
 
 
 /***************************************
@@ -164,6 +166,10 @@
 #define CYBLE_GAP_SMP_RESP_IRK_KEY_DIST         0x20u
 #define CYBLE_GAP_SMP_RESP_CSRK_KEY_DIST        0x40u
 
+/** SMP P256 Public-Private Key Size */
+#define CYBLE_GAP_SMP_P256_PUBLIC_KEY_SIZE      0x40u
+#define CYBLE_GAP_SMP_P256_PRIVATE_KEY_SIZE     0x20u
+
 /* Passkey Response */
 #define CYBLE_GAP_REJECT_PASSKEY_REQ            0x00u
 #define CYBLE_GAP_ACCEPT_PASSKEY_REQ            0x01u
@@ -193,6 +199,16 @@
 /* Key Size */
 /** Identity Resolving Key size */
 #define CYBLE_GAP_IRK_SIZE                              16u
+    
+/** Security Requirements */
+#define CYBLE_GAP_NO_SECURITY_REQUIREMENTS              (0x00u)
+#define CYBLE_GAP_SEC_UNAUTH_PAIRING                    (0x01u)
+#define CYBLE_GAP_SEC_AUTH_PAIRING                      (0x02u)
+#define CYBLE_GAP_SEC_SC_PAIRING_WITH_NO_MITM           (0x04u)
+#define CYBLE_GAP_SEC_SC_PAIRING_WITH_MITM              (0x08u)
+#define CYBLE_GAP_SEC_OOB_IN_LEGACY_PAIRING             (0x10u)
+#define CYBLE_GAP_SEC_OOB_IN_SC_PAIRING                 (0x20u)
+#define CYBLE_GAP_SEC_REQ_BIT_MASK                      (0x3Fu)
 
 /***************************************
 * Enumerated Types
@@ -318,7 +334,8 @@ typedef enum
 	/** Pairing is not supported by the device */
 	CYBLE_GAP_AUTH_ERROR_PAIRING_NOT_SUPPORTED,
 
-	/** Insufficient key size for the security requirements of this device */
+	/** Insufficient key size for the security requirements of this device 
+	    or LTK is lost */
 	CYBLE_GAP_AUTH_ERROR_INSUFFICIENT_ENCRYPTION_KEY_SIZE,
 
 	/** command received is not supported */
@@ -333,8 +350,6 @@ typedef enum
 
 	/** Invalid Parameters in Request - Invalid Command length and Parameter value outside range */
 	CYBLE_GAP_AUTH_ERROR_INVALID_PARAMETERS ,
-
-#ifdef SMP_SECURED_CONNECTION_SUPPORT
 
 	/** Indicates to the remote device that the DHKey Check value received doesn't
 	   match the one calculated by the local device */
@@ -351,7 +366,9 @@ typedef enum
 	/** Indicates that the BR/EDR Link Key generated on the BR/EDR transport cannot
 	   be used to derive and distribute keys for LE transport */
 	CYBLE_GAP_AUTH_ERROR_CROSS_TRANSPORT_KEY_GEN_DER_NOT_ALLOWED,
-#endif /* SMP_SECURED_CONNECTION_SUPPORT */
+
+    /** Indicates that over the air, spec will not allow error code value to be greater than 0x0E*/
+    CYBLE_GAP_AUTH_ERROR_CODE_SPEC_MAX_VALUE,
 
 	/** Authentication process timeout, if pairing timeout happens for first time, 
 	    application can choose to re-initiate the pairing procedure. If timeout occurs again, 
@@ -380,7 +397,6 @@ typedef enum
     
 } CYBLE_GAP_ADDR_TYPE_T;
 
-#ifdef SMP_SECURED_CONNECTION_SUPPORT
 /** Passkey entry notification types.
     These are used for CyBle_GapAuthSendKeyPress API
     as well as with CYBLE_EVT_GAP_KEYPRESS_NOTIFICATION event parameter.
@@ -402,9 +418,7 @@ typedef enum
     /** Passkey entry completed */
     CYBLE_GAP_PASSKEY_ENTRY_COMPLETED  = 0x04u
 } CYBLE_GAP_KEYPRESS_NOTIFY_TYPE;
-#endif /* SMP_SECURED_CONNECTION_SUPPORT */
 
-#ifdef HCI_PRIVACY_1_2_SUPPORT
 /** GAP Direct advertiser address type */
 typedef enum
 {
@@ -421,7 +435,6 @@ typedef enum
     CYBLE_GAP_RANDOM_IDENTITY_ADDR_TYPE
     
 } CYBLE_GAP_ADV_ADDR_TYPE_T;
-#endif  /* HCI_PRIVACY_1_2_SUPPORT */
 
 /** GAP physical layer */
 typedef enum
@@ -516,6 +529,17 @@ typedef struct
     uint8 csrkInfo[CYBLE_GAP_SMP_CSRK_SIZE];
 
 } CYBLE_GAP_SMP_KEY_DIST_T;
+
+/** SMP P-256 public-private key pair */
+typedef struct
+{
+    /** P-256 public key */
+    uint8 publicKey[CYBLE_GAP_SMP_P256_PUBLIC_KEY_SIZE];
+    
+    /** P-256 private key */
+    uint8 privateKey[CYBLE_GAP_SMP_P256_PRIVATE_KEY_SIZE];
+    
+} CYBLE_GAP_SMP_LOCAL_P256_KEYS;
 
 /** Advertising parameters   */
 typedef struct
@@ -858,7 +882,9 @@ typedef struct
 typedef struct
 {
 	/** status corresponding to this event will be HCI error code 
-    as defined in BLE spec 4.1 */
+    	as defined in BLE spec 4.1 or User can refer CYBLE_HCI_ERROR_T 
+    	for HCI error codes
+    */
     uint8      status;					
 
 	/** Connection interval used on this connection. 
@@ -880,8 +906,7 @@ typedef struct
 
 }CYBLE_GAP_CONN_PARAM_UPDATED_IN_CONTROLLER_T;
 
-#ifdef SMP_SECURED_CONNECTION_SUPPORT
-#ifdef SMP_HAVE_OOB_SUPPORT
+/** Structure containing OOB parameters */
 typedef struct
 {
     /** Status corresponding to this event will be HCI error code 
@@ -898,10 +923,7 @@ typedef struct
     uint8   oobDataLen; 
     
 }CYBLE_GAP_OOB_DATA_T;
-#endif /* SMP_HAVE_OOB_SUPPORT */
-#endif /* SMP_SECURED_CONNECTION_SUPPORT */
 
-#ifdef HCI_DLE_SUPPORT
 /** Local suggested or Max 'tx octets' and 'tx time' */
 typedef struct
 {
@@ -961,9 +983,26 @@ typedef struct
     uint16      connMaxRxTime; 
 
 }CYBLE_GAP_CONN_DATA_LENGTH_T;
-#endif   /* HCI_DLE_SUPPORT */
 
-#ifdef HCI_PRIVACY_1_2_SUPPORT
+/** LE Data Length RX parameters */
+typedef struct
+{
+	/** Peer bdHandle */
+	uint8 bdHandle;
+
+	/** The maximum number of payload octets in a Link Layer Data Channel
+     *  PDU that the local controller expects to receive on current connection
+     */
+	uint16 connMaxRxOctets;
+
+	/** The maximum time that the local Controller expects to take to receive a
+     *  Link Layer Data Channel PDU on this connection 
+     */
+	uint16 connMaxRxTime;
+	
+}CYBLE_GAP_RX_DATA_LENGTH_T;
+
+
 /** Resolving list information of one device */
 typedef struct
 {
@@ -1081,13 +1120,12 @@ typedef struct
 
     /** Status corresponding to this event will be HCI error code.
      * Values of 0 indicates connection successfully completed.
-     * Refer BLE spec 4.2,Vol2, Part D for Error codes.
+     * Refer BLE spec 4.2,Vol2, Part D for Error codes 
+     * or User can refer CYBLE_HCI_ERROR_T for HCI error codes.
      */
     uint8                       status;
 
 }CYBLE_GAP_ENHANCE_CONN_COMPLETE_T;
-
-#endif /* HCI_PRIVACY_1_2_SUPPORT */
 
 /** Bluetooth Bonded Device Address list */
 typedef struct
@@ -1110,6 +1148,20 @@ typedef struct
     uint8                           count;
 
 }CYBLE_GAP_DEVICE_ADDR_LIST_T;
+
+/** Configuration Structure for Set Privacy Mode */
+typedef struct
+{
+	 /** Bluetooth device address */
+    uint8     peerBdAddr[CYBLE_GAP_BD_ADDR_SIZE]; 
+	 
+	/** public = 0, Random = 1 */
+    uint8     peerBdAddrType; 
+	
+	/** Privacy Mode */
+	uint8 privacyMode;
+
+}CYBLE_GAP_PRIVACY_MODE_INFO_T;
 
 /** @} */
 
@@ -1190,6 +1242,90 @@ typedef struct
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_GapSetIoCap(CYBLE_GAP_IOCAP_T ioCap);
 
+/******************************************************************************
+* Function Name: CyBle_GapSetSecurityRequirements
+***************************************************************************//**
+*
+*  This function is used to set the security requirements of local device and encryption
+*  key size requirement of the local device. This is a blocking function. No event 
+*  is generated on calling this function. It is expected to call this API on host stack 
+*  on, though can be called at any point except when any of SMP procedure is in progress. 
+*  Security requirements are defined in the following table:
+*  <table>
+*  <tr>
+*    <th>Security Requirement</th>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_GAP_NO_SECURITY_REQUIREMENTS</td>
+*    <td>Default :security requirement specifies there are no security requirements</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_GAP_SEC_UNAUTH_PAIRING</td>
+*    <td>Bit 0: Legacy pairing with NO MITM protection</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_GAP_SEC_AUTH_PAIRING</td>
+*    <td>Bit 1: Legacy pairing with MITM protection</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_GAP_SEC_SC_PAIRING_WITH_NO_MITM</td>
+*    <td>Bit 2: Secured Connection pairing with NO MITM protection</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_GAP_SEC_SC_PAIRING_WITH_MITM</td>
+*    <td>Bit 3: Secured Connection pairing with MITM protection</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_GAP_SEC_OOB_IN_LEGACY_PAIRING</td>
+*    <td>Bit 4: Legacy pairing with OOB method</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_GAP_SEC_OOB_IN_SC_PAIRING</td>
+*    <td>Bit 5: Secured Connection pairing with OOB method
+*  </tr>
+*  </table>
+*
+*  After this API is called, BLE Stack will check whether the received 
+*  security request or pairing request or pairing response satisfies local 
+*  device security requirements that are set using this API. If local device
+*  security requirements are not met then pairing is rejected by the BLE stack.
+*
+*  Eg: CyBle_GapSetSecurityRequirements() is called with secReq as CYBLE_GAP_SEC_SC_PAIRING_WITH_MITM.
+*  Now if BLE Stack receives any pairing request with SC bit and MITM bit are not set, 
+*  then that pairing request will be rejected by the stack.
+*
+*  Note: If the secured connection only mode is set, then these security requirements are not 
+*  considered during pairing procedure. This is to maintain BWC for SC Only mode.
+*
+*  \param secReq: Security requirement is a bit-field parameter. Application can
+*     set this value with the above defined values in the table. Application can set 
+*     multiple security requirements by ORing them in this parameter.
+*     Eg: If secReq is (CYBLE_GAP_SEC_UNAUTH_PAIRING | CYBLE_GAP_SEC_SC_PAIRING_WITH_NO_MITM),
+*     then stack allows pairing only if received pairing request is either Legacy 
+*     pairing with NO MITM or Secured Connection pairing with NO MITM.
+*
+* \param encKeySize: Encryption key size requirement of the local device. 
+*     This parameter does not affect anything on central side. At peripheral side,
+*     when encryption key size is set using this API, then after during pairing if 
+*     negotiated key size is less than the key size set by this API, then BLE Stack will 
+*     reject that pairing request.
+*
+* 	
+* \return
+*  CYBLE_API_RESULT_T : Return value indicates if the function succeeded or
+*  failed. Following are the possible error codes.
+*
+*   Errors codes                     | Description
+*   ------------                     | -----------
+*   CYBLE_ERROR_OK                   | On successful operation
+*   CYBLE_ERROR_INVALID_PARAMETER    | On specifying invalid input parameter
+*
+******************************************************************************/
+CYBLE_API_RESULT_T CyBle_GapSetSecurityRequirements
+					(
+						uint8 secReq,
+						uint8 encKeySize
+					);
 
 /******************************************************************************
 * Function Name: CyBle_GapSetOobData
@@ -1209,7 +1345,8 @@ CYBLE_API_RESULT_T CyBle_GapSetIoCap(CYBLE_GAP_IOCAP_T ioCap);
 *            * CYBLE_GAP_OOB_DISABLE
 *            * CYBLE_GAP_OOB_ENABLE
 *  \param key: 16 Octet Temporary Key, to be used for OOB authentication.
-*  \param oobData: Pointer to OOB data.
+*  \param oobData: Pointer to OOB data. In case of Legacy Pairing this parameter is not 
+*                  used for OOB authentication.
 *  \param oobDataLen: Pointer to a variable to store OOB data length.
 * 		
 * \return
@@ -1323,8 +1460,6 @@ CYBLE_API_RESULT_T CyBle_GapGetPeerDevSecurity (uint8 bdHandle, CYBLE_GAP_AUTH_I
  @{
 */
 
-#ifdef GAP_PERIPHERAL
-
 /******************************************************************************
 * Function Name: CyBle_GappEnterDiscoveryMode
 ***************************************************************************//**
@@ -1396,9 +1531,7 @@ CYBLE_API_RESULT_T CyBle_GappEnterDiscoveryMode (CYBLE_GAPP_DISC_MODE_INFO_T* ad
 void CyBle_GappExitDiscoveryMode (void);
 
 /** @} */
-#endif /*GAP_PERIPHERAL*/
 
-#ifdef GAP_CENTRAL
 /**
  \addtogroup group_common_api_gap_central_functions
  @{
@@ -1494,6 +1627,9 @@ CYBLE_API_RESULT_T CyBle_GapcStartDiscovery(CYBLE_GAPC_DISC_INFO_T* scanInfo);
 *  before receiving this event to associate this event with either the start or
 *  stop discovery function.
 * 			
+*
+*
+*
 ******************************************************************************/
 void CyBle_GapcStopDiscovery(void);
 
@@ -1588,7 +1724,6 @@ CYBLE_API_RESULT_T CyBle_GapcInitConnection(CYBLE_GAPC_CONN_PARAM_T* connParam);
 CYBLE_API_RESULT_T CyBle_GapcCancelConnection(void);
 
 /** @} */
-#endif /* GAP_CENTRAL */
 
 /**
  \addtogroup group_common_api_gap_central_peripheral_functions
@@ -1630,19 +1765,57 @@ CYBLE_API_RESULT_T CyBle_GapcCancelConnection(void);
 *    <td>CYBLE_ERROR_MEMORY_ALLOCATION_FAILED</td>
 *    <td>Memory allocation failed.</td>
 *  </tr>
-*  <tr>
-*    <td>CYBLE_ERROR_NO_DEVICE_ENTITY</td>
-*    <td>Device identified using 'bdHandle' does not exist.</td>
-*  </tr>
 *  </table>
 * 
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_GapDisconnect(uint8 bdHandle);
 
+/******************************************************************************
+* Function Name: CyBle_GapDisconnectWithReason
+***************************************************************************//**
+* 
+*  This function allows to disconnect the peer device with reason code. It is to be used by the device in
+*  GAP Central mode and may be used by a GAP Peripheral device to send a
+*  disconnect request. This is a non-blocking function. 
+*  On disconnection, the
+*  following events are generated, in order.
+*  * CYBLE_EVT_GATT_DISCONNECT_IND
+*  * CYBLE_EVT_GAP_DEVICE_DISCONNECTED
+*
+*  Note: If the reason code is not valid, then by default reason code sent is 0x13
+*     
+*  \param bdHandle:  Peer device handle
+*  \param reason: Reason for the disconnect. Refer Volume 2, Part E, section 7.1.6 for the reason codes.
+* 
+* \return
+*  CYBLE_API_RESULT_T : Return value indicates if the function succeeded or
+*  failed. Following are the possible error codes.
+*
+*  <table>
+*  <tr>
+*    <th>Error codes</th>
+*    <th>Description</th>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_OK</td>
+*    <td>On successful operation.</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_INVALID_PARAMETER</td>
+*    <td>No device to be disconnected. The specified device handle does not map 
+*        to any device entry in the BLE Stack.</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_MEMORY_ALLOCATION_FAILED</td>
+*    <td>Memory allocation failed.</td>
+*  </tr>
+*  </table>
+* 
+******************************************************************************/
+CYBLE_API_RESULT_T CyBle_GapDisconnectWithReason (uint8 bdHandle, uint8 reason);
+
 /** @} */
 
-#ifdef GAP_CENTRAL
-#ifdef HOST_RESOLVE_PVT_ADDR
 /**
  \addtogroup group_common_api_gap_central_functions
  @{
@@ -1692,8 +1865,6 @@ CYBLE_API_RESULT_T CyBle_GapDisconnect(uint8 bdHandle);
 CYBLE_API_RESULT_T CyBle_GapcResolveDevice(const uint8 *bdAddr, const uint8 *irk);
 
 /** @} */
-#endif /* HOST_RESOLVE_PVT_ADDR */
-#endif /* GAP_CENTRAL */
 
 /**
  \addtogroup group_common_api_gap_central_peripheral_functions
@@ -1876,6 +2047,8 @@ CYBLE_API_RESULT_T CyBle_GapGenerateKeys(uint8 keysFlag, CYBLE_GAP_SMP_KEY_DIST_
 *             CYBLE_GAP_AUTH_INFO_T. The 'authErr' parameter in 
 *             CYBLE_GAP_AUTH_INFO_T should be ignored as it is not used in 
 *             this function.
+*  NOTE: If the bonding flag in authInfo is set to CYBLE_GAP_BONDING_NONE then, SMP keys will not be
+*        distributed even if application has generated and set the keys explicitly.
 * 
 * \return
 *  CYBLE_API_RESULT_T : Return value indicates if the function succeeded or
@@ -1912,8 +2085,6 @@ CYBLE_API_RESULT_T CyBle_GapGenerateKeys(uint8 keysFlag, CYBLE_GAP_SMP_KEY_DIST_
 CYBLE_API_RESULT_T CyBle_GapAuthReq(uint8 bdHandle, CYBLE_GAP_AUTH_INFO_T *authInfo);
 
 /** @} */
-
-#ifdef GAP_PERIPHERAL
 
 /**
  \addtogroup group_common_api_gap_peripheral_functions
@@ -1958,7 +2129,11 @@ CYBLE_API_RESULT_T CyBle_GapAuthReq(uint8 bdHandle, CYBLE_GAP_AUTH_INFO_T *authI
 *  \param bdHandle: Peer device handle.
 *  \param authInfo: Pointer to a variable containing security information of the device
 *             of type CYBLE_GAP_AUTH_INFO_T.
-* 
+*
+*  NOTE: If the bonding flag in authInfo is set to CYBLE_GAP_BONDING_NONE then, SMP keys will not be
+*        distributed even if application has generated and set the keys explicitly.
+*
+*
 * \return
 *  CYBLE_API_RESULT_T : Return value indicates if the function succeeded or
 *  failed. Following are the possible error codes.
@@ -1993,7 +2168,6 @@ CYBLE_API_RESULT_T CyBle_GapAuthReq(uint8 bdHandle, CYBLE_GAP_AUTH_INFO_T *authI
 CYBLE_API_RESULT_T CyBle_GappAuthReqReply(uint8 bdHandle, CYBLE_GAP_AUTH_INFO_T *authInfo);
 
 /** @} */
-#endif /* GAP_PERIPHERAL */
 
 /**
  \addtogroup group_common_api_gap_central_peripheral_functions
@@ -2171,7 +2345,6 @@ CYBLE_API_RESULT_T CyBle_GapGetBondedDevicesList(CYBLE_GAP_BONDED_DEV_ADDR_LIST_
 CYBLE_API_RESULT_T CyBle_GapRemoveOldestDeviceFromBondedList (void);
 
 /** @} */
-#ifdef GAP_CENTRAL
 
 /**
  \addtogroup group_common_api_gap_central_functions
@@ -2261,7 +2434,6 @@ CYBLE_API_RESULT_T CyBle_GapcSetHostChannelClassification
            );
 
 /** @} */           
-#endif /* GAP_CENTRAL */
 
 /**
  \addtogroup group_common_api_gap_central_peripheral_functions
@@ -2306,7 +2478,6 @@ CYBLE_API_RESULT_T CyBle_GapGetDevSecurityKeyInfo
 
 /** @} */
 
-#ifdef GAP_PERIPHERAL
 /**
  \addtogroup group_common_api_gap_peripheral_functions
  @{
@@ -2352,9 +2523,7 @@ CYBLE_API_RESULT_T CyBle_GapUpdateAdvData
 );
 
 /** @} */
-#endif /* GAP_PERIPHERAL */
 
-#ifdef GAP_CENTRAL
 /**
  \addtogroup group_common_api_gap_central_functions
  @{
@@ -2393,7 +2562,6 @@ CYBLE_API_RESULT_T CyBle_GapcSetRemoteAddr
 );
 
 /** @} */
-#endif  /* GAP_CENTRAL */
 
 /**
  \addtogroup group_common_api_gap_central_peripheral_functions
@@ -2487,7 +2655,6 @@ CYBLE_API_RESULT_T CyBle_GapGetChannelMap
 );
 
 
-#ifdef SMP_SECURED_CONNECTION_SUPPORT
 /******************************************************************************
 * Function Name: CyBle_GapSetSecureConnectionsOnlyMode
 ***************************************************************************//**
@@ -2522,10 +2689,12 @@ CYBLE_API_RESULT_T CyBle_GapSetSecureConnectionsOnlyMode(uint8 state);
 * Function Name: CyBle_GapGenerateLocalP256Keys
 ***************************************************************************//**
 *
-* This API is used to generate  P-256 Public-Private key pair to be using during LE Secure connection 
-* pairing procedure. Application may choose to generate P-256 public-private key pair before paring 
+* This API is used to generate P-256 Public-Private key pair to be used during LE Secure connection 
+* pairing procedure. Application may choose to generate P-256 public-private key pair before pairing 
 * process starts. If this API is not called before pairing process starts, BLE Stack will use default
 * public-private key pair.
+* On the Completion of key generation, new keys will be set in the BLE Stack for SC pairing procedure 
+* and application receives CYBLE_EVT_GAP_SMP_LOC_P256_KEYS_GEN_AND_SET_COMPLETE event.
 *
 *
 * \return
@@ -2540,6 +2709,40 @@ CYBLE_API_RESULT_T CyBle_GapSetSecureConnectionsOnlyMode(uint8 state);
 *
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_GapGenerateLocalP256Keys(void);
+
+/******************************************************************************
+* Function Name: CyBle_GapSetLocalP256Keys
+***************************************************************************//**
+*
+* This API is used to set P-256 Public-Private key pair to be used during LE Secure connection 
+* pairing procedure. Application may choose to set P-256 public-private key pair before pairing 
+* process starts. If this API is not called before pairing process starts, BLE Stack will use default
+* public-private key pair. This API is not expected to be called when pairing procedure is in progress.
+* Application can generate P-256 Public-Private key pair using API CyBle_GapGenerateLocalP256Keys()
+* and can set the generated key pair using this API.
+*
+* \param localP256Keys: Pointer to structure CYBLE_GAP_SMP_LOCAL_P256_KEYS, that has
+*                       fields for local P-256 public-private key pair.
+* \param isValidateKeys: If it is set to 1 public key is validated, if it is set to 0 
+*                        public key is not validated.
+*
+* \return
+* CYBLE_API_RESULT_T : Return value indicates if the function succeeded or
+* failed. Following are the possible error codes.
+*
+*  Errors codes                     | Description
+*  ------------                     | -----------
+*  CYBLE_ERROR_OK                   | On successful operation.
+*  CYBLE_ERROR_INVALID_PARAMETER    | Parameter is NULL Or Public key is not valid
+*  CYBLE_ERROR_INVALID_OPERATION    | Pairing is in progress.
+*
+*
+******************************************************************************/
+CYBLE_API_RESULT_T CyBle_GapSetLocalP256Keys
+(
+    CYBLE_GAP_SMP_LOCAL_P256_KEYS *localP256Keys,
+    uint8 isValidateKeys
+);
 
 /******************************************************************************
 * Function Name: CyBle_GapAuthSendKeyPress
@@ -2559,7 +2762,7 @@ CYBLE_API_RESULT_T CyBle_GapGenerateLocalP256Keys(void);
 *  1. Call with CYBLE_GAP_PASSKEY_ENTRY_STARTED on receiving event to enter passkey.
 *  2. Call with CYBLE_GAP_PASSKEY_DIGIT_ENTERED, CYBLE_GAP_PASSKEY_DIGIT_ERASED or 
 *     CYBLE_GAP_PASSKEY_CLEARED based on application events while user enters passkey.
-*  3. Call with CYBLE_GAP_PASSKEY_ENTRY_COMPLETED after user application sucessfully
+*  3. Call with CYBLE_GAP_PASSKEY_ENTRY_COMPLETED after user application successfully
 *     received passkey.
 *  4. This should be followed by call to CyBle_GapAuthPassKeyReply API to provide
 *     user entered passkey to Stack.
@@ -2576,7 +2779,10 @@ CYBLE_API_RESULT_T CyBle_GapGenerateLocalP256Keys(void);
 *  CYBLE_ERROR_OK                       | On successful operation.
 *  CYBLE_ERROR_INVALID_PARAMETER        | notificationType is invalid.  
 *  CYBLE_ERROR_NO_DEVICE_ENTITY         | Device identified using 'bdHandle' does not exist.
-*  CYBLE_ERROR_INVALID_OPERATION        | Either keypress was not negotiated or passkey entry procedure not ongoing.
+*  CYBLE_ERROR_INVALID_OPERATION        | Keypress was not negotiated or 
+*                                         passkey entry procedure not ongoing or
+*                                         Secured Connection is not enabled or 
+*                                         pairing procedure is not in progress.
 *
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_GapAuthSendKeyPress
@@ -2591,7 +2797,11 @@ CYBLE_API_RESULT_T CyBle_GapAuthSendKeyPress
 *
 * This API is used to generate OOB data based on the input parameter (16 Byte random number)
 * This API is called to generate OOB data to be used by peer device. Peer device (or local device with peer's OOB data)
-* will use 'CyBle_GapSetOobData()' to set the oob data to be used for secure connections pairing. 
+* will use 'CyBle_GapSetOobData()' to set the OOB data to be used for secure connections pairing. 
+*
+* Note: This API should be used only in secured connection pairing. In case of legacy pairing only key is used for
+*       OOB authentication. But in SC pairing, key(pRand) is used to generate local OOB data(Confirm value). In SC both
+*       key and generated OOB data are used in OOB authentication. Hence this API is used only in SC pairing.
 *
 *  \param pRand: 16 Bytes Random number to be used for generating OOB data. If NULL is passed, stack will generate
 *                16 Bytes random number and then will generate OOB data.
@@ -2607,9 +2817,7 @@ CYBLE_API_RESULT_T CyBle_GapAuthSendKeyPress
 *
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_GapGenerateOobData (const uint8 *pRand);
-#endif /* SMP_SECURED_CONNECTION_SUPPORT */
 
-#ifdef HCI_DLE_SUPPORT
 /******************************************************************************
 * Function Name: CyBle_GapSetDataLength
 ***************************************************************************//**
@@ -2635,6 +2843,7 @@ CYBLE_API_RESULT_T CyBle_GapGenerateOobData (const uint8 *pRand);
 *  CYBLE_ERROR_OK                       | On successful operation.
 *  CYBLE_ERROR_NO_DEVICE_ENTITY         | Device identified by bdHandle is not present
 *  CYBLE_ERROR_INVALID_PARAMETER		| Out of range value passed.                                      
+*  CYBLE_ERROR_INVALID_OPERATION        | DLE feature not enabled
 *
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_GapSetDataLength 
@@ -2644,18 +2853,62 @@ CYBLE_API_RESULT_T CyBle_GapSetDataLength
     uint16		connMaxTxTime
 );
 
+
+/******************************************************************************
+* Function Name: CyBle_GapSetRxDataLength
+***************************************************************************//**
+*
+* This API allows application to suggest the maximum number of payload octets 
+* that the local controller expects to receive and maximum time that local 
+* controller expects to take to receive a PDU on current connection.
+*
+* Actual data length used by controller will be informed through 'CYBLE_EVT_GAP_DATA_LENGTH_CHANGE' event
+*
+*  \param RxDleParams: Pointer to a structure of type 'CYBLE_GAP_RX_DATA_LENGTH_T'. 
+*				 It has three fields bdHandle field representing the peer device handle, 
+*				 connmaxRxOctets field representing preferred maximum number of payload octets 
+*				 that the local controller should expects to receive on current connection
+*				 Range 0x001B-0x00FB (0x0000 - 0x001A and 0x00FC - 0xFFFF Reserved for future use)
+*				 and connMaxRxTime field representing preferred maximum number of microseconds that the
+*				 local Controller should use to receive a single Link Layer Data Channel PDU.
+* 				 Range 0x0148-0x0848 (0x0000 - 0x0147 and 0x0849 - 0xFFFF Reserved for future use)
+*
+* \return
+* CYBLE_API_RESULT_T : Return value indicates if the function succeeded or
+* failed. Following are the possible error codes.
+* 
+*  Errors codes                         | Description
+*  ------------                         | -----------
+*  CYBLE_ERROR_OK                       | On successful operation.
+*  CYBLE_ERROR_NO_DEVICE_ENTITY         | Device identified by bdHandle is not present
+*  CYBLE_ERROR_INVALID_PARAMETER        | If NULL passed
+*  CYBLE_ERROR_INVALID_OPERATION        | DLE feature not enabled
+*
+******************************************************************************/
+CYBLE_API_RESULT_T CyBle_GapSetRxDataLength(CYBLE_GAP_RX_DATA_LENGTH_T *RxDleParams);
+
+
 /******************************************************************************
 * Function Name: CyBle_GapSetSuggestedDataLength
 ***************************************************************************//**
 *
-* This API allows application to set suggested Tx packet size and suggested Tx time. 
+* This API allows the application to specify its preferred values for the Link 
+* Layer maximum Tx packet (Data Channel PDU) size (connInitialMaxTxOctets) and 
+* maximum Tx packet transmission time (connInitialMaxTxTime)to be used for new 
+* connections. 
 *
-*  \param suggestedTxOctets: Preferred suggested number of payload octets that the local Controller should include in a 
-*					single Link Layer Data Channel PDU. 
-*					Range 0x001B-0x00FB (0x0000 - 0x001A and 0x00FC - 0xFFFF Reserved for future use)
-*  \param suggestedTxTime: Preferred suggested number of microseconds that the local Controller should use to transmit 
-* 				    a single Link Layer Data Channel PDU. 
-* 				    Range 0x0148-0x0848 (0x0000 - 0x0147 and 0x0849 - 0xFFFF Reserved for future use)
+*  \param suggestedTxOctets: The suggested value (connInitialMaxTxOctets) for 
+*                    the maximum transmitted number of payload octets (Link  
+*                    Layer Data Channel PDU) to be used for new connections.
+*					 Range 0x001B-0x00FB (0x0000 - 0x001A and 
+*                    0x00FC - 0xFFFF Reserved for future use)
+*  \param suggestedTxTime: The suggested value (connInitialMaxTxTime)for the  
+*                     maximum packet (Link Layer Data Channel PDU) transmission  
+*                     time to be used for new connections. Application can use 
+*                     API-CyBle_GapConvertOctetToTime to get timeconnMaxTxTime 
+*                     corresponding to suggestedTxOctets.
+*                     Range 0x0148-0x0848 (0x0000 - 0x0147 and 0x0849 - 0xFFFF 
+*                     Reserved for future use)
 *
 *  \return
 *  CYBLE_API_RESULT_T : Return value indicates if the function succeeded or
@@ -2665,6 +2918,7 @@ CYBLE_API_RESULT_T CyBle_GapSetDataLength
 *  ------------                         | -----------
 *  CYBLE_ERROR_OK                       | On successful operation.
 *  CYBLE_ERROR_INVALID_PARAMETER        | Out of range values.
+*  CYBLE_ERROR_INVALID_OPERATION        | DLE feature not enabled
 *
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_GapSetSuggestedDataLength 
@@ -2677,20 +2931,23 @@ CYBLE_API_RESULT_T CyBle_GapSetSuggestedDataLength
 * Function Name: CyBle_GapGetDataLength
 ***************************************************************************//**
 *
-* This API allows application to read the suggested and maximum Tx/Rx packet size and
-* suggested and maximum Tx/Rx time that BLE Stack uses. 
+* This API allows the application to read Link Layer maximum supported Tx/Rx  
+* packet (DataChannel PDU) octets / transmission time and maximum suggested 
+* Tx/Rx packet octets / transmission time.
 *
-*  \param readParam: Pointer to structure of type 'CYBLE_GAP_DATA_LENGTH_T'. This is an output parameter
-*  			which stores the Tx and Rx octets and time.
+*  \param readParam: Pointer to structure of type 'CYBLE_GAP_DATA_LENGTH_T'.  
+*             This is an output parameter which contain the maximum supported  
+*             Tx and Rx octets & time and maximum suggested Tx octets & time.
 *
-* \return
-*   CYBLE_API_RESULT_T : Return value indicates if the function succeeded or
-* failed. Following are the possible error codes.
+*  \return
+*  CYBLE_API_RESULT_T : Return value indicates if the function succeeded or
+*  failed. Following are the possible error codes.
 *
 *  Errors codes                         | Description
 *  ------------                         | -----------
 *  CYBLE_ERROR_OK                       | On successful operation.
 *  CYBLE_ERROR_INVALID_PARAMETER        | Null pointer passed.
+*  CYBLE_ERROR_INVALID_OPERATION        | DLE feature not enabled
 *
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_GapGetDataLength 
@@ -2710,9 +2967,9 @@ CYBLE_API_RESULT_T CyBle_GapGetDataLength
 *  \param octets: Payload octets. This is an input parameter.
 *  \param pTime: Buffer where time in microseconds will be stored which is 
 *           derived from octets and phy.
-* \return
+*  \return
 *   CYBLE_API_RESULT_T : Return value indicates if the function succeeded or
-* failed. Following are the possible error codes.
+*   failed. Following are the possible error codes.
 *
 *  Errors codes                         | Description
 *  ------------                         | -----------
@@ -2727,9 +2984,6 @@ CYBLE_API_RESULT_T CyBle_GapConvertOctetToTime
     uint16              *pTime
 );
 
-#endif /* HCI_DLE_SUPPORT */
-
-#ifdef HCI_PRIVACY_1_2_SUPPORT
 /******************************************************************************
 * Function Name: CyBle_GapAddDeviceToResolvingList
 ***************************************************************************//**
@@ -2996,63 +3250,58 @@ CYBLE_API_RESULT_T CyBle_GapSetAddressResolutionEnable
 	uint8 		enableDisable
 );
 
-#endif /* HCI_PRIVACY_1_2_SUPPORT */
-
-#ifdef GAP_DYNAMIC_BONDLIST_SUPPORT
 /******************************************************************************
-* Function Name: CyBle_GapRemDeviceFromWhiteList
+* Function Name: CyBle_GapSetPrivacyMode
 ***************************************************************************//**
 *
-* This API removes the device(s) from the white list. 
-* This is a blocking function. No event is generated on calling this function.
+* This API is used to allow the Host to specify the privacy mode to be used for 
+* a given entry on the resolving list. 
+
+* The effect of this setting is specified in [Vol 6] Part B, Section 4.7.
 *
-* \param bdAddr: Pointer to peer device address, of type CYBLE_GAP_BD_ADDR_T. If device
-*          address is set to 0, then all devices shall be removed from trusted
-*          list and white list.
+* When an entry on the resolving list is removed, the mode associated with that
+* entry shall also be removed.
+*
+*  \param privacyModeInfo: Pointer to a structure of type CYBLE_GAP_PRIVACY_MODE_INFO_T
 *
 * \return
-* CYBLE_API_RESULT_T : Return value indicates if the function succeeded or
+*  CYBLE_API_RESULT_T : Return value indicates if the function succeeded or
 * failed. Following are the possible error codes.
 *
-*  Errors codes                     | Description
-*  ------------                     | -----------
-*  CYBLE_ERROR_OK                   | On successful operation.
-*  CYBLE_ERROR_INVALID_PARAMETER    | On specifying NULL as input parameter for 'bdAddr'.
-*  CYBLE_ERROR_INVALID_OPERATION    | Whitelist is already in use.	
-*  CYBLE_ERROR_NO_DEVICE_ENTITY     | Device does not exist in the whitelist.
+<table>
+*  <tr>
+*    <th>Errors codes</th>
+*    <th>Description</th>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_OK</td>
+*    <td>On successful operation.</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_INVALID_PARAMETER</td>
+*    <td>Any of the input parameter is NULL</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_NO_DEVICE_ENTITY</td>
+*    <td>When a Controller cannot find device entry in the resolving list</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_INVALID_OPERATION</td>
+*    <td>Request is not permitted when address translation is enabled in the Controller and:
+*               * Advertising is enabled
+*               * Scanning is enabled
+*               * Create connection command is outstanding.
+*    </td>
+*  </tr>
+* </table>
 *
 ******************************************************************************/
-CYBLE_API_RESULT_T CyBle_GapRemDeviceFromWhiteList (const CYBLE_GAP_BD_ADDR_T   * bdAddr);
 
-/******************************************************************************
-* Function Name: CyBle_GapRemDeviceFromWhiteList
-***************************************************************************//**
-*
-* This function marks the device untrusted. It removes the bonding information
-* of the device from the database. More details on 'bonding' and 'trusted devices' is
-* available in Bluetooth 4.1 core specification, Volume 3, Part C, section 9.4.4.
-*
-* This is a blocking function. No event is generated on calling this function.
-*
-* \param bdAddr: Pointer to peer device address, of type CYBLE_GAP_BD_ADDR_T. If device
-*          address is set to 0, then all devices shall be removed from trusted
-*          list and white list.
-*
-* \return
-* CYBLE_API_RESULT_T : Return value indicates if the function succeeded or
-* failed. Following are the possible error codes.
-*
-*  Errors codes                     | Description
-*  ------------                     | -----------
-*  CYBLE_ERROR_OK                   | On successful operation.
-*  CYBLE_ERROR_INVALID_PARAMETER    | On specifying NULL as input parameter for 'bdAddr'.
-*  CYBLE_ERROR_INVALID_OPERATION    | Whitelist is already in use.	
-*  CYBLE_ERROR_NO_DEVICE_ENTITY     | Device does not exist in the whitelist.
-*
-******************************************************************************/
-CYBLE_API_RESULT_T CyBle_GapRemDeviceFromBondList (const CYBLE_GAP_BD_ADDR_T   * bdAddr);
+CYBLE_API_RESULT_T CyBle_GapSetPrivacyMode
+(
+	CYBLE_GAP_PRIVACY_MODE_INFO_T *privacyModeInfo
+);
 
-#endif  /* GAP_DYNAMIC_BONDLIST_SUPPORT */
 
 /******************************************************************************
 * Function Name: CyBle_GapGetBondedDevicesByRank
@@ -3226,8 +3475,39 @@ CYBLE_API_RESULT_T CyBle_GapGenerateAndSetIrk(uint8 keysFlag, uint8 *irk);
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_GapFixAuthPassKey(uint8 isFixed, uint32 fixedPassKey);
 
-/** @} */
-#endif /* CY_BLE_CYBLE_GAP_H */
+/******************************************************************************
+* Function Name: CyBle_GappSetNumOfAdvPkts
+***************************************************************************//**
+* Sets number of advertisement packets to be sent over the air and starts
+* Advertisement.
+*
+*
+* Gap Peripheral receives CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP 
+* event after specified number of adv packets transmitted successfully.
+*
+* Note1:  Advertisement Timeout will be ignored.
+* Note2:  Ongoing Advertisement should be stopped by the application 
+*		  before calling this API.
+*
+* \param advInfo: Structure of type CYBLE_GAPP_DISC_MODE_INFO_T, which contains the
+*		 		  advertisement parameters
+*
+* \param  NumOfAdvPkts: (Input parameter) Total number of packets 
+* 						to transmitted over the air.
+*
+* \return
+* CYBLE_API_RESULT_T : Return value indicates if the function succeeded or
+* failed. Following are the possible error codes.
+* 
+*  Errors codes                         | Description
+*  ------------                         | -----------
+*  CYBLE_ERROR_OK                       | On successful operation.
+*  CYBLE_ERROR_INVALID_PARAMETER        | If Zero passed
+*
+******************************************************************************/
+CYBLE_API_RESULT_T CyBle_GappSetNumOfAdvPkts(CYBLE_GAPP_DISC_MODE_INFO_T* advInfo, uint16 NumOfAdvPkts);
 
+/** @} */
+#endif /* CYBLE_GAP_H_ */
 
 /*EOF*/

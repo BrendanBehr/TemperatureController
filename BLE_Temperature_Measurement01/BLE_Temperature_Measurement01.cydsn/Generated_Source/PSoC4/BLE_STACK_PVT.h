@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file CYBLE_STACK_PVT.h
-* \version 3.10
+* \version 3.30
 *
 * \brief
 *  Contains the function prototypes and constants for the HAL section
@@ -16,6 +16,7 @@
 * the software package with which this file was provided.
 *******************************************************************************/
 
+/** \cond IGNORE */
 
 #if !defined(CY_BLE_CYBLE_STACK_PVT_H)
 #define CY_BLE_CYBLE_STACK_PVT_H
@@ -27,8 +28,8 @@
 ***************************************/
 typedef struct
 {
-    uint32  timerPeriod; /**< In ms */
-    uint8   timerMode;   /**< One shot, continuous. */
+    uint32  timerPeriod; /* In ms */
+    uint8   timerMode;   /* One shot, continuous. */
 } CyBLE_timerConfig;
 
 
@@ -138,5 +139,7 @@ extern void pf_timer_handle_tick (void);
                                         (((x) - ((x) & 3u)) + 4u))
 
 #endif /* CY_BLE_CYBLE_STACK_PVT_H  */
+
+/** \endcond */
 
 /* [] END OF FILE */

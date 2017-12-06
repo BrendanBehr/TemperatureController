@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file CYBLE_bas.c
-* \version 3.10
+* \version 3.30
 * 
 * \brief
 *  Contains the source code for Battery Service.
@@ -45,10 +45,7 @@ static CYBLE_GATT_DB_ATTR_HANDLE_T cyBle_bascReqHandle;
 ***************************************************************************//**
 * 
 *  This function initializes the BAS Service.
-* 
-* \return
-*  None
-* 
+*
 ******************************************************************************/
 void CyBle_BasInit(void)
 {
@@ -89,12 +86,6 @@ void CyBle_BasInit(void)
 *                       structure that contains details of the characteristic 
 *                       for which notification enabled event was triggered)
 * 
-* \return
-*  None
-*
-* \events
-*  None
-*
 * \sideeffect The *eventParams in the callback function should not be used 
 *                by the application once the callback function execution is 
 *                finished. Otherwise this data may become corrupted.
@@ -126,9 +117,6 @@ void CyBle_BasRegisterAttrCallback(CYBLE_CALLBACK_T callbackFunc)
 *  Return value is of type CYBLE_API_RESULT_T.
 *  * CYBLE_ERROR_OK - The request handled successfully
 *  * CYBLE_ERROR_INVALID_PARAMETER - Validation of the input parameter failed
-*
-* \events
-*  None
 *
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_BassSetCharacteristicValue(uint8 serviceIndex, CYBLE_BAS_CHAR_INDEX_T charIndex,
@@ -179,9 +167,6 @@ CYBLE_API_RESULT_T CyBle_BassSetCharacteristicValue(uint8 serviceIndex, CYBLE_BA
 *  Return value is of type CYBLE_API_RESULT_T.
 *  * CYBLE_ERROR_OK - The request handled successfully
 *  * CYBLE_ERROR_INVALID_PARAMETER - Validation of the input parameter failed
-*
-* \events
-*  None
 *
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_BassGetCharacteristicValue(uint8 serviceIndex, CYBLE_BAS_CHAR_INDEX_T charIndex,
@@ -234,9 +219,6 @@ CYBLE_API_RESULT_T CyBle_BassGetCharacteristicValue(uint8 serviceIndex, CYBLE_BA
 *  Return value is of type CYBLE_API_RESULT_T.
 *  * CYBLE_ERROR_OK - The request handled successfully
 *  * CYBLE_ERROR_INVALID_PARAMETER - Validation of the input parameter failed
-*
-* \events
-*  None
 *
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_BassGetCharacteristicDescriptor(uint8 serviceIndex, CYBLE_BAS_CHAR_INDEX_T charIndex,
@@ -307,7 +289,7 @@ CYBLE_GATT_ERR_CODE_T CyBle_BassWriteEventHandler(CYBLE_GATTS_WRITE_REQ_PARAM_T 
                 {
                     gattErr = CyBle_GattsWriteAttributeValue(&eventParam->handleValPair, 0u, 
                         &eventParam->connHandle, CYBLE_GATT_DB_PEER_INITIATED);
-                    if(CYBLE_GATT_ERR_NONE == gattErr)
+                    if(gattErr == CYBLE_GATT_ERR_NONE)
                     {
                         locCharIndex.connHandle = eventParam->connHandle;
                         locCharIndex.serviceIndex = locServIndex;
@@ -354,9 +336,11 @@ CYBLE_GATT_ERR_CODE_T CyBle_BassWriteEventHandler(CYBLE_GATTS_WRITE_REQ_PARAM_T 
 *  GATT database. If the client has configured a notification on the Battery
 *  Level characteristic, the function additionally sends this value using a 
 *  GATT Notification message.
-* 
-*  The CYBLE_EVT_BASC_NOTIFICATION event is received by the peer device, on 
-*  invoking this function.
+*
+*  On enabling notification successfully for a service characteristic, if the GATT
+*  server has an updated value to be notified to the GATT Client, it sends out a
+*  'Handle Value Notification' which results in CYBLE_EVT_BASC_NOTIFICATION event
+*  at the GATT Client's end.
 * 
 *  \param connHandle: The BLE peer device connection handle
 *  \param serviceIndex: The index of the service instance. e.g. If two Battery Services
@@ -388,7 +372,7 @@ CYBLE_API_RESULT_T CyBle_BassSendNotification(CYBLE_CONN_HANDLE_T connHandle,
     /* Store new data in database */
     apiResult = CyBle_BassSetCharacteristicValue(serviceIndex, charIndex, attrSize, attrValue);
     
-    if(CYBLE_ERROR_OK == apiResult)  
+    if(apiResult == CYBLE_ERROR_OK)  
     {
         /* Send Notification if it is enabled and connected */
         if(CYBLE_STATE_CONNECTED != CyBle_GetState())
@@ -433,9 +417,6 @@ CYBLE_API_RESULT_T CyBle_BassSendNotification(CYBLE_CONN_HANDLE_T connHandle,
 *  \param discCharInfo: The pointer to a characteristic information structure.
 *  \param discoveryService: The index of the service instance
 * 
-* \return
-*  None
-* 
 ******************************************************************************/
 void CyBle_BascDiscoverCharacteristicsEventHandler(uint16 discoveryService, CYBLE_DISC_CHAR_INFO_T *discCharInfo)
 {
@@ -456,9 +437,6 @@ void CyBle_BascDiscoverCharacteristicsEventHandler(uint16 discoveryService, CYBL
 * 
 *  \param discDescrInfo: The pointer to a descriptor information structure.
 *  \param discoveryService: The index of the service instance
-* 
-* \return
-*  None
 * 
 ******************************************************************************/
 void CyBle_BascDiscoverCharDescriptorsEventHandler(uint16 discoveryService,
@@ -571,14 +549,11 @@ CYBLE_API_RESULT_T CyBle_BascGetCharacteristicValue(CYBLE_CONN_HANDLE_T connHand
 ***************************************************************************//**
 * 
 *  Sends a request to set characteristic descriptor of specified Battery Service
-*  characteristic on the server device. This function call can result in the
-*  generation of the following events based on the response from the server 
-*  device.
-*  * CYBLE_EVT_BASC_WRITE_DESCR_RESPONSE
-*  * CYBLE_EVT_GATTC_ERROR_RSP
-* 
-*  One of the following events is received by the peer device, on invoking this
-*  function.
+*  characteristic on the server device.
+*
+*  Internally, Write Request is sent to the GATT Server and on successful 
+*  execution of the request on the Server side the following events can be 
+*  generated: 
 *  * CYBLE_EVT_BASS_NOTIFICATION_ENABLED
 *  * CYBLE_EVT_BASS_NOTIFICATION_DISABLED
 * 
@@ -764,9 +739,6 @@ CYBLE_API_RESULT_T CyBle_BascGetCharacteristicDescriptor(CYBLE_CONN_HANDLE_T con
 * 
 *  \param eventParam: the pointer to the data structure specified by the event.
 * 
-* \return
-*  None
-* 
 ******************************************************************************/
 void CyBle_BascNotificationEventHandler(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *eventParam)
 {
@@ -799,10 +771,7 @@ void CyBle_BascNotificationEventHandler(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *ev
 *  Handles the Read Response Event.
 * 
 *  \param eventParam: the pointer to the data structure specified by the event.
-* 
-* \return
-*  None
-* 
+*  
 ******************************************************************************/
 void CyBle_BascReadResponseEventHandler(CYBLE_GATTC_READ_RSP_PARAM_T *eventParam)
 {
@@ -859,10 +828,7 @@ void CyBle_BascReadResponseEventHandler(CYBLE_GATTC_READ_RSP_PARAM_T *eventParam
 *  Handles the Write Response Event.
 * 
 *  \param eventParam: the pointer to the data structure specified by the event.
-* 
-* \return
-*  None
-* 
+*  
 ******************************************************************************/
 void CyBle_BascWriteResponseEventHandler(const CYBLE_CONN_HANDLE_T *eventParam)
 {
@@ -899,9 +865,6 @@ void CyBle_BascWriteResponseEventHandler(const CYBLE_CONN_HANDLE_T *eventParam)
 *  Handles the Error Response Event.
 * 
 *  \param eventParam: the pointer to the data structure specified by the event.
-* 
-* \return
-*  None
 * 
 ******************************************************************************/
 void CyBle_BascErrorResponseEventHandler(const CYBLE_GATTC_ERR_RSP_PARAM_T *eventParam)

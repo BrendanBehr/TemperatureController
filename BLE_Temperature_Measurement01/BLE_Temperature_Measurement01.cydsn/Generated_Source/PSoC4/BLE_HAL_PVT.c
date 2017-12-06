@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file CYBLE_HAL_PVT.c
-* \version 3.10
+* \version 3.30
 *
 * \brief
 *  This file contains the source code for the HAL section of the BLE component
@@ -32,10 +32,12 @@
 *******************************************************************************/
 void CyBLE_Uart_Start (void)
 {
-    /* Setup ISR */
-    BLE_uart_isr_StartEx(&CyBLE_Uart_Interrupt);
+    #if (CYBLE_HCI_TYPE == CYBLE_HCI_OVER_UART)
+        /* Setup ISR */
+        BLE_uart_isr_StartEx(&CyBLE_Uart_Interrupt);
 
-    BLE_HAL_Uart_Start();
+        BLE_HAL_Uart_Start();
+    #endif /* (CYBLE_HCI_TYPE == CYBLE_HCI_OVER_UART) */
 }
 
 
@@ -52,10 +54,12 @@ void CyBLE_Uart_Start (void)
 *******************************************************************************/
 void CyBLE_Uart_Stop (void)
 {
-    /* Stop interrupt and UART */
-    BLE_uart_isr_Stop();
+    #if (CYBLE_HCI_TYPE == CYBLE_HCI_OVER_UART)
+        /* Stop interrupt and UART */
+        BLE_uart_isr_Stop();
 
-    BLE_HAL_Uart_Stop();
+        BLE_HAL_Uart_Stop();
+    #endif /* (CYBLE_HCI_TYPE == CYBLE_HCI_OVER_UART) */
 }
 
 
@@ -75,7 +79,41 @@ void CyBLE_Uart_Stop (void)
 *******************************************************************************/
 void CyBLE_Uart_Transmit (const uint8 *dataBuf, uint8 length)
 {
-    BLE_HAL_Uart_SpiUartPutArray(dataBuf, (uint32)length);
+    #if (CYBLE_HCI_TYPE == CYBLE_HCI_OVER_UART)
+        BLE_HAL_Uart_SpiUartPutArray(dataBuf, (uint32)length);
+    #endif /* (CYBLE_HCI_TYPE == CYBLE_HCI_OVER_UART) */
+}
+
+/*******************************************************************************
+* Function Name: CyBLE_Uart_Isr_Enable
+****************************************************************************//**
+*
+*   Enables the UART interrupt to the interrupt controller. 
+*   Do not call this function unless CyBLE_Uart_Start() has been called or the
+*   functionality of the SysInt_Init() function, which sets the vector and the
+*   priority, has been called.
+*
+*******************************************************************************/
+void CyBLE_Uart_Isr_Enable(void)
+{
+    #if (CYBLE_HCI_TYPE == CYBLE_HCI_OVER_UART)
+        BLE_uart_isr_Enable();
+    #endif /* (CYBLE_HCI_TYPE == CYBLE_HCI_OVER_UART) */
+}
+
+
+/*******************************************************************************
+* Function Name: CyBLE_Uart_Isr_Disable
+****************************************************************************//**
+*
+*   Disables the UART Interrupt in the interrupt controller.
+*
+*******************************************************************************/
+void CyBLE_Uart_Isr_Disable(void)
+{
+    #if (CYBLE_HCI_TYPE == CYBLE_HCI_OVER_UART)
+        BLE_uart_isr_Disable();
+    #endif /* (CYBLE_HCI_TYPE == CYBLE_HCI_OVER_UART) */
 }
 
 #endif /* (CYBLE_MODE == CYBLE_HCI) */
@@ -128,7 +166,7 @@ cystatus CyBLE_Nvram_Write (const uint8 buffer[], const uint8 varFlash[], uint16
         rowId = eeOffset / CY_FLASH_SIZEOF_ROW;
         byteOffset = CY_FLASH_SIZEOF_ROW * rowId;
 
-        while ((srcIndex < length) && (CYRET_SUCCESS == rc))
+        while ((srcIndex < length) && (rc == CYRET_SUCCESS))
         {
             rowsNotEqual = 0u;
             /* Copy data to the write buffer either from the source buffer or from the flash */
@@ -312,11 +350,13 @@ void CyBLE_Bless_RfRegWrite (reg32 *blessAddr, const uint16 regValue)
 *******************************************************************************/
 void CyBLE_BlessDeviceConfig(void)
 {
+#if (CYIPBLOCK_m0s8bless_VERSION < 3)
+    
     uint32 trimRegValue;
     uint32 ldo;
-    uint32 siliconRev;
     uint16 trimRef34Val;
-    uint16 trimRef38Val;
+    uint16 trimRef38Val;    
+    uint32 siliconRev;
 
     trimRegValue = ((uint32)CYBLE_SFLASH_BLESS_BB_BUMP2_HIGH_REG << 8u) | CYBLE_SFLASH_BLESS_BB_BUMP2_LOW_REG;
     ldo = ((uint32)CYBLE_SFLASH_BLESS_LDO_HIGH_REG << 8u) | CYBLE_SFLASH_BLESS_LDO_LOW_REG;
@@ -371,7 +411,9 @@ void CyBLE_BlessDeviceConfig(void)
             ((uint16) CYBLE_BLE_BLESS_REG38_TRIM_LOW_REG);
 		CYBLE_BLERD_RX_BUMP2_REG = trimRef38Val;
 	}
+#endif /* (CYIPBLOCK_m0s8bless_VERSION < 3) */
 }
+
 
 /* Interface to CyDelayUs function */
 void CyBleHal_DelayUs(uint16 delayVal)
@@ -432,6 +474,10 @@ void CyBle_HalInit(void)
 *******************************************************************************/
 void CYBLE_BlessStart(void)
 {
+#if((CYBLE_M0S8BLESS_VERSION_3) && (CYBLE_EXT_PA_ENABLED))
+    CYBLE_EXT_PA_LNA_CTRL_REG |= CYBLE_EXT_PA_LNA_ENABLE | CYBLE_EXT_OUT_EN_DRIVE_VAL; 
+#endif  /* (CYBLE_M0S8BLESS_VERSION_3) */
+
     BLE_bless_isr_StartEx(&CyBLE_Bless_Interrupt);
 }
 

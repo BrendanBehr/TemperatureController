@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file cyPm.h
-* \version 5.40
+* \version 5.60
 *
 * \brief Provides the function definitions for the power management API.
 *
@@ -9,7 +9,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2011-2016, Cypress Semiconductor Corporation.  All rights reserved.
+* Copyright 2011-2017, Cypress Semiconductor Corporation.  All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -52,11 +52,11 @@ The Power Management API is provided in the CyPm.c and CyPm.h files.
 
 
 \section group_power_management_implementation Implementation
-For PSoC 4100 and PSoC 4200 devices, the software should set EXT_VCCD bit in the PWR_CONTROL register when Vccd is
-shorted to Vddd on the board. This impacts the chip internal state transitions where it is necessary to know whether
-Vccd is connected or floating to achieve minimum current in low power modes. Note Setting this bit turns off the active
-regulator and will lead to a system reset unless both Vddd and Vccd pins are supplied externally. Refer to the device
-TRM for more information.
+For PSoC 4100, PSoC 4000U and PSoC 4200 devices, the software should set EXT_VCCD bit in the PWR_CONTROL register when 
+Vccd is shorted to Vddd on the board. This impacts the chip internal state transitions where it is necessary to know 
+whether Vccd is connected or floating to achieve minimum current in low power modes. Note Setting this bit turns off 
+the active regulator and will lead to a system reset unless both Vddd and Vccd pins are supplied externally. Refer to 
+the device TRM for more information.
 
 It is safe to call PM APIs from the ISR. The wakeup conditions for Sleep and DeepSleep low power modes are illustrated
 in the following table.
@@ -165,11 +165,11 @@ void CySysPmDeepSleep(void);
     #define CY_PM_PWR_STOP_PTR              ( (reg32 *) CYREG_PWR_STOP)
 #endif /* (CY_IP_SRSSV2) */
 
-#if (CY_PSOC4_4100 || CY_PSOC4_4200)
+#if (CY_PSOC4_4100 || CY_PSOC4_4200 || CY_PSOC4_4000U)
     /* CPU Subsystem Configuration */
     #define CY_PM_CPUSS_CONFIG_REG             (*(reg32 *) CYREG_CPUSS_CONFIG)
     #define CY_PM_CPUSS_CONFIG_PTR             ( (reg32 *) CYREG_CPUSS_CONFIG)
-#endif /* (CY_PSOC4_4100 || CY_PSOC4_4200) */
+#endif /* (CY_PSOC4_4100 || CY_PSOC4_4200 || CY_PSOC4_4000U) */
 
 
 /***************************************
@@ -202,10 +202,10 @@ void CySysPmDeepSleep(void);
     #define CY_PM_PWR_KEY_DELAY_FREQ_DEFAULT    (48u)
 #endif /* (CY_IP_SRSSV2) */
 
-#if (CY_PSOC4_4100 || CY_PSOC4_4200)
+#if (CY_PSOC4_4100 || CY_PSOC4_4200 || CY_PSOC4_4000U)
     /* 0 - normal operation, 1 - Flash Accelerator in bypass mode */
     #define CY_PM_CPUSS_CONFIG_FLSH_ACC_BYPASS      ((uint32) 0x02u)
-#endif /* (CY_PSOC4_4100 || CY_PSOC4_4200) */
+#endif /* (CY_PSOC4_4100 || CY_PSOC4_4200 || CY_PSOC4_4000U) */
 
 
 #if (CY_IP_SRSSV2)

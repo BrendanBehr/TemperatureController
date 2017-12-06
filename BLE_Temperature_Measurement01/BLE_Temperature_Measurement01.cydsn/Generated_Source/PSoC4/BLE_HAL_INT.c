@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file BLE_HAL_INT.c
-* \version 3.10
+* \version 3.30
 *
 * \brief
 *  This file contains the source code for the Interrupt Service Routine for the
@@ -40,8 +40,7 @@ CY_ISR(CyBLE_Bless_Interrupt)
 
 
 #if(CYBLE_MODE == CYBLE_HCI)
-
-
+#if (CYBLE_HCI_TYPE == CYBLE_HCI_OVER_UART)
 /*******************************************************************************
 * Function Name: CyBLE_Uart_Interrupt
 ****************************************************************************//**
@@ -121,6 +120,8 @@ CY_ISR(CyBLE_Uart_Interrupt)
         /* No TX interrupt. Do nothing. */
     }
 }
+
+#endif /* (CYBLE_HCI_TYPE == CYBLE_HCI_OVER_UART) */
 #endif /* (CYBLE_MODE == CYBLE_HCI) */
 
 

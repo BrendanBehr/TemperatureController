@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file .c
-* \version 1.10
+* \version 1.20
 *
 * \brief
 *  This file provides the source code for configuring watchdog timers WDTs, 
@@ -9,7 +9,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2008-2016, Cypress Semiconductor Corporation.  All rights reserved.
+* Copyright 2008-2017, Cypress Semiconductor Corporation.  All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -24,10 +24,10 @@
 #endif /* (CY_IP_WCO && CY_IP_SRSSV2) */
 
 
-#if(CY_IP_SRSSV2 && (!(CY_PSOC4_4100 || CY_PSOC4_4200)))
+#if(CY_IP_SRSSV2 && (!CY_IP_CPUSS))
     /* Default Ilo Trim Register value for ILO trimming*/
     static volatile uint16 defaultIloTrimRegValue = CY_SYS_CLK_ILO_TRIM_DEFAULT_VALUE;
-#endif /* (CY_IP_SRSSV2 && (!(CY_PSOC4_4100 || CY_PSOC4_4200))) */
+#endif /* (CY_IP_SRSSV2 && (!CY_IP_CPUSS)) */
 
 #if(CY_IP_SRSSV2)
     /* CySysClkLfclkPosedgeCatch() / CySysClkLfclkPosedgeRestore() */
@@ -167,7 +167,7 @@ void CySysClkIloStop(void)
 ******************************************************************************/
 void CySysClkIloStartMeasurement(void)
 {
-#if(CY_IP_SRSSV2 && (!(CY_PSOC4_4100 || CY_PSOC4_4200)))
+#if(CY_IP_SRSSV2 && (!CY_IP_CPUSS))
     static uint8 iloTrimTrig = 0u;
 
     /* Write default ILO trim value while ILO starting ( Cypress ID 225244 )*/
@@ -176,7 +176,7 @@ void CySysClkIloStartMeasurement(void)
         defaultIloTrimRegValue = ((uint8)(CY_SYS_CLK_ILO_TRIM_REG & CY_SYS_CLK_ILO_TRIM_MASK));
         iloTrimTrig = 1u;
     }
-#endif /* (CY_IP_SRSSV2 && (!(CY_PSOC4_4100 || CY_PSOC4_4200))) */
+#endif /* (CY_IP_SRSSV2 && (!CY_IP_CPUSS)) */
 
     /* Configure measurement counters to source by SysClk (Counter 1) and ILO (Counter 2)*/
     CY_SYS_CLK_DFT_REG = (CY_SYS_CLK_DFT_REG & (uint32) ~CY_SYS_CLK_DFT_SELECT_DEFAULT_MASK) |
@@ -377,7 +377,7 @@ cystatus CySysClkIloCompensate(uint32 desiredDelay , uint32* compensatedCycles)
 #endif /* (CY_IP_SRSSV2) */
 
 
-#if(CY_IP_SRSSV2 && (!(CY_PSOC4_4100 || CY_PSOC4_4200)))
+#if(CY_IP_SRSSV2 && (!CY_IP_CPUSS))
 /********************************************************************************
 * Function Name: CySysClkIloTrim
 *****************************************************************************//**
@@ -581,7 +581,7 @@ cystatus CySysClkIloUpdateTrimReg(int32* iloAccuracyInPPT)
         measuredIloFreq = (CY_SYS_CNT_REG2_REG * cydelayFreqHz) / (cydelayFreqHz >> CY_SYS_CLK_SYS_CLK_DEVIDER);
 
         /* Calculate value of error in PPT according to formula - 
-        *       ((measuredIlofrequency - iloDesired freaquency) * 1000 / iloDesired freaquency) */
+        *       ((measuredIlofrequency - iloDesired frequency) * 1000 / iloDesired frequency) */
         iloAccuracyValue = (((int32) measuredIloFreq - (int32) CY_SYS_CLK_ILO_DESIRED_FREQ_HZ) * \
                             ((int32) CY_SYS_CLK_PERTHOUSAND)) / ((int32) CY_SYS_CLK_ILO_DESIRED_FREQ_HZ);
 
@@ -662,26 +662,26 @@ cystatus CySysClkIloRestoreFactoryTrim(void)
 
         return (returnStatus);
 }
-#endif /* (CY_IP_SRSSV2 && (!(CY_PSOC4_4100 || CY_PSOC4_4200))) */
+#endif /* (CY_IP_SRSSV2 && (!CY_IP_CPUSS)) */
 
 
 #if (CY_IP_WCO && CY_IP_SRSSV2)
-/*******************************************************************************
-* Function Name: CySysClkGetLfclkSource
-********************************************************************************
-*
-* \internal
-*  Gets the clock source for the LFCLK clock.
-*  The function is applicable only for PSoC 4100 BLE / PSoC 4200 BLE / PSoC 4100M /
-*  PSoC 4200M / PSoC 4200L.
-*
-* \return The LFCLK source:
-* CY_SYS_CLK_LFCLK_SRC_ILO Internal Low Frequency (32 kHz) Oscillator (ILO)
-* CY_SYS_CLK_LFCLK_SRC_WCO Low Frequency Watch Crystal Oscillator (WCO)
-*
-* \endinternal
-*
-*******************************************************************************/
+    /*******************************************************************************
+    * Function Name: CySysClkGetLfclkSource
+    ********************************************************************************
+    *
+    * \internal
+    *  Gets the clock source for the LFCLK clock.
+    *  The function is applicable only for PSoC 4100 BLE / PSoC 4200 BLE / 
+    *  PSoC 4100M / PSoC 4200M / PSoC 4200L.
+    *
+    * \return The LFCLK source:
+    * CY_SYS_CLK_LFCLK_SRC_ILO Internal Low Frequency (32 kHz) Oscillator (ILO)
+    * CY_SYS_CLK_LFCLK_SRC_WCO Low Frequency Watch Crystal Oscillator (WCO)
+    *
+    * \endinternal
+    *
+    *******************************************************************************/
     static uint32 CySysClkGetLfclkSource(void)
     {
         uint32 lfclkSource;
@@ -689,48 +689,48 @@ cystatus CySysClkIloRestoreFactoryTrim(void)
         return (lfclkSource);
     }
 
-    
-/*******************************************************************************
-* Function Name: CySysClkSetLfclkSource
-****************************************************************************//**
-* \brief
-*  Sets the clock source for the LFCLK clock.
-*
-* The switch between LFCLK sources must be done between the positive edges of
-* LFCLK, because the glitch risk is around the LFCLK positive edge. To ensure
-* that the switch can be done safely, the WDT counter value is read until it
-* changes.
-*
-* That means that the positive edge just finished and the switch is performed.
-* The enabled WDT counter is used for that purpose. If no counters are enabled,
-* counter 0 is enabled. And after the LFCLK source is switched, counter 0
-* configuration is restored.
-*
-*  The function is applicable only for devices with more than one source for 
-* LFCLK - PSoC 4100 BLE / PSoC 4200 BLE / PRoC BLE / PSoC 4100M / PSoC 4200M / 
-* PSoC 4200L.
-*
-* \note For PSoC 4000S / PSoC 4100S / PSoC Analog Coprocessor devices LFCLK can
-* only be sourced from ILO even though WCO is available.
-*
-* \param
-* source
-* CY_SYS_CLK_LFCLK_SRC_ILO - Internal Low Frequency (32 kHz) 
-* Oscillator (ILO).<br>
-* CY_SYS_CLK_LFCLK_SRC_WCO - Low Frequency Watch Crystal Oscillator (WCO).
-*
-* \details
-* This function has no effect if WDT is locked (CySysWdtLock() is called). 
-* Call CySysWdtUnlock() to unlock WDT.
-*
-* Both the current source and the new source must be running and stable before
-* calling this function.
-*
-* Changing the LFCLK clock source may change the LFCLK clock frequency and
-* affect the functionality that uses this clock. For example, watchdog timer
-* "uses this clock" or "this clock uses" (WDT) is clocked by LFCLK.
-*
-*******************************************************************************/
+
+    /*******************************************************************************
+    * Function Name: CySysClkSetLfclkSource
+    ****************************************************************************//**
+    * \brief
+    *  Sets the clock source for the LFCLK clock.
+    *
+    * The switch between LFCLK sources must be done between the positive edges of
+    * LFCLK, because the glitch risk is around the LFCLK positive edge. To ensure
+    * that the switch can be done safely, the WDT counter value is read until it
+    * changes.
+    *
+    * That means that the positive edge just finished and the switch is performed.
+    * The enabled WDT counter is used for that purpose. If no counters are enabled,
+    * counter 0 is enabled. And after the LFCLK source is switched, counter 0
+    * configuration is restored.
+    *
+    *  The function is applicable only for devices with more than one source for 
+    * LFCLK - PSoC 4100 BLE / PSoC 4200 BLE / PRoC BLE / PSoC 4100M / PSoC 4200M / 
+    * PSoC 4200L.
+    *
+    * \note For PSoC 4000S / PSoC 4100S / PSoC Analog Coprocessor devices LFCLK can
+    * only be sourced from ILO even though WCO is available.
+    *
+    * \param
+    * source
+    * CY_SYS_CLK_LFCLK_SRC_ILO - Internal Low Frequency (32 kHz) 
+    * Oscillator (ILO).<br>
+    * CY_SYS_CLK_LFCLK_SRC_WCO - Low Frequency Watch Crystal Oscillator (WCO).
+    *
+    * \details
+    * This function has no effect if WDT is locked (CySysWdtLock() is called). 
+    * Call CySysWdtUnlock() to unlock WDT.
+    *
+    * Both the current source and the new source must be running and stable before
+    * calling this function.
+    *
+    * Changing the LFCLK clock source may change the LFCLK clock frequency and
+    * affect the functionality that uses this clock. For example, watchdog timer
+    * "uses this clock" or "this clock uses" (WDT) is clocked by LFCLK.
+    *
+    *******************************************************************************/
     void CySysClkSetLfclkSource(uint32 source)
     {
         uint8  interruptState;
@@ -860,11 +860,11 @@ cystatus CySysClkIloRestoreFactoryTrim(void)
                 CySysClkWcoSetHighPowerMode();
             break;
 
-        #if(CY_PSOC4_4100BL || CY_PSOC4_4200BL)
+        #if(CY_IP_BLESS)
             case CY_SYS_CLK_WCO_LPM:
                     CySysClkWcoSetLowPowerMode();
                 break;
-        #endif /* (CY_PSOC4_4100BL || CY_PSOC4_4200BL) */
+        #endif /* (CY_IP_BLESS) */
 
         default:
             CYASSERT(0u != 0u);
@@ -875,47 +875,47 @@ cystatus CySysClkIloRestoreFactoryTrim(void)
     }
 
 
-/*******************************************************************************
-* Function Name: CySysClkWcoClockOutSelect
-****************************************************************************//**
-* \brief
-* Selects the WCO block output source.
-*
-* In addition to generating 32.768 kHz clock from external crystals, WCO 
-* can be sourced by external clock source using wco_out pin. The API help to
-* lets you select between the sources: External crystal or external pin.
-*
-* If you want to use external pin to drive WCO the next procedure is required:
-* <br> 1) Disable the WCO.
-* <br> 2) Drive the wco_out pin to an external signal source.
-* <br> 3) Call CySysClkWcoClockOutSelect(CY_SYS_CLK_WCO_SEL_PIN).
-* <br> 4) Enable the WCO and wait for 15 us before clocking the XO pad at the high 
-* potential. Let's assume you are using the 1.6v clock amplitude, then the
-* sequence would start at 1.6v, then 0v, then 1.6v etc at a chosen frequency.
-*
-* If you want to use WCO after using an external pin source:
-* <br> 1) Disable the WCO.
-* <br> 2) Drive off wco_out pin with external signal source.
-* <br> 3) Call CySysClkWcoClockOutSelect(CY_SYS_CLK_WCO_SEL_CRYSTAL).
-* <br> 4) Enable the WCO.
-*
-* \warning 
-* Do not use the oscillator output clock prior to a 15uS delay in your system.
-* There are no limitations on the external clock frequency.
-* \warning 
-* When external clock source was selected to drive WCO block the IMO can be 
-* trimmed only when external clock source period is equal to WCO external
-* crystal period. Also external clock source accuracy should be higher 
-* or equal to WCO external crystal accuracy.
-*
-* \param clockSel
-* CY_SYS_CLK_WCO_SEL_CRYSTAL - Selects External crystal as clock 
-* source of WCO.<br>
-* CY_SYS_CLK_WCO_SEL_PIN - Selects External clock input on wco_in pin as 
-* clock source of WCO.
-*
-*******************************************************************************/
-void CySysClkWcoClockOutSelect(uint32 clockSel)
+    /*******************************************************************************
+    * Function Name: CySysClkWcoClockOutSelect
+    ****************************************************************************//**
+    * \brief
+    * Selects the WCO block output source.
+    *
+    * In addition to generating 32.768 kHz clock from external crystals, WCO 
+    * can be sourced by external clock source using wco_out pin. The API help to
+    * lets you select between the sources: External crystal or external pin.
+    *
+    * If you want to use external pin to drive WCO the next procedure is required:
+    * <br> 1) Disable the WCO.
+    * <br> 2) Drive the wco_out pin to an external signal source.
+    * <br> 3) Call CySysClkWcoClockOutSelect(CY_SYS_CLK_WCO_SEL_PIN).
+    * <br> 4) Enable the WCO and wait for 15 us before clocking the XO pad at the high 
+    * potential. Let's assume you are using the 1.6v clock amplitude, then the
+    * sequence would start at 1.6v, then 0v, then 1.6v etc at a chosen frequency.
+    *
+    * If you want to use WCO after using an external pin source:
+    * <br> 1) Disable the WCO.
+    * <br> 2) Drive off wco_out pin with external signal source.
+    * <br> 3) Call CySysClkWcoClockOutSelect(CY_SYS_CLK_WCO_SEL_CRYSTAL).
+    * <br> 4) Enable the WCO.
+    *
+    * \warning 
+    * Do not use the oscillator output clock prior to a 15uS delay in your system.
+    * There are no limitations on the external clock frequency.
+    * \warning 
+    * When external clock source was selected to drive WCO block the IMO can be 
+    * trimmed only when external clock source period is equal to WCO external
+    * crystal period. Also external clock source accuracy should be higher 
+    * or equal to WCO external crystal accuracy.
+    *
+    * \param clockSel
+    * CY_SYS_CLK_WCO_SEL_CRYSTAL - Selects External crystal as clock 
+    * source of WCO.<br>
+    * CY_SYS_CLK_WCO_SEL_PIN - Selects External clock input on wco_in pin as 
+    * clock source of WCO.
+    *
+    *******************************************************************************/
+    void CySysClkWcoClockOutSelect(uint32 clockSel)
     {
         if (0u != CySysClkWcoEnabled())
         {

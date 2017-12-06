@@ -1,12 +1,12 @@
 /***************************************************************************//**
 * \file Cm0Start.c
-* \version 5.40
+* \version 5.60
 *
 * \brief Startup code for the ARM CM0.
 *
 ********************************************************************************
 * \copyright
-* Copyright 2010-2016, Cypress Semiconductor Corporation.  All rights reserved.
+* Copyright 2010-2017, Cypress Semiconductor Corporation.  All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -113,14 +113,32 @@ CY_ISR(IntDefaultHandler)
     * an infinite loop.
     ***************************************************************************/
 
-    #ifdef CY_BOOT_INT_DEFAULT_HANDLER_EXCEPTION_ENTRY_CALLBACK
-        CyBoot_IntDefaultHandler_Exception_EntryCallback();
-    #endif /* CY_BOOT_INT_DEFAULT_HANDLER_EXCEPTION_ENTRY_CALLBACK */
+    #if defined(__GNUC__)
+        if (errno == ENOMEM)
+        {
+            #ifdef CY_BOOT_INT_DEFAULT_HANDLER_ENOMEM_EXCEPTION_CALLBACK
+                CyBoot_IntDefaultHandler_Enomem_Exception_Callback();
+            #endif /* CY_BOOT_INT_DEFAULT_HANDLER_ENOMEM_EXCEPTION_CALLBACK */
+            
+            while(1)
+            {
+                /* Out Of Heap Space
+                 * This can be increased in the System tab of the Design Wide Resources.
+                 */
+            }
+        }
+        else
+    #endif
+        {
+            #ifdef CY_BOOT_INT_DEFAULT_HANDLER_EXCEPTION_ENTRY_CALLBACK
+                CyBoot_IntDefaultHandler_Exception_EntryCallback();
+            #endif /* CY_BOOT_INT_DEFAULT_HANDLER_EXCEPTION_ENTRY_CALLBACK */
 
-    while(1)
-    {
+            while(1)
+            {
 
-    }
+            }
+        }
 }
 
 #if defined(__ARMCC_VERSION)
@@ -265,11 +283,11 @@ void * _sbrk (int nbytes)
     void *      returnValue;
 
     /* The statically held previous end of the heap, with its initialization. */
-    static void *heapPointer = (void *) &end;                 /* Previous end */
+    static uint8 *heapPointer = (uint8 *) &end;                 /* Previous end */
 
-    if (((heapPointer + nbytes) - (void *) &end) <= CYDEV_HEAP_SIZE)
+    if (((heapPointer + nbytes) - (uint8 *) &end) <= CYDEV_HEAP_SIZE)
     {
-        returnValue  = heapPointer;
+        returnValue  = (void *) heapPointer;
         heapPointer += nbytes;
     }
     else
@@ -412,6 +430,11 @@ int __low_level_init(void)
 
 #if defined (__ICCARM__)
     #pragma location=".ramvectors"
+#elif defined (__ARMCC_VERSION)
+    #ifndef CY_SYS_RAM_VECTOR_SECTION
+        #define CY_SYS_RAM_VECTOR_SECTION __attribute__((section(".ramvectors"), zero_init))
+    #endif /* CY_SYS_RAM_VECTOR_SECTION */
+    CY_SYS_RAM_VECTOR_SECTION    
 #else
     #ifndef CY_SYS_RAM_VECTOR_SECTION
         #define CY_SYS_RAM_VECTOR_SECTION CY_SECTION(".ramvectors")

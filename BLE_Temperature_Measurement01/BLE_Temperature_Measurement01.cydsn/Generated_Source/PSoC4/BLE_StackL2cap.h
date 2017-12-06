@@ -1,7 +1,9 @@
 /***************************************************************************//**
+* \file CyBle_L2cap.h
+*
 * \file CYBLE_StackL2cap.h
-* \version 3.10
-* 
+* \version 3.30
+*
 * \brief
 *  This file contains the L2CAP APIs of the BLE Host Stack IP
 * 
@@ -17,8 +19,8 @@
 *******************************************************************************/
 
 
-#ifndef CY_BLE_CYBLE_STACK_L2CAP_H
-#define CY_BLE_CYBLE_STACK_L2CAP_H
+#ifndef CYBLE_L2CAP_H_
+#define CYBLE_L2CAP_H_
 
 
 /***************************************
@@ -32,25 +34,7 @@
 * Exported Constants
 ***************************************/
 
-#ifdef L2CAP_SUPPORT_CBFC_MODE
-
-/* Protocol and Service Multiplexers (PSMs) */
-#define CYBLE_L2CAP_PSM_SDP                         0x0001u
-#define CYBLE_L2CAP_PSM_RFCOMM                      0x0003u
-#define CYBLE_L2CAP_PSM_TCS_BIN                     0x0005u
-#define CYBLE_L2CAP_PSM_TCS_BIN_CORDLESS            0x0007u
-#define CYBLE_L2CAP_PSM_BNEP                        0x000Fu
-#define CYBLE_L2CAP_PSM_HID_CONTROL                 0x0011u
-#define CYBLE_L2CAP_PSM_HID_INTERRUPT               0x0013u
-#define CYBLE_L2CAP_PSM_UPNP                        0x0015u
-#define CYBLE_L2CAP_PSM_AVCTP                       0x0017u
-#define CYBLE_L2CAP_PSM_AVDTP                       0x0019u
-#define CYBLE_L2CAP_PSM_AVCTP_BROWSING              0x001Bu
-#define CYBLE_L2CAP_PSM_UDI_C_PLANE                 0x001Du
-#define CYBLE_L2CAP_PSM_ATT                         0x001Fu
-#define CYBLE_L2CAP_PSM_3DSP                        0x0021u
-#define CYBLE_L2CAP_PSM_LE_PSM_IPSP                 0x0023u
-    
+#define CYBLE_L2CAP_PSM_LE_PSM_IPSP					0x0023u
 /* L2CAP Invalid PSM */
 #define CYBLE_L2CAP_PSM_INVALID                     0x0000u
 
@@ -59,14 +43,18 @@
 #define CYBLE_L2CAP_CREDIT_MODE_HDR_LEN             6u
 
 /* L2CAP Connect Results */
-#define CYBLE_L2CAP_CONNECTION_SUCCESSFUL                     			0x0000u
-#define CYBLE_L2CAP_CONNECTION_PENDING                        			0x0001u
-#define CYBLE_L2CAP_CONNECTION_REFUSED_PSM_UNSUPPORTED        			0x0002u
-#define CYBLE_L2CAP_CONNECTION_REFUSED_SECURITY_BLOCK         			0x0003u
-#define CYBLE_L2CAP_CONNECTION_REFUSED_NO_RESOURCE            			0x0004u
-#define CYBLE_L2CAP_CONNECTION_REFUSED_AUTHENTICATION_INSUFFICIENT      0x0005u
-#define CYBLE_L2CAP_CONNECTION_REFUSED_AUTHORIZATION_INSUFFICIENT       0x0006u
-#define CYBLE_L2CAP_CONNECTION_REFUSED_ENC_KEY_SIZE_INSUFFICIENT        0x0007u
+#define CYBLE_L2CAP_CONNECTION_SUCCESSFUL                     			(0x0000u)
+#define CYBLE_L2CAP_CONNECTION_PENDING                        			(0x0001u)
+#define CYBLE_L2CAP_CONNECTION_REFUSED_PSM_UNSUPPORTED        			(0x0002u)
+#define CYBLE_L2CAP_CONNECTION_REFUSED_SECURITY_BLOCK         			(0x0003u)
+#define CYBLE_L2CAP_CONNECTION_REFUSED_NO_RESOURCE            			(0x0004u)
+#define CYBLE_L2CAP_CONNECTION_REFUSED_AUTHENTICATION_INSUFFICIENT      (0x0005u)
+#define CYBLE_L2CAP_CONNECTION_REFUSED_AUTHORIZATION_INSUFFICIENT       (0x0006u)
+#define CYBLE_L2CAP_CONNECTION_REFUSED_ENC_KEY_SIZE_INSUFFICIENT        (0x0007u)
+#define CYBLE_L2CAP_CONNECTION_REFUSED_ENCRYPTION_INSUFFICIENT          (0x0008u)
+#define CYBLE_L2CAP_CONNECTION_REFUSED_SRC_CID_INVALID                  (0x0009u)
+#define CYBLE_L2CAP_CONNECTION_REFUSED_SRC_CID_ALREADY_ALLOCATED        (0x000Au)
+#define CYBLE_L2CAP_CONNECTION_REFUSED_UNACCEPTABLE_PARAMETERS          (0x000Bu)
 
     
     
@@ -325,10 +313,8 @@ typedef struct
 *    <td>Cannot register more than one PSM</td>
 *  </tr>
 *  <tr>
-*    <td>CYBLE_ERROR_L2CAP_PSM_WRONG_ENCODING</td>
-*    <td>PSM value must be an odd number and the Most Significant 
-         Byte must have Least Significant Bit value set to '0'. 
-		 If PSM does not follow this guideline, this return code is generated.</td>
+*    <td>CYBLE_ERROR_L2CAP_PSM_NOT_IN_RANGE</td>
+*    <td>If the PSM is not in range of 0x0001 - 0x00FF.</td>
 *  </tr>
 *  <tr>
 *    <td>CYBLE_ERROR_L2CAP_PSM_ALREADY_REGISTERED</td>
@@ -603,10 +589,6 @@ CYBLE_API_RESULT_T CyBle_L2capDisconnectReq
                  uint16  localCid
            );
 
-#endif /*L2CAP_SUPPORT_CBFC_MODE*/
-
-
-#ifdef GAP_PERIPHERAL
 
 /******************************************************************************
 * Function Name: CyBle_L2capLeConnectionParamUpdateRequest
@@ -647,11 +629,6 @@ CYBLE_API_RESULT_T CyBle_L2capLeConnectionParamUpdateRequest
            );
 
 
-#endif /*GAP_PERIPHERAL*/
-
-
-#ifdef GAP_CENTRAL
-
 /******************************************************************************
 * Function Name: CyBle_L2capLeConnectionParamUpdateResponse
 ***************************************************************************//**
@@ -681,12 +658,9 @@ CYBLE_API_RESULT_T CyBle_L2capLeConnectionParamUpdateResponse
                uint16        result
            );
 
-
-#endif /*GAP_CENTRAL*/
-
 /** @} */
 
-#endif /*CY_BLE_CYBLE_STACK_L2CAP_H*/
+#endif /*CYBLE_L2CAP_H_*/
 
 
 /*EOF*/

@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file CYBLE_dis.c
-* \version 3.10
+* \version 3.30
 * 
 * \brief
 *  Contains the source code for the Device Information Service.
@@ -50,10 +50,7 @@ static CYBLE_CALLBACK_T CyBle_DisApplCallback = NULL;
 ***************************************************************************//**
 * 
 *  This function initializes the DIS service.
-* 
-* \return
-*  None
-* 
+*  
 ******************************************************************************/
 void CyBle_DisInit(void)
 {
@@ -88,12 +85,6 @@ void CyBle_DisInit(void)
 *                    * eventParam contains the parameters corresponding to the 
 *                      current event.
 * 
-* \return
-*  None
-*
-* \events
-*  None
-*
 ******************************************************************************/
 void CyBle_DisRegisterAttrCallback(CYBLE_CALLBACK_T callbackFunc)
 {
@@ -128,9 +119,6 @@ void CyBle_DisRegisterAttrCallback(CYBLE_CALLBACK_T callbackFunc)
 *  Return value is of type CYBLE_API_RESULT_T.
 *  * CYBLE_ERROR_OK - The request handled successfully
 *  * CYBLE_ERROR_INVALID_PARAMETER - Validation of the input parameter failed
-*
-* \events
-*  None
 *
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_DissSetCharacteristicValue(CYBLE_DIS_CHAR_INDEX_T charIndex, uint8 attrSize, uint8 *attrValue)
@@ -176,9 +164,6 @@ CYBLE_API_RESULT_T CyBle_DissSetCharacteristicValue(CYBLE_DIS_CHAR_INDEX_T charI
 *  * CYBLE_ERROR_OK - The request handled successfully
 *  * CYBLE_ERROR_INVALID_PARAMETER - Validation of the input parameter failed
 *
-* \events
-*  None
-*
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_DissGetCharacteristicValue(CYBLE_DIS_CHAR_INDEX_T charIndex, uint8 attrSize, uint8 *attrValue)
 {
@@ -218,9 +203,6 @@ CYBLE_API_RESULT_T CyBle_DissGetCharacteristicValue(CYBLE_DIS_CHAR_INDEX_T charI
 *  data received as part of the callback.
 * 
 *  \param *discCharInfo:  the pointer to a characteristic information structure.
-* 
-* \return
-*  None
 * 
 ******************************************************************************/
 void CyBle_DiscDiscoverCharacteristicsEventHandler(CYBLE_DISC_CHAR_INFO_T *discCharInfo)
@@ -341,10 +323,7 @@ CYBLE_API_RESULT_T CyBle_DiscGetCharacteristicValue(CYBLE_CONN_HANDLE_T connHand
 *  Handles the Read Response Event.
 * 
 *  \param *eventParam: the pointer to the data structure specified by the event.
-* 
-* \return
-*  None
-* 
+*  
 ******************************************************************************/
 void CyBle_DiscReadResponseEventHandler(CYBLE_GATTC_READ_RSP_PARAM_T *eventParam)
 {
@@ -378,9 +357,6 @@ void CyBle_DiscReadResponseEventHandler(CYBLE_GATTC_READ_RSP_PARAM_T *eventParam
 *  Handles the Error Response Event.
 * 
 *  \param *eventParam: the pointer to the data structure specified by the event.
-* 
-* \return
-*  None
 * 
 ******************************************************************************/
 void CyBle_DiscErrorResponseEventHandler(const CYBLE_GATTC_ERR_RSP_PARAM_T *eventParam)

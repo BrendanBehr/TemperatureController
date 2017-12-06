@@ -1,6 +1,8 @@
 /***************************************************************************//**
+* \file CyBle.h
+*
 * \file CYBLE_Stack.h
-* \version 3.10
+* \version 3.30
 *
 * \brief
 *  This file contains declaration of public BLE APIs other than those covered by
@@ -18,9 +20,8 @@
 * the software package with which this file was provided.
 *******************************************************************************/
 
-
-#ifndef CY_BLE_CYBLE_STACK_H
-#define CY_BLE_CYBLE_STACK_H
+#ifndef CYBLE_H_
+#define CYBLE_H_
 
 
 /***************************************
@@ -35,39 +36,18 @@
 * Constants
 ***************************************/
 
-/* Enable all features */
-#define GAP_CENTRAL
-#define GAP_PERIPHERAL
-#define GATT_SUPPORT_128_BIT_UUID
-#define GATT_SERVER
-#define GATT_CLIENT
-#define ATT_HANDLE_VALUE_NOTIFICATION_SUPPORT
-#define ATT_HANDLE_VALUE_INDICATION_SUPPORT
-#define ATT_MTU_EXCHANGE_SUPPORT
-#define ATT_FIND_INFO_SUPPORT
-#define ATT_FIND_BY_TYPE_VALUE_SUPPORT
-#define ATT_READ_BY_TYPE_SUPPORT
-#define ATT_READ_REQUEST_SUPPORT
-#define ATT_READ_BLOB_SUPPORT
-#define ATT_READ_MULTIPLE_SUPPORT
-#define ATT_READ_BY_GROUP_TYPE_SUPPORT
-#define ATT_WRITE_REQUEST_SUPPORT
-#define ATT_WRITE_COMMAND_SUPPORT
-#define ATT_QUEUED_WRITE_SUPPORT
-#define ATT_SIGNED_WRITE_SUPPORT    
-#define HOST_RESOLVE_PVT_ADDR
-#define L2CAP_SUPPORT_CBFC_MODE
-#define GAP_DYNAMIC_BONDLIST_SUPPORT
-    
-/* BLE 4.2 features */
-#define HCI_PRIVACY_1_2_SUPPORT
-#define HCI_DLE_SUPPORT
-#define SMP_SECURED_CONNECTION_SUPPORT
-#define SMP_HAVE_OOB_SUPPORT
-
 #define CYBLE_STACK_STATE_BUSY		   	0x01u
 #define CYBLE_STACK_STATE_FREE		   	0x00u
 
+/***************************************
+* MACROS for User Event mask 
+****************************************/
+#define CYBLE_EVT_GAP_CONN_ESTB_MSK        	  0x01u
+#define CYBLE_EVT_GAP_SCAN_REQ_RECVD_MSK      0x02u
+
+#define CYBLE_ISR_BLESS_CONN_CLOSE_CE		0x0001u
+
+#define CYBLE_ISR_BLESS_ADV_CLOSE           0x0002u 
 
 /***************************************
 * Retention data definition
@@ -75,6 +55,30 @@
 
 /* Bluetooth Device Address size */
 #define CYBLE_GAP_BD_ADDR_SIZE                                          (0x06u)
+
+/* LTK Size */
+#define CYBLE_LTK_SIZE                                                  (0x10u) 
+ 
+/* Mid Infor Size - EDIV + RAND */
+#define CYBLE_MID_INFO_SIZE                                             (0x0Au)
+
+/* IRK Size */
+#define CYBLE_IRK_SIZE                                                  (0x10u)
+
+/* ID Address Size - Type + Address */
+#define CYBLE_IDADDR_SIZE                                               (0x07u)
+
+/* CSRK Size */
+#define CYBLE_CSRK_SIZE                                                 (0x10u)
+
+/* Maximum Bonded devices supported */
+#define CYBLE_MAX_BONDED_DEVICE                                         (0x04u)
+
+/* Maximum Bd address can be stored */
+#define CYBLE_MAX_BD_DEVICE                                             (0x05u)
+
+/* MAX Reserved Size for Stack */
+#define CYBLE_MAX_RESERVED_SIZE                                         (0x0Au)
 
 /***************************************
 *  Memory pool configuration data defines
@@ -101,7 +105,7 @@
  * Formula: Default ACL Size (27 bytes) ~ AlignToWord(27) =  28
  *
  * */
-#define CYBLE_LL_DEFAULT_ACL_MAX_TX_BUFFER_SZ                           (0x1Cu)
+#define CYBLE_LL_DEFAULT_ACL_MAX_TX_BUFFER_SZ                           (0x24u)
 
 
 /* Number of Rx ACL Packet buffers, this shall not change
@@ -128,13 +132,13 @@
  * 2) 
  * CYBLE_LL_DEFAULT_NUM_ACL_RX_PACKETS shall be fixed to the defined value
  * */
-/*#define CYBLE_LL_ACL_RX_HEAP_REQ        (CYBLE_LL_DEFAULT_NUM_ACL_RX_PACKETS * \
+#define CYBLE_LL_ACL_RX_HEAP_REQ        (CYBLE_LL_DEFAULT_NUM_ACL_RX_PACKETS * \
                             (                                                  \
                                  CYBLE_LL_DEFAULT_MAX_SUPPORTED_ACL_BUFFER_SZ + \
                                  CYBLE_LL_ACL_DATA_PACKET_OVERHEAD_SZ +    \
                                  CYBLE_MEM_EXT_SZ                           \
                             ))
-*/
+
 /* Example for ACL Tx Packets User Configuration
  * 1) 
  * CYBLE_LL_DEFAULT_ACL_MAX_BUFFER_SZ can change as User can choose
@@ -149,13 +153,12 @@
  * 2) 
  * CYBLE_LL_DEFAULT_NUM_ACL_RX_PACKETS shall be fixed to the defined value
  * */
-/*#define CYBLE_LL_ACL_TX_HEAP_REQ        (CYBLE_LL_DEFAULT_NUM_ACL_TX_PACKETS * \
+#define CYBLE_LL_ACL_TX_HEAP_REQ        (CYBLE_LL_DEFAULT_NUM_ACL_TX_PACKETS * \
                             (                                                  \
                                  CYBLE_LL_DEFAULT_MAX_SUPPORTED_ACL_BUFFER_SZ + \
                                  CYBLE_LL_ACL_DATA_PACKET_OVERHEAD_SZ +    \
                                  CYBLE_MEM_EXT_SZ                           \
                             ))
-*/
 
 /* Internal RAM required for LE Data Length Extension Feature */
 #define CYBLE_LL_DLE_HEAP_REQ                                           (0x50u)
@@ -171,12 +174,12 @@
 #define CYBLE_MAX_RPA_LIST_SZ                                           (0x08u)
 
 /* Example for Total BLE Controller Heap Requirement */
-/*#define CYBLE_LL_CONTROLLER_HEAP_REQ    ((CYBLE_LL_PRIVACY_HEAP_REQ * \
+#define CYBLE_LL_CONTROLLER_HEAP_REQ    ((CYBLE_LL_PRIVACY_HEAP_REQ * \
                                             CYBLE_DEFAULT_RPA_LIST_SZ) + \
                                             CYBLE_LL_DLE_HEAP_REQ + \
                                             CYBLE_LL_ACL_TX_HEAP_REQ + \
                                             CYBLE_LL_ACL_RX_HEAP_REQ)
-*/
+
 
 
 /* Size of the heap when GATT MTU, L2CAP MTU, MPS sizes are specified as 23 Bytes */
@@ -267,7 +270,10 @@
 
 /* Feature mask for selective features for CYBLE_STACK_CONFIG_PARAM_T */
 #define CYBLE_DLE_FEATURE_MASK                                     (0x01u)
+#define CYBLE_PRIVACY_1_2_FEATURE_MASK                             (0x02u)
+#ifdef CYBLE_PRIVACY_1_2_FEATURE_MASK
 #define CYBLE_LL_PRIVACY_FEATURE_MASK                              (0x02u)
+#endif /* CYBLE_PRIVACY_1_2_FEATURE_MASK */
 #define CYBLE_SECURE_CONN_FEATURE_MASK                             (0x04u)
 
 /* BLESS IP Version for BLE128, BLE256 **, *A revision compatible
@@ -304,6 +310,11 @@
 /** event callback function prototype to receive events from stack */
 typedef void (*CYBLE_APP_CB_T)(uint8 event, void* evParam);
 
+/** event callback function prototype to receive Bless State events from stack */
+typedef void (*CYBLE_BLESS_CB_T)(uint32 event, void* evParam);
+
+/** Application callback function prototype to notify when AES CMAC generation is completed */
+typedef void (* AES_CMAC_APPL_CB) (void);
 /** @} */
 
 /**
@@ -338,7 +349,8 @@ typedef enum
 
     /** This event is triggered by 'Host Stack' if 'Controller' responds with an error code for any HCI command.
        Event parameter returned will be an HCI error code as defined in Bluetooth 4.1 core specification, Volume 2,
-       Part D, section 1.3. This event will be received only if there is an error. */
+       Part D, section 1.3 or User can refer CYBLE_HCI_ERROR_T for HCI error codes. This event will be received only 
+       if there is an error. */
     CYBLE_EVT_HCI_STATUS,
 
     /** This event is triggered by host stack if BLE stack is busy or not. 
@@ -441,7 +453,7 @@ typedef enum
 
 	/** Disconnected from remote device or failed to establish connection. Parameter returned with the event 
 	contains pointer to the reason for disconnection, which is of type uint8. For details refer
-	core spec 4.2, vol2, part D */
+	core spec 4.2, vol2, part D or User can refer CYBLE_HCI_ERROR_T for HCI error codes */
     CYBLE_EVT_GAP_DEVICE_DISCONNECTED,
 
     /** Encryption change event for active connection. 'evParam' can be decoded as
@@ -511,6 +523,25 @@ typedef enum
      * API-CyBle_GappAuthReqReply context.
      */
     CYBLE_EVT_GAP_SMP_NEGOTIATED_AUTH_INFO,
+
+	/**	This event is generated when connection got established */
+	CYBLE_EVT_GAP_CONN_ESTB,
+
+	/** SCAN_REQ received event 
+	 *  User has to explicitly call CyBle_SetAppEventMask() by setting scan req event mask
+	 */
+	CYBLE_EVT_GAP_SCAN_REQ_RECVD,
+
+	/**	This event is generated when in the CYBLE_EVT_GAP_AUTH_REQ component event handler CyBle_GappAuthReqReply()
+        returned not CYBLE_ERROR_OK value. It's possible when the bonded device is full and application tries to initiate 
+        pairing with bonding enabled. Event parameter is of type 'CYBLE_API_RESULT_T'. Application will have to handle this event by removing an oldest (or any other) 
+        device from the bond list and call CyBle_GappAuthReqReply() function again. */
+    CYBLE_EVT_GAP_AUTH_REQ_REPLY_ERR,
+
+	/** This event is generated when the local P-256 public-private key pair generation is completed and new keys
+	    are stored in the BLE Stack for SC pairing procedure.
+	    Event parameter is a pointer to structure of type CYBLE_GAP_SMP_LOCAL_P256_KEYS. */
+	CYBLE_EVT_GAP_SMP_LOC_P256_KEYS_GEN_AND_SET_COMPLETE,
 
     /* Range for GATT events - 0x40 to 6F */
 
@@ -624,7 +655,8 @@ typedef enum
    /** Event parameter type is CYBLE_GATTS_CHAR_VAL_READ_REQ_T. It is triggered on server side 
        when client sends read request and when characteristic has CYBLE_GATT_DB_ATTR_CHAR_VAL_RD_EVENT 
        property set. This event could be ignored by application unless it need to response by error response which
-       needs to be set in gattErrorCode field of event parameter. */
+       needs to be set in gattErrorCode field of event parameter. Application can update attribute value
+	   when this event is received */
     CYBLE_EVT_GATTS_READ_CHAR_VAL_ACCESS_REQ,
 
 	/** Event indicates that GATT long procedure is end and stack will not send any further
@@ -720,7 +752,11 @@ typedef enum
     CYBLE_EVT_L2CAP_CBFC_TX_CREDIT_IND,
 
     /** This event is used to inform application of data transmission completion over L2CAP CBFC
-       channel. Event parameter is of type 'CYBLE_L2CAP_CBFC_DATA_WRITE_PARAM_T' 
+       channel. Event parameter is of type 'CYBLE_L2CAP_CBFC_DATA_WRITE_PARAM_T'.
+       L2CAP CBFC application must wait for this event before transmitting the next CBFC L2CAP data.
+       Application can send next data only when CYBLE_EVT_L2CAP_CBFC_DATA_WRITE_IND event is received for 
+       previous sent data and CYBLE_EVT_STACK_BUSY_STATUS is received with status CYBLE_STACK_STATE_FREE.
+       
        This event will be deprecated in future. It is only kept for backward compatibility.
        It is not recommended to be used by new design */
     CYBLE_EVT_L2CAP_CBFC_DATA_WRITE_IND,
@@ -750,11 +786,234 @@ typedef enum
         with the valid MIC packet within the application configured ping authentication time. */
     CYBLE_EVT_LE_PING_AUTH_TIMEOUT = 0xFB,
 
+	
+	/** This event is used to inform application that an HCI event has been received from controller.
+	    Event parameter is of type 'CYBLE_HCI_PKT_PARAMS_T'	 
+
+	    This event will only be trigger when user register for SoftTransport by calling CyBle_HciSoftTransportEnable() */
+	CYBLE_EVT_HCI_PKT,
+
+	/** This event is used to inform application that bonding information stored in flash is corrupted. */
+    CYBLE_EVT_FLASH_CORRUPT,
+	
 	/** Maximum value of CYBLE_EVENT_T type */
     CYBLE_EVT_MAX = 0xFF
 
 }CYBLE_EVENT_T;
+/** Alias of CYBLE_EVENT_T, which is used internally by Stack */
+#define CYBLE_EVT_HOST_STACK_T CYBLE_EVENT_T
+/** @} */
 
+/**
+ \addtogroup group_common_api_events
+ @{
+*/
+/** HCI Error codes defined by BT Spec */
+typedef enum
+{
+    /** Command success */
+   	CYBLE_HCI_COMMAND_SUCCEEDED = 0x00u,
+
+    /** Unknown HCI Command */
+    CYBLE_HCI_UNKNOWN_HCI_COMMAND_ERROR,
+
+	/** Unknown Connection Identifier */
+    CYBLE_HCI_NO_CONNECTION_ERROR,
+
+	/** Hardware Failure */
+    CYBLE_HCI_HARDWARE_FAILURE_ERROR,
+
+	/** Page Timeout */
+    CYBLE_HCI_PAGE_TIMEOUT_ERROR,
+
+	/** Authentication Failure */
+    CYBLE_HCI_AUTHENTICATION_FAILURE_ERROR,
+
+	/** PIN or Key Missing */
+    CYBLE_HCI_KEY_MISSING_ERROR,
+
+	/** Memory Capacity Exceeded */
+    CYBLE_HCI_MEMORY_FULL_ERROR,
+
+	/** Connection Timeout */
+    CYBLE_HCI_CONNECTION_TIMEOUT_ERROR,
+
+	/** Connection Limit Exceeded */
+    CYBLE_HCI_MAX_NUMBER_OF_CONNECTIONS_ERROR, 
+
+	/** Synchronous Connection Limit to a Device Exceeded */
+    CYBLE_HCI_MAX_SCO_CONNECTIONS_REACHED_ERROR, 
+
+	/** ACL Connection Already Exists */
+    CYBLE_HCI_ACL_CONNECTION_EXISTS_ERROR,
+
+	/** Command Disallowed*/
+    CYBLE_HCI_COMMAND_DISALLOWED_ERROR,
+
+	/** Connection Rejected due to Limited resources */
+    CYBLE_HCI_HOST_REJECTED_LIMITED_RESOURCES_ERROR,
+
+	/** Connection Rejected due to Security Reasons */
+    CYBLE_HCI_HOST_REJECTED_SECURITY_REASONS_ERROR,   
+
+	/** Connection Rejected due to Unacceptable BD_ADDR */
+    CYBLE_HCI_HOST_REJECTED_PERSONAL_DEVICE_ERROR, 
+
+	/** Connection Accept Timeout Exceeded */
+    CYBLE_HCI_CONNECTION_ACCEPT_TIMEOUT_EXCEEDED_ERROR, 
+
+	/** Unsupported Feature or Parameter Value */
+    CYBLE_HCI_UNSUPPORTED_FEATURE_OR_PARAMETER_ERROR, 
+
+	/** Invalid HCI Command Parameters */
+    CYBLE_HCI_INVALID_HCI_COMMAND_PARAMETERS_ERROR,
+
+	/** remote user terminated Connection */
+    CYBLE_HCI_CONNECTION_TERMINATED_USER_ERROR ,  
+
+	/** Remote Device Terminated Connection due to Low Resources */
+    CYBLE_HCI_CONNECTION_TERMINATED_LOW_RESOURCES_ERROR, 
+
+	/** Remote Device Terminated Connection due to Power Off */
+    CYBLE_HCI_CONNECTION_TERMINATED_POWER_OFF_ERROR , 
+
+	/** Connection Terminated By Local Host */
+    CYBLE_HCI_CONNECTION_TERMINATED_LOCAL_HOST_ERROR, 
+
+	/** Repeated Attempts */
+    CYBLE_HCI_REPEATED_ATTEMPTS_ERROR,    
+
+	/** Pairing Not Allowed */
+    CYBLE_HCI_PAIRING_NOT_ALLOWED_ERROR, 
+
+	/** Unknown LMP PDU */
+    CYBLE_HCI_UNKNOWN_LMP_PDU_ERROR, 
+
+	/** Unsupported Remote Feature */
+    CYBLE_HCI_UNSUPPORTED_REMOTE_FEATURE_ERROR,  
+
+	/** SCO Offset Rejected */
+    CYBLE_HCI_SCO_OFFSET_REJECTED_ERROR,     
+
+	/** SCO Interval Rejected */
+    CYBLE_HCI_SCO_INTERVAL_REJECTED_ERROR, 
+
+	/** SCO Air Mode Rejected */
+    CYBLE_HCI_SCO_AIR_MODE_REJECTED_ERROR,  
+
+	/** Invalid LMP Parameters */
+    CYBLE_HCI_INVALID_LMP_PARAMETERS_ERROR,  
+
+	/** Invalid LL Parameters */
+    CYBLE_HCI_INVALID_LL_PARAMETERS_ERROR = 0x01Eu,    
+
+	/** Unspecified error */
+    CYBLE_HCI_UNSPECIFIED_ERROR,                  
+
+	/** Unsupported LMP Parameter Value */
+    CYBLE_HCI_UNSUPPORTED_PARAMETER_VALUE_ERROR,   
+
+	/** Unsupported LL Parameter Value */
+    CYBLE_HCI_UNSUPPORTED_LL_PARAMETER_VALUE_ERROR = 0x20u,    
+
+	/** Role Change Not Allowed */
+    CYBLE_HCI_SWITCH_NOT_ALLOWED_ERROR,             
+
+	/** LMP Response Timeout */
+    CYBLE_HCI_LMP_RESPONSE_TIMEOUT_ERROR,      
+
+	/** LL Response Timeout*/
+	CYBLE_HCI_LL_RESPONSE_TEMEOUT_ERROR = 0x22u,
+
+	/** LMP Error Transaction Collision */
+    CYBLE_HCI_LMP_ERROR_TRANSACTION_COLLISION_ERROR,  
+
+	/** LMP PDU Not Allowed */
+    CYBLE_HCI_PDU_NOT_ALLOWED_ERROR,               
+
+	/** Encryption Mode Not Acceptable */
+    CYBLE_HCI_ENCRYPTION_MODE_NOT_ACCEPTABLE_ERROR,    
+
+	/** Link Key cannot be changed */
+    CYBLE_HCI_UNIT_KEY_USED_ERROR,       
+
+	/** Requested QoS Not Supported */
+    CYBLE_HCI_QOS_NOT_SUPPORTED_ERROR,  
+
+	/** Instant Passed */
+    CYBLE_HCI_INSTANT_PASSED_ERROR,          
+
+	/** Pairing with unit key not supported */
+    CYBLE_HCI_PAIRING_WITH_UNIT_KEY_NOT_SUPPPORTED_ERROR, 
+
+    /** Different Transaction Collision */
+    CYBLE_HCI_DIFFERENT_TRANSACTION_COLLISION,   
+
+	/** QoS Unacceptable parameter */
+    CYBLE_HCI_QOS_UNACCEPTABLE_PARAMETER = 0x2C, 
+
+	/** QoS Rejected */
+    CYBLE_HCI_QOS_REJECTED_ERROR, 
+
+	/** Channel Classification Not Supported */
+    CYBLE_HCI_CHANNEL_CLASSIFICATION_NOT_SUPPORTED,
+
+	/** Insufficient security */
+    CYBLE_HCI_INSUFFICIENT_SECURITY,  
+
+	/** parameter out of mandatory range */
+    CYBLE_HCI_PARAMETER_OUT_OF_MANDATORY_RANGE,   
+
+	/** Role Switch Pending */
+    CYBLE_HCI_ROLE_SWITCH_PENDING = 0x32,          
+
+	/** Reserved Slot violate */
+    CYBLE_HCI_RESERVED_SLOT_VIOLATION = 0x34,    
+
+	/** Role switch failed */
+    CYBLE_HCI_ROLE_SWITCH_FAILED,      
+
+	/** Extended inquiry response too large */
+    CYBLE_HCI_EXTENDED_INQUIRY_RESPONSE_TOO_LARGE,   
+
+	/** secure simple pairing not supported by host */
+    CYBLE_HCI_SECURE_SIMPLE_PAIRING_NOT_SUPPORTED_BY_HOST,  
+
+	/** host busy pairing */
+    CYBLE_HCI_HOST_BUSY_PAIRING,             
+
+ 	/** Connection Rejected due to No suitable channel found */
+    CYBLE_HCI_CONNECTION_REJECTED_DUE_TO_NO_SUITABLE_CHANNEL_FOUND, 
+
+	/** Controller busy */
+    CYBLE_HCI_CONTROLLER_BUSY,                           
+
+	/** unacceptable connection interval */
+    CYBLE_HCI_UNACCEPTABLE_CONNECTION_INTERVAL,                   
+
+	/** unacceptable connection parameters */
+    CYBLE_HCI_UNACCEPTABLE_CONNECTION_PARAMETERS = 0x3B,                   
+
+	/** Directed Advertising Timeout */
+    CYBLE_HCI_DIRECTED_ADVERTISING_TIMEOUT,                      
+
+	/** Connection Terminated due to MIC Failure */
+    CYBLE_HCI_CONNECTION_TERMINATED_DUE_TO_MIC_FAILURE,          
+
+	/** Connection failed to be established */
+    CYBLE_HCI_CONNECTION_FAILED_TO_BE_ESTABLISHED,                
+
+	/** MAC connection failed */
+    CYBLE_HCI_MAC_CONNECTION_FAILED,                             
+
+	/** Coarse Clock Adjustment Rejected 
+	 *  but will try to adjust using clock 
+	 */
+    CYBLE_HCI_COARSE_CLOCK_ADJ_REJECTED_TRY_USING_CLOCK_DRAGGING,  
+
+	/** INVALID HCI ERROR CODE */
+    CYBLE_HCI_LAST_ENTRY_BLUETOOTH_ERROR_CODE,
+}CYBLE_HCI_ERROR_T;
 /** @} */
 
 /**
@@ -870,7 +1129,10 @@ typedef enum
     /** \endcond */
 
     /** The state is not valid for current operation */
-    CYBLE_ERROR_INVALID_STATE
+    CYBLE_ERROR_INVALID_STATE,
+    
+    /** Stack is Busy */
+    CYBLE_ERROR_STACK_BUSY
 
 }CYBLE_API_RESULT_T;
 
@@ -909,13 +1171,21 @@ typedef enum
 /** BLESS Power enum reflecting power states supported by BLESS radio */
 typedef enum
 {
+	/** BLESS state is ACTIVE */
     CYBLE_BLESS_STATE_ACTIVE = 0x01,
+    /** BLESS state is EVENT_CLOSE */
     CYBLE_BLESS_STATE_EVENT_CLOSE,
+    /** BLESS state is SLEEP */
     CYBLE_BLESS_STATE_SLEEP,
+    /** BLESS state is ECO_ON */
     CYBLE_BLESS_STATE_ECO_ON,
+    /** BLESS state is ECO_STABLE */
     CYBLE_BLESS_STATE_ECO_STABLE,
+    /** BLESS state is DEEPSLEEP */
     CYBLE_BLESS_STATE_DEEPSLEEP,
+    /** BLESS state is HIBERNATE */
     CYBLE_BLESS_STATE_HIBERNATE,
+    /** BLESS state is INVALID */
     CYBLE_BLESS_STATE_INVALID = 0xFFu
 } CYBLE_BLESS_STATE_T;
 
@@ -969,14 +1239,23 @@ typedef struct
 /** BLE WCO sleep clock accuracy configuration */
 typedef enum
 {
+	/** SCA 251 to 500 PPM */
     CYBLE_LL_SCA_251_TO_500_PPM = 0x00u,
+   	/** SCA 151 to 250 PPM */
     CYBLE_LL_SCA_151_TO_250_PPM,
+    /** SCA 101 to 150 PPM */
     CYBLE_LL_SCA_101_TO_150_PPM,
+    /** SCA 076 to 100 PPM */
     CYBLE_LL_SCA_076_TO_100_PPM,
+    /** SCA 051 to 075 PPM */
     CYBLE_LL_SCA_051_TO_075_PPM,
+    /** SCA 031 to 050 PPM */
     CYBLE_LL_SCA_031_TO_050_PPM,
+    /** SCA 021 to 030 PPM */
     CYBLE_LL_SCA_021_TO_030_PPM,
+    /** SCA 000 to 020 PPM */
     CYBLE_LL_SCA_000_TO_020_PPM,    
+    /** Invalid PPM */
     CYBLE_LL_SCA_IN_PPM_INVALID
 } CYBLE_BLESS_WCO_SCA_CFG_T;
 
@@ -1012,9 +1291,9 @@ typedef struct
     /** Protocol Request type*/
     CYBLE_PROTOCOL_REQ_T  	request;
 
-    /** event parameter is generated to allocatate memory or to free up previously allocated memory
+    /** event parameter is generated to allocate memory or to free up previously allocated memory
     		CYBLE_ALLOC_MEMORY (0) = to allocate memory for request type, 
-    		CYBLE_FREE_MEMORY (1) = free previously allocated memory for the request type*/
+    		CYBLE_FREE_MEMORY (1) = free previously allocated memory for the request type */
     uint8					allocFree;
 
 	/** This is an output parameter which application needs to fill and pass to BLE Stack as per below table:
@@ -1043,13 +1322,13 @@ typedef struct
 typedef struct 
 {
     /** The major version of the library */
-    uint8 majorVersion;     
+    uint16 majorVersion;     
 	/** The minor version of the library */
-    uint8 minorVersion;     
+    uint16 minorVersion;     
 	/** The patch number of the library */
-    uint8 patch;            
+    uint16 patch;            
 	/** The build number of the library */
-    uint8 buildNumber;
+    uint16 buildNumber;
 
 } CYBLE_STACK_LIB_VERSION_T;
 
@@ -1125,6 +1404,130 @@ typedef struct
     uint16                             feature_mask;
 } CYBLE_STACK_CONFIG_PARAM_T;
 
+/**
+ * Structure containing the parameters required for AES CMAC Generation 
+ */
+typedef struct
+{
+    /** pointer to message for which AES CMAC has to be calculated, LSB should be first */
+    uint8               *buffer;
+    /** size of the message buffer */
+    uint16              size;
+    /** AES CMAC 128-bit Key, LSB should be first */
+    uint8               *key;
+    /** output-parameter, Buffer to hold generated MAC of 16 bytes. Output is LSB first */
+    uint8               *mac;
+    /** Callback to notify when the AES-CMAC generation is completed. Once this callback is 
+     * called, check for the output-parameter, which contains generated cmac
+	 */
+    AES_CMAC_APPL_CB    appl_callback;
+                        
+}CYBLE_AES_CMAC_GENERATE_PARAM_T;
+
+/**
+ * Structure for Registering Bless event mask 
+ * and associated callback.
+ */
+typedef struct
+{
+	/** Bless state Event mask */
+	uint32 BlessStateMask;
+
+	/** User callback function */
+	CYBLE_BLESS_CB_T bless_evt_app_cb;
+	
+}CYBLE_BLESS_EVENT_PARAM_T;
+
+/**
+ * DTM Payload sequence in SoC mode
+ */
+typedef enum
+{
+	/** PRBS9 sequence '11111111100000111101…’ 
+	    (in transmission order) as described 
+	    in [Vol 6] Part F, Section 4.1.5 */
+	CYBLE_PAYLOAD_VAL_ZERO,
+
+	/** Repeated ‘11110000’ (in transmission order) 
+		sequence as described
+		in [Vol 6] Part F, Section 4.1.5 */
+	CYBLE_PAYLOAD_VAL_ONE,
+
+	/** Repeated ‘10101010’ (in transmission order) 
+		sequence as described
+		in [Vol 6] Part F, Section 4.1.5 */
+	CYBLE_PAYLOAD_VAL_TWO,
+
+	/** PRBS15 sequence as described in 
+		[Vol 6] Part F, Section 4.1.5 */
+	CYBLE_PAYLOAD_VAL_THREE,
+
+	/** Repeated ‘11111111’ (in transmission order) sequence */
+	CYBLE_PAYLOAD_VAL_FOUR,
+
+	/** Repeated ‘00000000’ (in transmission order) sequence */
+	CYBLE_PAYLOAD_VAL_FIVE,
+
+	/** Repeated ‘00001111’ (in transmission order) sequence */
+	CYBLE_PAYLOAD_VAL_SIX,
+
+	/** Repeated ‘01010101’ (in transmission order) sequence */
+	CYBLE_PAYLOAD_VAL_SEVEN,
+	
+}CYBLE_PKT_PAYLOAD_T;
+
+/**
+ * DTM test parameters in SoC mode
+ */
+typedef struct
+{
+	/** "N = (F – 2402) / 2 Range: 0x00 – 0x27. 
+		Frequency Range : 2402 MHz to 2480 MHz" */
+	uint8 tx_frequency;
+
+	/** length of the test data */
+	uint8 length_of_test_data;
+
+	/** payload sequence */
+	CYBLE_PKT_PAYLOAD_T packet_payload;
+	
+}CYBLE_TRANSMITTER_TEST_PARAMS_T;
+
+/**
+ * HCI Packet type enum
+ */
+typedef enum
+{
+	/** HCI Command packet type */
+    CYBLE_HCI_CMD_PKT_TYPE=0x1,
+
+	/** HCI ACL data packet type */
+    CYBLE_HCI_ACL_DATA_PKT_TYPE,
+
+	/** HCI Synchronous packet type */
+    CYBLE_HCI_SYNC_DATA_PKT_TYPE,
+
+	/** HCI Event packet type */
+    CYBLE_HCI_EVENT_PKT_TYPE,
+    
+}CYBLE_HCI_PKT_TYPE_T;
+
+/**
+ * structure containing params for HCI command
+ */
+typedef struct
+{
+	/** HCI packet type */
+	CYBLE_HCI_PKT_TYPE_T pkt_type;
+
+	/** length of the command */
+	uint16 length;
+
+	/** Command buffer*/
+	uint8 *buffer;
+	
+}CYBLE_HCI_PKT_PARAMS_T;
+
 /** @} */
 
 
@@ -1134,6 +1537,7 @@ typedef struct
 
 
 /******************************************************************************
+
 * Function Name: CyBle_StackSetFeatureConfig
 ***************************************************************************//**
 *
@@ -1409,8 +1813,9 @@ void CyBle_Shutdown(void);
 *  reset the BLE Stack if the BLE Stack turns unresponsive due to incomplete 
 *  transfers with the peer BLE device. 
 * 
-*  This is a blocking function. No event is generated on calling this function.
-*     
+*  A call to this function results in the generation of CYBLE_EVT_STACK_ON event 
+*  on successful BLE Stack Reset.
+*
 * \return
 *  CYBLE_API_RESULT_T : Return value indicates if the function succeeded or
 *  failed. Following are the possible error codes.
@@ -2021,7 +2426,11 @@ CYBLE_API_RESULT_T CyBle_SetCeLengthParam
 *                      - Default Value (N) = 3000 (30 seconds)
 *                      - Time Calculation = N x 10 ms
 *                      - Time Range = 10 ms to 655,350 ms
-* 
+*
+*  Note: The time at which PING packet transmitted over the air is determined from the 
+*        following formula 
+*        (authPayloadTimeout - (4 * ((1 + SlaveLatency) * Connection Interval)))
+*						
 * \return
 *  CYBLE_API_RESULT_T: Return value indicates if the function succeeded or
 *  failed. Following are the possible error codes.
@@ -2096,7 +2505,27 @@ CYBLE_API_RESULT_T CyBle_ReadAuthPayloadTimeout
 * 
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_GetStackLibraryVersion(CYBLE_STACK_LIB_VERSION_T*   stackVersion);
-
+/******************************************************************************
+* Function Name: CyBle_IsStackIdle
+***************************************************************************//**
+* 
+*  This function is used to check BLE stack is idle or not. This API returns CYBLE_ERROR_OK
+*  if BLE Stack is idle. This function returns CYBLE_ERROR_STACK_BUSY if L2CAP TX data is queued 
+*  for transmission, or any tasks are pending or hardware is busy. This function will not consider 
+*  Rx path to decide stack is idle or not.
+*
+*  Note:
+*  This API should not be called from BLE Stack callback context.
+*  
+*  Use case example: Application can check before shut-down, BLE stack is idle or not.
+*
+*   Errors codes                     | Description
+*   ------------                     | -----------
+*   CYBLE_ERROR_OK                   | If Stack is idle
+*   CYBLE_ERROR_STACK_BUSY           | If Stack is not idle.
+* 
+******************************************************************************/
+CYBLE_API_RESULT_T CyBle_IsStackIdle(void);
 
 /******************************************************************************
 * Function Name: CyBle_GetBleSsState
@@ -2146,6 +2575,8 @@ CYBLE_API_RESULT_T CyBle_GetStackLibraryVersion(CYBLE_STACK_LIB_VERSION_T*   sta
 *  </tr>
 *  </table>
 * 
+\image html GetBleSsState_State_Diagram.bmp
+\image rtf GetBleSsState_State_Diagram.bmp
 ******************************************************************************/
 CYBLE_BLESS_STATE_T CyBle_GetBleSsState(void);
 
@@ -2260,6 +2691,134 @@ CYBLE_API_RESULT_T CyBle_AesCcmDecrypt(
     uint8 *out_data,
 	uint8 *in_mic
 	);	
+/******************************************************************************
+* Function Name: CyBle_GenerateAesCmac
+***************************************************************************//**
+* 
+*  This API enables the application to generate the AES CMAC of 16 bytes, for given variable 
+*  length message and CMAC Key.
+    
+*  After this API call, if the return value is CYBLE_ERROR_OK, 
+*  then callback given in the input parameter is called when the cmac generation is completed. 
+*  Once this callback is called, check the output parameter cmac to get the generated cmac value.
+* 	
+*  \param cmacGenParam: pointer to structure containing parameters required for AES CMAC Generation.
+* 
+* \return
+*  CYBLE_API_RESULT_T: Return value indicates if the function succeeded or
+*  failed. Following are the possible error codes.
+*
+*  <table>
+*  <tr>
+*    <th>Error codes</th>
+*    <th>Description</th>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_OK</td>
+*    <td>On successful operation.</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_INVALID_PARAMETER</td>
+*    <td>cmacGenParam is NULL or key is NULL or
+*        mac, output parameter is NULL or
+*        appl_callback is NULL or
+*        if buffer is NULL when size is greater than zero
+*	 </td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_STACK_INTERNAL</td>
+*    <td>An error occurred in BLE stack</td>
+*  </tr>
+*  </table>
+* 
+******************************************************************************/
+CYBLE_API_RESULT_T CyBle_GenerateAesCmac(CYBLE_AES_CMAC_GENERATE_PARAM_T *cmacGenParam);
+
+/******************************************************************************
+* Function Name: CyBle_SetAppEventMask
+***************************************************************************//**
+* 
+*  This API enables the application to Mask which Events user wants to receive 
+*	
+*    Currently supporting maskable events 
+*		CYBLE_EVT_GAP_CONN_ESTB
+*		CYBLE_EVT_GAP_SCAN_REQ_RECVD
+*
+*  \param UserEventMask: User Event Mask
+* 
+* \return
+*  CYBLE_API_RESULT_T: Return value indicates if the function succeeded or
+*  failed. Following are the possible error codes.
+*
+*  <table>
+*  <tr>
+*    <th>Error codes</th>
+*    <th>Description</th>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_OK</td>
+*    <td>On successful operation.</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_INVALID_PARAMETER</td>
+*    <td>UserEventMask is ZERO</td>
+*  </tr>
+*  </table>
+* 
+******************************************************************************/
+CYBLE_API_RESULT_T CyBle_SetAppEventMask(uint32 UserEventMask);
+
+
+/******************************************************************************
+* Function Name: CyBle_RegisterBlessInterruptCallback
+***************************************************************************//**
+* 
+*   This API will registers the callback function for BLESS Events and sets 
+*   Event mask which BLESS Events user wants to receive 
+*
+*    Currently supporting events 
+*		CYBLE_ISR_BLESS_CONN_CLOSE_CE 
+*       CYBLE_ISR_BLESS_ADV_CLOSE
+*
+*
+*	Note:
+*		Application has to pay utmost care about not doing delayed processing
+*		in event handler as the registered callback will get called from BLESS 
+*		Interrupt Service Routine. 
+*		
+*		Application can set/clear flag which can be used for further processing
+*		outside of the ISR context.
+*
+*		Event received through callback represents events received
+*		as a whole at that point i.e., application won't receive individual
+*		events.
+* 		
+*  \param BlessEventParams: pointer to structure CYBLE_BLESS_EVENT_PARAM_T
+* 
+* \return
+*  CYBLE_API_RESULT_T: Return value indicates if the function succeeded or
+*  failed. Following are the possible error codes.
+*
+*  <table>
+*  <tr>
+*    <th>Error codes</th>
+*    <th>Description</th>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_OK</td>
+*    <td>On successful operation.</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_INVALID_PARAMETER</td>
+*    <td>If NULL passed</td>
+*  </tr>
+*  </table>
+* 
+******************************************************************************/
+CYBLE_API_RESULT_T CyBle_RegisterBlessInterruptCallback
+	(
+		CYBLE_BLESS_EVENT_PARAM_T *BlessEventParams
+	);
 
 
 /******************************************************************************
@@ -2323,7 +2882,7 @@ void CyBle_SetRxGainMode(uint8 bleSsGainMode);
 * BLE Stack resets the quick transmit to enable latency for power save.
 *
 * BLE Stack also enables quick transmit whenever any real time LL Control PDU
-* is received. Once the acknowledgement of the PDU is processed the quick transmit
+* is received. Once the acknowledgment of the PDU is processed the quick transmit
 * option is reset.
 *
 *
@@ -2355,8 +2914,12 @@ CYBLE_API_RESULT_T CyBle_SetSlaveLatencyMode(uint8 bdHandle, uint8 setForceQuick
 * Function Name: CyBle_SetSeedForRandomGenerator
 ***************************************************************************//**
 *
-* This function sets application specific seed for DRBG (Deterministic 
-*  Random number generator).
+* As per security specification of Bluetooth, BLE stack uses pseudo random number 
+* generator (Bluetooth core specification 4.2, Vol.2 Part H, Sec-2). Application 
+* can generate random number using API- CyBle_GenerateRandomNumber. Seed for 
+* random number generator with better entropy for randomness can be provided by 
+* application using this API. This function sets application specific seed for 
+* DRBG (Deterministic Random number generator).
 *  
 *  \param seed: Seed for DRBG. Setting the seed to zero is functionally 
 *               equivalent to not setting the application specific seed.
@@ -2396,6 +2959,155 @@ void CyBle_SetSeedForRandomGenerator(uint32 seed);
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_IsLLControlProcPending(void);
 
+/******************************************************************************
+* Function Name: CyBle_StartTransmitterTest
+***************************************************************************//**
+* 
+*  This API Programs direct test mode TX test command parameters.
+* 	
+*  \param TransmitterTestParams: pointer to structure CYBLE_TRANSMITTER_TEST_PARAMS_T.
+* 
+* \return
+*  CYBLE_API_RESULT_T: Return value indicates if the function succeeded or
+*  failed. Following are the possible error codes.
+*
+*  <table>
+*  <tr>
+*    <th>Error codes</th>
+*    <th>Description</th>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_OK</td>
+*    <td>On successful operation.</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_INVALID_PARAMETER</td>
+*    <td>TransmitterTestParams is NULL </td>
+*  </tr>
+*  </table>
+* 
+******************************************************************************/
+
+CYBLE_API_RESULT_T CyBle_StartTransmitterTest
+     (
+          CYBLE_TRANSMITTER_TEST_PARAMS_T *TransmitterTestParams
+     );
+
+/******************************************************************************
+* Function Name: CyBle_StartReceiverTest
+***************************************************************************//**
+* 
+*  This API Programs direct test mode RX test command parameters.
+*  
+*  \param RxFreq: Frequency for reception.
+*                 N = (F – 2402)/2  Range: 0x00 – 0x27. 
+                  Frequency Range : 2402 MHz to 2480 MHz.
+* 
+* \return
+*  CYBLE_API_RESULT_T: Return value indicates if the function succeeded or
+*  failed. Following are the possible error codes.
+*
+*  <table>
+*  <tr>
+*    <th>Error codes</th>
+*    <th>Description</th>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_OK</td>
+*    <td>On successful operation.</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_INVALID_PARAMETER</td>
+*    <td>RxFreq is Out of Range </td>
+*  </tr>
+*  </table>
+* 
+******************************************************************************/
+CYBLE_API_RESULT_T CyBle_StartReceiverTest
+     (
+          uint8 RxFreq
+     );
+
+/******************************************************************************
+* Function Name: CyBle_TestEnd
+***************************************************************************//**
+* 
+*  This API Programs the direct test end command to the hardware, it reads number
+*  of successful packtes received from ll hardware.
+*  
+*  \param PacketCount: Pointer to a buffer of size 16 bytes in which the received 
+*                      number of successful packets will be stored.
+* 
+* \return
+*  CYBLE_API_RESULT_T: Return value indicates if the function succeeded or
+*  failed. Following are the possible error codes.
+*
+*  <table>
+*  <tr>
+*    <th>Error codes</th>
+*    <th>Description</th>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_OK</td>
+*    <td>On successful operation.</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_INVALID_PARAMETER</td>
+*    <td>PacketCount is NULL </td>
+*  </tr>
+*  </table>
+* 
+******************************************************************************/
+CYBLE_API_RESULT_T CyBle_TestEnd
+     (
+          uint16 *PacketCount
+     );
+
+/******************************************************************************
+* Function Name: CyBle_HciSendPacket
+***************************************************************************//**
+* 
+*  This API Sends HCI packet to Controller
+*  
+*  User should deallocate memory buffer passed as an input parameter,
+*  after receiving an Event from the controller for command packet and 
+*  after recieving Number Of Completed Packets event for data packet transmitted.  
+*
+*  \param HciPktParams: pointer to structure CYBLE_HCI_PKT_PARAMS_T.
+* 
+* \return
+*  CYBLE_API_RESULT_T: Return value indicates if the function succeeded or
+*  failed. Following are the possible error codes.
+*
+*  <table>
+*  <tr>
+*    <th>Error codes</th>
+*    <th>Description</th>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_OK</td>
+*    <td>On successful operation.</td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_INVALID_PARAMETER</td>
+*    <td>HciCmdParams is NULL </td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_INVALID_OPERATION</td>
+*    <td>Operation not permitted </td>
+*  </tr>
+*  <tr>
+*    <td>CYBLE_ERROR_MEMORY_ALLOCATION_FAILED</td>
+*    <td>Memory allocation failed </td>
+*  </tr>
+*  </table>
+* 
+******************************************************************************/
+CYBLE_API_RESULT_T CyBle_HciSendPacket
+	(
+	     CYBLE_HCI_PKT_PARAMS_T *HciPktParams
+	);
+
 /** @} */
 
 /** \cond IGNORE */
@@ -2431,10 +3143,48 @@ void CyBle_EnablePrivacyFeature(void);
 ******************************************************************************/
 void CyBle_EnableDleFeature(void);
 
+/******************************************************************************
+* Function Name: CyBle_EnableDefaultDevicePrivacy
+*******************************************************************************
+*
+* This function Enables Default device privacy i.e., loose privacy
+* implementation.
+*
+* \return
+*    None.
+*
+******************************************************************************/
+void CyBle_EnableDefaultDevicePrivacy(void);
+
+
+/******************************************************************************
+* Function Name: CyBle_HciUartTransportEnable
+*******************************************************************************
+*
+* This function Enables HCI Software Transport 
+*
+* \return
+*    None.
+*
+******************************************************************************/
+
+void CyBle_HciUartTransportEnable(void);
+
+/******************************************************************************
+* Function Name: CyBle_HciSoftTransportEnable
+*******************************************************************************
+*
+* This function Enables HCI UART transport
+*
+* \return
+*    None.
+*
+******************************************************************************/
+
+void CyBle_HciSoftTransportEnable(void);
+
 /** \endcond */
 
 
-#endif /* CY_BLE_CYBLE_STACK_H */
-
-
+#endif /* CYBLE_H_ */
 /*EOF*/

@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file cytypes.h
-* \version 5.40
+* \version 5.60
 *
 * \brief CyTypes provides register access macros and approved types for use in
 * firmware.
@@ -16,7 +16,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2008-2016, Cypress Semiconductor Corporation.  All rights reserved.
+* Copyright 2008-2017, Cypress Semiconductor Corporation.  All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -120,6 +120,46 @@
 #else
     #define CY_PSOC4_4400 (0u != 0u)
 #endif  /* CYDEV_CHIP_MEMBER_4I */
+
+#ifdef CYDEV_CHIP_MEMBER_4E
+    #define CY_CCG2 (CYDEV_CHIP_MEMBER_USED == CYDEV_CHIP_MEMBER_4E)
+#else
+    #define CY_CCG2 (0u != 0u)
+#endif  /* CYDEV_CHIP_MEMBER_4E */
+
+#ifdef CYDEV_CHIP_MEMBER_4O
+    #define CY_CCG3 (CYDEV_CHIP_MEMBER_USED == CYDEV_CHIP_MEMBER_4O)
+#else
+    #define CY_CCG3 (0u != 0u)
+#endif  /* CYDEV_CHIP_MEMBER_4O */
+
+#ifdef CYDEV_CHIP_MEMBER_4R
+    #define CY_CCG3PA (CYDEV_CHIP_MEMBER_USED == CYDEV_CHIP_MEMBER_4R)
+#else
+    #define CY_CCG3PA (0u != 0u)
+#endif  /* CYDEV_CHIP_MEMBER_4R */
+
+#ifdef CYDEV_CHIP_MEMBER_4N
+    #define CY_CCG4 (CYDEV_CHIP_MEMBER_USED == CYDEV_CHIP_MEMBER_4N)
+#else
+    #define CY_CCG4 (0u != 0u)
+#endif  /* CYDEV_CHIP_MEMBER_4N */
+
+#ifdef CYDEV_CHIP_MEMBER_4S
+    #define CY_CCG5 (CYDEV_CHIP_MEMBER_USED == CYDEV_CHIP_MEMBER_4S)
+#else
+    #define CY_CCG5 (0u != 0u)
+#endif  /* CYDEV_CHIP_MEMBER_4S */
+
+#ifdef CYDEV_CHIP_MEMBER_4P
+    #define CY_PSOC4_4100BLII (CYDEV_CHIP_MEMBER_USED == CYDEV_CHIP_MEMBER_4P)
+    #define CY_PSOC4_4200BLII (CYDEV_CHIP_MEMBER_USED == CYDEV_CHIP_MEMBER_4P)
+#else
+    #define CY_PSOC4_4100BLII (0u != 0u)
+    #define CY_PSOC4_4200BLII (0u != 0u)
+#endif  /* CYDEV_CHIP_MEMBER_4P */
+
+
 
 
 #define CY_IP_HOBTO_DEVICE      (!(0 == 1))
@@ -230,10 +270,11 @@
     /* Presence of the BLESS IP block */
     #if (CY_IP_HOBTO_DEVICE)
         #define CY_IP_BLESS             (1 != 0)
+        #define CY_IP_BLESSV3           (CYIPBLOCK_m0s8bless_VERSION == 3)
     #else
         #define CY_IP_BLESS             (0 != 0)
+        #define CY_IP_BLESSV3           (0 != 0)
     #endif  /* (CY_IP_HOBTO_DEVICE) */
-
 
     #if (CY_IP_HOBTO_DEVICE)
         #define CY_IP_USBDEV            (0 != 0)
@@ -261,21 +302,29 @@
     /* Watch Crystal Oscillator (WCO) is present (32kHz) */
     #if (CY_IP_HOBTO_DEVICE)
         #if (CY_IP_BLESS)
-            #define CY_IP_WCO_BLESS         (0 == 0)
             #define CY_IP_WCO_WCO           (0 != 0)
             #define CY_IP_WCO_SRSSV2        (0 != 0)
+            #if (CY_IP_BLESSV3)
+                #define CY_IP_WCO_WCOV2     (0 == 0)
+                #define CY_IP_WCO_BLESS     (0 != 0)                
+            #else
+                #define CY_IP_WCO_WCOV2     (0 != 0)
+                #define CY_IP_WCO_BLESS     (0 == 0)
+            #endif
         #else
             #define CY_IP_WCO_BLESS         (0 != 0)
             #define CY_IP_WCO_WCO           (0 == 1)
+            #define CY_IP_WCO_WCOV2         (0 != 0)
             #define CY_IP_WCO_SRSSV2        (0 == 1)
         #endif  /* (CY_IP_BLESS) */
     #else
         #define CY_IP_WCO_BLESS             (0 != 0)
         #define CY_IP_WCO_WCO               (0 != 0)
+        #define CY_IP_WCO_WCOV2             (0 != 0)
         #define CY_IP_WCO_SRSSV2            (0 != 0)
     #endif  /* (CY_IP_HOBTO_DEVICE) */
 
-    #define CY_IP_WCO   (CY_IP_WCO_BLESS || CY_IP_WCO_WCO || CY_IP_WCO_SRSSV2)
+    #define CY_IP_WCO   (CY_IP_WCO_BLESS || CY_IP_WCO_WCO || CY_IP_WCO_WCOV2 || CY_IP_WCO_SRSSV2)
 
 
     /* PLL is present */
@@ -294,18 +343,26 @@
     /* External Crystal Oscillator is present (high frequency) */
     #if (CY_IP_HOBTO_DEVICE)
         #if (CY_IP_BLESS)
-            #define CY_IP_ECO_BLESS         (0 == 0)
             #define CY_IP_ECO_SRSSV2        (0 != 0)
+            #if (CY_IP_BLESSV3)
+                #define CY_IP_ECO_BLESS     (0 != 0)
+                #define CY_IP_ECO_BLESSV3   (0 == 0)
+            #else
+                #define CY_IP_ECO_BLESS     (0 == 0)
+                #define CY_IP_ECO_BLESSV3   (0 != 0)
+            #endif
         #else
             #define CY_IP_ECO_BLESS         (0 != 0)
+            #define CY_IP_ECO_BLESSV3       (0 != 0)
             #define CY_IP_ECO_SRSSV2        (0 == 1)
         #endif  /* (CY_IP_BLESS) */
     #else
         #define CY_IP_ECO_BLESS             (0 != 0)
+        #define CY_IP_ECO_BLESSV3           (0 != 0)
         #define CY_IP_ECO_SRSSV2            (0 != 0)
     #endif  /* (CY_IP_HOBTO_DEVICE) */
 
-    #define CY_IP_ECO   (CY_IP_ECO_BLESS || CY_IP_ECO_SRSSV2)
+    #define CY_IP_ECO   (CY_IP_ECO_BLESS || CY_IP_ECO_SRSSV2 || CY_IP_ECO_BLESSV3)
 
 
     /* Clock Source clk_lf implemented in SysTick Counter. When 0, not implemented, 1=implemented */
@@ -399,7 +456,8 @@
 #define CY_BOOT_5_20            (520u)
 #define CY_BOOT_5_30            (530u)
 #define CY_BOOT_5_40            (540u)
-#define CY_BOOT_VERSION         (CY_BOOT_5_40)
+#define CY_BOOT_5_50            (550u)
+#define CY_BOOT_VERSION         (CY_BOOT_5_50)
 
 
 /*******************************************************************************

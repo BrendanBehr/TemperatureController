@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file CYBLE_gatt.h
-* \version 3.10
+* \version 3.30
 * 
 * \brief
 *  Contains the prototypes and constants used in the BLE GATT profile.
@@ -35,13 +35,13 @@
 
 #if(CYBLE_GATT_ROLE_SERVER)
 
-#define CYBLE_GATT_DB_INDEX_COUNT                    (0x0020u)
-#define CYBLE_GATT_DB_ATT_VAL_COUNT                  (0x10u)
-#define CYBLE_GATT_DB_MAX_VALUE_LEN                  (0x0015u)
+#define CYBLE_GATT_DB_INDEX_COUNT                    (0x001Cu)
+#define CYBLE_GATT_DB_ATT_VAL_COUNT                  (0x14u)
+#define CYBLE_GATT_DB_MAX_VALUE_LEN                  (0x0012u)
 
 #endif /* CYBLE_GATT_ROLE_SERVER */
 
-#define CYBLE_GATT_DB_CCCD_COUNT                     (0x06u)
+#define CYBLE_GATT_DB_CCCD_COUNT                     (0x08u)
 
 #if (CYBLE_GATT_DB_CCCD_COUNT == 0u)
     #define CYBLE_GATT_DB_FLASH_CCCD_COUNT          (1u)
@@ -49,12 +49,8 @@
     #define CYBLE_GATT_DB_FLASH_CCCD_COUNT          (CYBLE_GATT_DB_CCCD_COUNT)
 #endif
 
-#define CYBLE_HTS
-#define CYBLE_HTS_SERVER
-#define CYBLE_DIS
-#define CYBLE_DIS_SERVER
-#define CYBLE_BAS
-#define CYBLE_BAS_SERVER
+#define CYBLE_CUSTOM
+#define CYBLE_CUSTOM_SERVER
 
 
 /***************************************
@@ -234,7 +230,7 @@ void CyBle_GattcIndicationEventHandler(CYBLE_GATTC_HANDLE_VALUE_IND_PARAM_T *eve
     
 extern const CYBLE_GATTS_T cyBle_gatts;
 extern const CYBLE_GATTS_DB_T cyBle_gattDB[CYBLE_GATT_DB_INDEX_COUNT];
-
+extern const uint8 cyBle_attUuid128[4u][16u];
 
 #if(CYBLE_GATT_DB_CCCD_COUNT != 0u)
 extern uint8 cyBle_attValuesCCCD[CYBLE_GATT_DB_CCCD_COUNT];
@@ -290,6 +286,7 @@ extern CYBLE_GATT_ATTR_HANDLE_RANGE_T cyBle_gattcDiscoveryRange;
 #define CYBLE_UUID_HIDS_SERVICE                      (0x1812u)
 #define CYBLE_UUID_SCAN_PARAM_SERVICE                (0x1813u)
 #define CYBLE_UUID_RUNNING_SPEED_AND_CADENCE_SERVICE (0x1814u)
+#define CYBLE_UUID_AUTOMATION_INPUT_OUTPUT_SERVICE   (0x1815u)
 #define CYBLE_UUID_CYCLING_SPEED_AND_CADENCE_SERVICE (0x1816u)
 #define CYBLE_UUID_PULSE_OXIMETER_SERVICE            (0x1817u)
 #define CYBLE_UUID_CPS_SERVICE                       (0x1818u)
@@ -302,6 +299,7 @@ extern CYBLE_GATT_ATTR_HANDLE_RANGE_T cyBle_gattcDiscoveryRange;
 #define CYBLE_UUID_CGM_SERVICE                       (0x181Fu)
 #define CYBLE_UUID_INTERNET_PROTOCOL_SUPPORT_SERVICE (0x1820u)
 #define CYBLE_UUID_IPS_SERVICE                       (0x1821u)
+#define CYBLE_UUID_PLXS_SERVICE                      (0x1822u)
 #define CYBLE_UUID_HTTP_PROXY_SERVICE                (0x1823u)
 #define CYBLE_UUID_FIND_ME_SERVICE                   (0x18A3u)
 #define CYBLE_UUID_WIRELESS_POWER_TRANSFER_SERVICE   (0xFFFEu)
@@ -343,12 +341,18 @@ extern CYBLE_GATT_ATTR_HANDLE_RANGE_T cyBle_gattcDiscoveryRange;
 #define CYBLE_UUID_CHAR_EXTERNAL_REPORT_REF          (0x2907u)
 /* Report Reference */
 #define CYBLE_UUID_CHAR_REPORT_REFERENCE             (0x2908u)
+/* Number of Digitals */
+#define CYBLE_UUID_CHAR_NUMBER_OF_DIGITALS           (0x2909u)
+/* Value Trigger Setting */
+#define CYBLE_UUID_CHAR_VALUE_TRIGGER_SETTING        (0x290Au)
 /* Environmental Sensing Configuration */
 #define CYBLE_UUID_CHAR_ES_CONFIGURATION             (0x290Bu)
 /* Environmental Sensing Measurement */
 #define CYBLE_UUID_CHAR_ES_MEASUREMENT               (0x290Cu)
 /* Environmental Sensing Trigger Setting */
 #define CYBLE_UUID_CHAR_ES_TRIGGER_SETTING           (0x290Du)
+/* Time Trigger Setting */
+#define CYBLE_UUID_CHAR_TIME_TRIGGER_SETTING         (0x290Eu)
 
 
 /***************************************
@@ -369,6 +373,8 @@ extern CYBLE_GATT_ATTR_HANDLE_RANGE_T cyBle_gattcDiscoveryRange;
 #define CYBLE_UUID_CHAR_SERVICE_CHANGED              (0x2A05u)
 /* Central Address Resolution Characteristic */
 #define CYBLE_UUID_CHAR_CENTRAL_ADDRESS_RESOLUTION   (0x2AA6u)
+/* Resolvable Private Address Only Characteristic */
+#define CYBLE_UUID_CHAR_RESOLVABLE_PRIV_ADDR_ONLY    (0x2AC9u)
 
 
 /***************************************
@@ -443,9 +449,15 @@ extern CYBLE_GATT_ATTR_HANDLE_RANGE_T cyBle_gattcDiscoveryRange;
 #define CYBLE_UUID_CHAR_RSC_MSRMT                    (0x2A53u)
 #define CYBLE_UUID_CHAR_RSC_FEATURE                  (0x2A54u)
 #define CYBLE_UUID_CHAR_SC_CONTROL_POINT             (0x2A55u)
+#define CYBLE_UUID_CHAR_DIGITAL                      (0x2A56u)
+#define CYBLE_UUID_CHAR_ANALOG                       (0x2A58u)
+#define CYBLE_UUID_CHAR_AGGREGATE                    (0x2A5Au)
 #define CYBLE_UUID_CHAR_CSC_MSRMT                    (0x2A5Bu)
 #define CYBLE_UUID_CHAR_CSC_FEATURE                  (0x2A5Cu)
 #define CYBLE_UUID_CHAR_SENSOR_LOCATION              (0x2A5Du)
+#define CYBLE_UUID_CHAR_SPOT_CHECK_MEASUREMENT       (0x2A5Eu)
+#define CYBLE_UUID_CHAR_CONTINUOUS_MEASUREMENT       (0x2A5Fu)
+#define CYBLE_UUID_CHAR_FEATURES                     (0x2A60u)
 #define CYBLE_UUID_CHAR_CPS_MSRMT                    (0x2A63u)
 #define CYBLE_UUID_CHAR_CPS_VECTOR                   (0x2A64u)
 #define CYBLE_UUID_CHAR_CPS_FEATURE                  (0x2A65u)
@@ -521,11 +533,11 @@ extern CYBLE_GATT_ATTR_HANDLE_RANGE_T cyBle_gattcDiscoveryRange;
 #define CYBLE_UUID_CHAR_CGM_SESSION_RUN_TIME         (0x2AABu)
 #define CYBLE_UUID_CHAR_CGM_SOCP                     (0x2AACu) /* CGM Specific Ops Control Point */
 /* Pulse Oximeter Characteristics defines */
-#define CYBLE_UUID_CHAR_POX_SPOT_CHK_MSRMT           (0x2A5Eu)
-#define CYBLE_UUID_CHAR_POX_CONTINUOUS_MSRMT         (0x2A5Fu)
-#define CYBLE_UUID_CHAR_POX_PULSATILE_EVENT          (0x2A60u)
-#define CYBLE_UUID_CHAR_POX_FEATURES                 (0x2A61u)
-#define CYBLE_UUID_CHAR_POX_CONTROL_POINT            (0x2A62u)
+#define CYBLE_UUID_CHAR_PLX_SPOT_CHK_MSRMT           (0x2A5Eu)
+#define CYBLE_UUID_CHAR_PLX_CONTINUOUS_MSRMT         (0x2A5Fu)
+#define CYBLE_UUID_CHAR_PLX_PULSATILE_EVENT          (0x2A60u)
+#define CYBLE_UUID_CHAR_PLX_FEATURES                 (0x2A61u)
+#define CYBLE_UUID_CHAR_PLX_CONTROL_POINT            (0x2A62u)
 /* CPM Characteristics Measurements */
 #define CYBLE_UUID_CHAR_CPM_MSRMT                    (0x2A63u)
 #define CYBLE_UUID_CHAR_CPM_VECTOR                   (0x2A64u)
@@ -539,7 +551,7 @@ extern CYBLE_GATT_ATTR_HANDLE_RANGE_T cyBle_gattcDiscoveryRange;
 #define CYBLE_UUID_CHAR_LOCAL_EAST_COORDINATE        (0x2AB1u)   
 #define CYBLE_UUID_CHAR_FLOOR_NUMBER                 (0x2AB2u)    
 #define CYBLE_UUID_CHAR_ALTITUDE                     (0x2AB3u)   
-#define CYBLE_UUID_CHAR_UNCERTSINTY                  (0x2AB4u)       
+#define CYBLE_UUID_CHAR_UNCERTAINTY                  (0x2AB4u)       
 #define CYBLE_UUID_CHAR_LOCATION_NAME                (0x2AB5u)
 /* HPS Characteristics defines */
 #define CYBLE_UUID_CHAR_URI                          (0x2AB6u)
@@ -758,7 +770,9 @@ extern CYBLE_GATT_ATTR_HANDLE_RANGE_T cyBle_gattcDiscoveryRange;
             (uint16) (length)\
         )
 
-/* Macro to get generic value of attribute */
+/* Macro to get generic value of attribute. This macro also used to get
+   UUID32 or UUID 128 of the attribute.
+*/
 #define CYBLE_GATT_DB_ATTR_GET_GEN_VALUE(dst,handle,length)\
         (void) memcpy\
         (\
@@ -784,7 +798,9 @@ extern CYBLE_GATT_ATTR_HANDLE_RANGE_T cyBle_gattcDiscoveryRange;
 #define CYBLE_GATT_DB_GET_UUID(handle)\
         cyBle_gattDB[(handle)-1u].attType
 
-/* Macro to get attribute value UUID for handle */
+/* Macro to get attribute value UUID for handle. This macro is only applicable
+   to UUID16. To get UUID32 or UUID 128 use CYBLE_GATT_DB_ATTR_GET_GEN_VALUE().
+*/
 #define CYBLE_GATT_DB_GET_ATTR_VALUE_UUID(handle)\
         cyBle_gattDB[(handle)-1u].attValue.attValueUuid
 
@@ -854,7 +870,11 @@ extern CYBLE_GATT_ATTR_HANDLE_RANGE_T cyBle_gattcDiscoveryRange;
         CYBLE_IS_RELIABLE_WRITE_ENABLED_IN_PTR(CYBLE_GATT_DB_ATTR_GET_ATTR_GEN_PTR(handle))
 
 
-/* BWC macro */
+/* cyBle_attValuesCCCDFlashMemory is the location in Flash
+  where the CCCD values of bonded device is stored. This
+  macro name is obsolete and will be removed in future
+  revisions of the BLE component.
+*/
 #define cyBle_attValuesCCCDFlashMemory (cyBle_flashStorage.attValuesCCCDFlashMemory)
 
 #endif /* CY_BLE_CYBLE_GATT_H  */

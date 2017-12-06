@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file CYBLE_eventHandler.h
-* \version 3.10
+* \version 3.30
 * 
 * \brief
 *  Contains the prototypes and constants used in the Event Handler State Machine
@@ -24,7 +24,10 @@
 ***************************************/
 
 #include "BLE_gatt.h"
-
+    
+#ifdef CYBLE_AIOS
+    #include "BLE_aios.h"
+#endif /* CYBLE_AIOS */
 #ifdef CYBLE_ANCS
     #include "BLE_ancs.h"
 #endif /* CYBLE_ANCS */
@@ -100,6 +103,9 @@
 #ifdef CYBLE_PASS
     #include "BLE_pass.h"
 #endif /* CYBLE_PASS */
+#ifdef CYBLE_PLXS
+    #include "BLE_plxs.h"
+#endif /* CYBLE_PLXS */
 #ifdef CYBLE_RSCS
     #include "BLE_rscs.h"
 #endif /* CYBLE_RSCS */
@@ -276,6 +282,93 @@ typedef enum
     */
     CYBLE_EVT_GATTC_DISCOVERY_COMPLETE,
     
+    /****************************************
+     AIOS Service Events
+     ***************************************/
+    
+    /** AIOS Server - Notifications for Automation Input Output Service Characteristic
+        were enabled. The parameter of this event is a structure of
+        CYBLE_AIOS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_AIOSS_NOTIFICATION_ENABLED,
+    
+    /** AIOS Server - Notifications for Automation Input Output Service Characteristic
+        were disabled. The parameter of this event is a structure of
+        CYBLE_AIOS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_AIOSS_NOTIFICATION_DISABLED,
+    
+    /** AIOS Server - Indication for Automation Input Output Service Characteristic
+        was enabled. The parameter of this event is a structure 
+        of CYBLE_AIOS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_AIOSS_INDICATION_ENABLED,
+
+    /** AIOSS Server - Indication for Automation Input Output Service Characteristic
+        was disabled. The parameter of this event is a structure 
+        of CYBLE_AIOS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_AIOSS_INDICATION_DISABLED,
+    
+    /** AIOS Server - Automation Input Output Service Characteristic
+        Indication was confirmed. The parameter of this event
+        is a structure of CYBLE_AIOS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_AIOSS_INDICATION_CONFIRMED,
+    
+    /** AIOS Server - Write Request for Automation Input Output Service Characteristic 
+        was received. The parameter of this event is a structure
+        of CYBLE_AIOS_CHAR_VALUE_T type.
+    */  
+    CYBLE_EVT_AIOSS_CHAR_WRITE,
+    
+    /** AIOSS Server - Write Request for Automation Input Output Service
+        Characteristic Descriptor was received. The parameter of this event is a structure of
+        CYBLE_AIOSS_DESCR_VALUE_T type.
+    */    
+    CYBLE_EVT_AIOSS_DESCR_WRITE,
+    
+    /** AIOS Client - Automation Input Output Characteristic Service Notification 
+        was received. The parameter of this event is a structure
+        of CYBLE_AIOS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_AIOSC_NOTIFICATION,
+
+    /** AIOS Client - Automation Input Output Service Characteristic
+        Indication was received. The parameter of this event
+        is a structure of CYBLE_AIOS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_AIOSC_INDICATION,
+    
+    /** AIOS Client - Read Response for Read Request for Automation Input Output Service Characteristic
+        Value. The parameter of this event is a structure of 
+        CYBLE_AIOS_CHAR_VALUE_T type.
+    */
+    
+    CYBLE_EVT_AIOSC_READ_CHAR_RESPONSE,
+    /** AIOS Client - Write Response for Write Request for Automation Input Output Service
+        Characteristic Value. The parameter of this event is a structure of 
+        CYBLE_AIOS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_AIOSC_WRITE_CHAR_RESPONSE,
+    
+    /** AIOS Client - Read Response for Read Request for Automation Input Output Service
+        Characteristic Descriptor Read Request. The parameter of this event is a
+        structure of CYBLE_AIOS_DESCR_VALUE_T type.
+    */
+    CYBLE_EVT_AIOSC_READ_DESCR_RESPONSE,
+
+    /** AIOS Client - Write Response for Write Request for Automation Input Output Service
+        Client Characteristic Configuration Descriptor Value. The parameter of
+        this event is a structure of CYBLE_AIOS_DESCR_VALUE_T type.
+    */
+    CYBLE_EVT_AIOSC_WRITE_DESCR_RESPONSE,
+    
+    /** AIOS Client - Error Response for Write Request for Automation Input Output Service
+        Characteristic Value. The parameter of this event is a structure of 
+        CYBLE_ANCS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_AIOSC_ERROR_RESPONSE,
     
     /****************************************
      ANCS Service Events
@@ -305,12 +398,6 @@ typedef enum
     */
     CYBLE_EVT_ANCSC_NOTIFICATION,
     
-    /** ANCS Client - Read Response for Apple Notification Center Service Characteristic
-        Value. The parameter of this event is a structure of 
-        CYBLE_ANCS_CHAR_VALUE_T type.
-    */
-    CYBLE_EVT_ANCSC_READ_CHAR_RESPONSE,
-
     /** ANCS Client - Write Response for Write Request for Apple Notification Center Service
         Characteristic Value. The parameter of this event is a structure of 
         CYBLE_ANCS_CHAR_VALUE_T type.
@@ -923,12 +1010,6 @@ typedef enum
     */    
     CYBLE_EVT_ESSS_CHAR_WRITE,
     
-    /** ESS Server - Execute Write Request for Environmental Sensing Service
-        Characteristic was received. The parameter of this event is a structure of
-        CYBLE_ESS_DESCR_VALUE_T type.
-    */    
-    CYBLE_EVT_ESSS_EXEC_WRITE_REQ,
-
     /** ESS Server - Write Request for Environmental Sensing Service
         Characteristic Descriptor was received. The parameter of this event is a structure of
         CYBLE_ESS_DESCR_VALUE_T type. This event is generated only when write for
@@ -1335,25 +1416,13 @@ typedef enum
     /****************************************
      Indoor Positioning Service Events
      ***************************************/
-    
-    /** IPS Server - Read Request for Indoor Positioning Service Characteristic
-        was received. The parameter of this event is a structure
-        of CYBLE_IPSS_CHAR_VALUE_T type.
-    */    
-    CYBLE_EVT_IPSS_READ_CHAR,
-    
+   
     /** IPS Server - Write Request for Indoor Positioning Service Characteristic
         was received. The parameter of this event is a structure
         of CYBLE_IPSS_CHAR_VALUE_T type.
     */    
     CYBLE_EVT_IPSS_WRITE_CHAR,
      
-    /** IPS Server - Write command request for Indoor Positioning Service
-        Characteristic. The parameter of this event
-        is a structure of CYBLE_IPSS_CHAR_VALUE_T type.
-    */
-    CYBLE_EVT_IPSS_WRITE_CHAR_CMD,
-    
     /** IPS Client - Read Response for Read Request of Indoor Positioning
         Service Characteristic value. The parameter of this event
         is a structure of CYBLE_IPS_CHAR_VALUE_T type.
@@ -1545,12 +1614,6 @@ typedef enum
     */
     CYBLE_EVT_PASSC_READ_CHAR_RESPONSE,
 
-    /** PASS Client - Write Response for Write Request of Phone Alert Status 
-        Service Characteristic value. The parameter of this event
-        is a structure of CYBLE_PASS_CHAR_VALUE_T type.
-    */
-    CYBLE_EVT_PASSC_WRITE_CHAR_RESPONSE,
-
     /** PASS Client - Read Response for Read Request of Phone Alert Status
         Service Characteristic Descriptor Read request. The 
         parameter of this event is a structure of
@@ -1565,6 +1628,83 @@ typedef enum
     */
     CYBLE_EVT_PASSC_WRITE_DESCR_RESPONSE,
     
+    /****************************************
+     Pulse Oximeter Service Events
+     ***************************************/
+   
+    /** PLXS Server - Write Request for Pulse Oximeter Service Characteristic
+        was received. The parameter of this event is a structure
+        of CYBLE_PLXSS_CHAR_VALUE_T type.
+    */    
+    CYBLE_EVT_PLXSS_WRITE_CHAR,
+     /** PLXS Server - Notifications for Pulse Oximeter 
+        Characteristic were enabled. The parameter of this event is a structure of
+        CYBLE_PLXS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_PLXSS_NOTIFICATION_ENABLED,
+
+    /** PLXS Server - Notifications for Pulse Oximeter 
+        Characteristic was disabled. The parameter of this event is a structure 
+        of CYBLE_PLXS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_PLXSS_NOTIFICATION_DISABLED,
+
+    /** PLXS Server - Indication for Pulse Oximeter Characteristic
+        was enabled. The parameter of this event is a structure 
+        of CYBLE_PLXS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_PLXSS_INDICATION_ENABLED,
+
+    /** PLXS Server - Indication for Pulse Oximeter Characteristic
+        was disabled. The parameter of this event is a structure 
+        of CYBLE_PLXS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_PLXSS_INDICATION_DISABLED,
+
+    /** PLXS Server - Pulse Oximeter Service Characteristic
+        Indication was confirmed. The parameter of this event
+        is a structure of CYBLE_PLXS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_PLXS_INDICATION_CONFIRMATION,
+
+    /** PLXS Client - Pulse Oximeter Characteristic
+        Notification was received. The parameter of this event
+        is a structure of CYBLE_PLXS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_PLXSC_NOTIFICATION,
+
+    /** PLXS Client - Pulse Oximeter Characteristic
+        Indication was received. The parameter of this event
+        is a structure of CYBLE_PLXS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_PLXSC_INDICATION,
+
+    /** PLXS Client - Read Response for Read Request of Pulse Oximeter
+        Service Characteristic value. The parameter of this event
+        is a structure of CYBLE_PLXS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_PLXSC_READ_CHAR_RESPONSE,
+
+    /** PLXS Client - Write Response for Write Request of Pulse Oximeter
+        Service Characteristic value. The parameter of this event
+        is a structure of CYBLE_PLXS_CHAR_VALUE_T type.
+    */
+    CYBLE_EVT_PLXSC_WRITE_CHAR_RESPONSE,
+
+    /** PLXS Client - Read Response for Read Request of Pulse Oximeter
+        Service Characteristic Descriptor Read request. The 
+        parameter of this event is a structure of
+        CYBLE_PLXS_DESCR_VALUE_T type.
+    */
+    CYBLE_EVT_PLXSC_READ_DESCR_RESPONSE,
+
+    /** PLXS Client - Write Response for Write Request of Pulse Oximeter
+        Service Characteristic Configuration Descriptor value.
+        The parameter of this event is a structure of 
+        CYBLE_PLXS_DESCR_VALUE_T type.
+    */
+    CYBLE_EVT_PLXSC_WRITE_DESCR_RESPONSE,
+
     
     /****************************************
      Running Speed and Cadence Service Events
@@ -1978,6 +2118,11 @@ typedef enum
 
 /** @} */
 
+/**
+ \addtogroup group_common_api_definitions
+ @{
+*/	
+
 /** Event handler state machine type */
 typedef enum
 {
@@ -1986,23 +2131,18 @@ typedef enum
     CYBLE_STATE_CONNECTED,                      /**< Peer device is connected */
 #if(CYBLE_GAP_ROLE_PERIPHERAL || CYBLE_GAP_ROLE_BROADCASTER)
     CYBLE_STATE_ADVERTISING,                    /**< Advertising process */
-#endif /**< CYBLE_GAP_ROLE_PERIPHERAL || CYBLE_GAP_ROLE_BROADCASTER */
+#endif /* CYBLE_GAP_ROLE_PERIPHERAL || CYBLE_GAP_ROLE_BROADCASTER */
 #if(CYBLE_GAP_ROLE_CENTRAL || CYBLE_GAP_ROLE_OBSERVER)
     CYBLE_STATE_SCANNING,                       /**< Scanning process */
-#endif /**< CYBLE_GAP_ROLE_CENTRAL || CYBLE_GAP_ROLE_OBSERVER */
+#endif /* CYBLE_GAP_ROLE_CENTRAL || CYBLE_GAP_ROLE_OBSERVER */
 #if(CYBLE_GAP_ROLE_CENTRAL)
     CYBLE_STATE_CONNECTING,                     /**< Connecting */
-#endif /**< CYBLE_GAP_ROLE_CENTRAL */
+#endif /* CYBLE_GAP_ROLE_CENTRAL */
     CYBLE_STATE_DISCONNECTED                    /**< Essentially idle state */
 } CYBLE_STATE_T;
 
 #if (CYBLE_GATT_ROLE_CLIENT)
 
-/**
- \addtogroup group_common_api_definitions
- @{
-*/		
-	
 /** Client State type */
 typedef enum
 {
@@ -2027,19 +2167,25 @@ typedef enum
 /** GAP Service characteristics server's GATT DB handles structure type */
 typedef struct
 {
-    /** Handle of the GAPS Device Name Characteristic */
+    /** Discovered handle of the GAP Service Device Name Characteristic */
     CYBLE_GATT_DB_ATTR_HANDLE_T deviceNameCharHandle;
-    /** Handle of the GAPS Appearance Characteristic */
+    /** Discovered handle of the GAP Service Appearance Characteristic */
     CYBLE_GATT_DB_ATTR_HANDLE_T appearanceCharHandle;
-    /** Handle of the GAPS Peripheral Privacy Flag Parameters Characteristic */
+    /** Discovered handle of the GAP Service Peripheral Privacy Flag Parameters 
+        Characteristic */
     CYBLE_GATT_DB_ATTR_HANDLE_T periphPrivacyCharHandle;
-    /** Handle of the GAPS Reconnection Address Characteristic */
+    /** Discovered handle of the GAP Service Reconnection Address 
+        Characteristic */
     CYBLE_GATT_DB_ATTR_HANDLE_T reconnAddrCharHandle;
-    /** Handle of the GAPS Peripheral Preferred Connection Parameters 
-       Characteristic */
+    /** Discovered handle of the GAP Service Peripheral Preferred Connection 
+        Parameters Characteristic */
     CYBLE_GATT_DB_ATTR_HANDLE_T prefConnParamCharHandle;
-    /** Handle of the GAPS Central Address Resolution characteristic */
+    /** Discovered handle of the GAP Service Central Address Resolution 
+        Characteristic */
     CYBLE_GATT_DB_ATTR_HANDLE_T centralAddrResolutionCharHandle;
+    /** Discovered handle of the GAP Service Resolvable Private Address Only 
+        Characteristic */
+    CYBLE_GATT_DB_ATTR_HANDLE_T rpaOnlyCharHandle;
 }CYBLE_GAPC_T;
 
 /** @} */
@@ -2049,106 +2195,112 @@ typedef enum
 {
     CYBLE_SRVI_GAP,
     CYBLE_SRVI_GATT,
-    
+
+#ifdef CYBLE_AIOS_CLIENT
+    CYBLE_SRVI_AIOS,
+#endif /* CYBLE_AIOS_CLIENT */    
 #ifdef CYBLE_ANCS_CLIENT
     CYBLE_SRVI_ANCS,
-#endif /**< CYBLE_ANCS_CLIENT */
+#endif /* CYBLE_ANCS_CLIENT */
 #ifdef CYBLE_ANS_CLIENT
     CYBLE_SRVI_ANS,
-#endif /**< CYBLE_ANS_CLIENT */
+#endif /* CYBLE_ANS_CLIENT */
 #ifdef CYBLE_BAS_CLIENT
     CYBLE_SRVI_BAS,
     CYBLE_SRVI_BAS_END = CYBLE_SRVI_BAS + CYBLE_BASC_SERVICE_COUNT - 1u,
-#endif /**< CYBLE_BAS_CLIENT */
+#endif /* CYBLE_BAS_CLIENT */
 #ifdef CYBLE_BCS_CLIENT
     CYBLE_SRVI_BCS,
-#endif /**< CYBLE_BCS_CLIENT */
+#endif /* CYBLE_BCS_CLIENT */
 #ifdef CYBLE_BLS_CLIENT
     CYBLE_SRVI_BLS,
-#endif /**< CYBLE_BLS_CLIENT */
+#endif /* CYBLE_BLS_CLIENT */
 #ifdef CYBLE_BMS_CLIENT
     CYBLE_SRVI_BMS,
-#endif /**< CYBLE_BMS_CLIENT */
+#endif /* CYBLE_BMS_CLIENT */
 #ifdef CYBLE_CGMS_CLIENT
     CYBLE_SRVI_CGMS,
-#endif /**< CYBLE_CGMS_CLIENT */
+#endif /* CYBLE_CGMS_CLIENT */
 #ifdef CYBLE_CPS_CLIENT
     CYBLE_SRVI_CPS,
-#endif /**< CYBLE_CPS_CLIENT */
+#endif /* CYBLE_CPS_CLIENT */
 #ifdef CYBLE_CSCS_CLIENT
     CYBLE_SRVI_CSCS,
-#endif /**< CYBLE_CSCS_CLIENT */
+#endif /* CYBLE_CSCS_CLIENT */
 #ifdef CYBLE_CTS_CLIENT
     CYBLE_SRVI_CTS,
-#endif /**< CYBLE_CTS_CLIENT */
+#endif /* CYBLE_CTS_CLIENT */
 #ifdef CYBLE_CUSTOM_CLIENT
     CYBLE_SRVI_CUSTOMS,
     CYBLE_SRVI_CUSTOMS_END = CYBLE_SRVI_CUSTOMS + CYBLE_CUSTOMC_SERVICE_COUNT - 1u,
-#endif /**< CYBLE_CUSTOM_CLIENT */
+#endif /* CYBLE_CUSTOM_CLIENT */
 #ifdef CYBLE_DIS_CLIENT
     CYBLE_SRVI_DIS,
-#endif /**< CYBLE_DIS_CLIENT */
+#endif /* CYBLE_DIS_CLIENT */
 #ifdef CYBLE_ESS_CLIENT
     CYBLE_SRVI_ESS,
-#endif /**< CYBLE_ESS_CLIENT */
+#endif /* CYBLE_ESS_CLIENT */
 #ifdef CYBLE_GLS_CLIENT
     CYBLE_SRVI_GLS,
-#endif /**< CYBLE_GLS_CLIENT */
+#endif /* CYBLE_GLS_CLIENT */
 #ifdef CYBLE_HIDS_CLIENT
     CYBLE_SRVI_HIDS,
     CYBLE_SRVI_HIDS_END = CYBLE_SRVI_HIDS + CYBLE_HIDSC_SERVICE_COUNT - 1u,
-#endif /**< CYBLE_HIDS_CLIENT */
+#endif /* CYBLE_HIDS_CLIENT */
 #ifdef CYBLE_HPS_CLIENT
     CYBLE_SRVI_HPS,
-#endif /**< CYBLE_HPS_CLIENT */
+#endif /* CYBLE_HPS_CLIENT */
 #ifdef CYBLE_HRS_CLIENT
     CYBLE_SRVI_HRS,
-#endif /**< CYBLE_HRS_CLIENT */
+#endif /* CYBLE_HRS_CLIENT */
 #ifdef CYBLE_HTS_CLIENT
     CYBLE_SRVI_HTS,
-#endif /**< CYBLE_HTS_CLIENT */
+#endif /* CYBLE_HTS_CLIENT */
 #ifdef CYBLE_IAS_CLIENT
     CYBLE_SRVI_IAS,
-#endif /**< CYBLE_IAS_CLIENT */
+#endif /* CYBLE_IAS_CLIENT */
 #ifdef CYBLE_IPS_CLIENT
     CYBLE_SRVI_IPS,
-#endif /**< CYBLE_IPS_CLIENT */
+#endif /* CYBLE_IPS_CLIENT */
 #ifdef CYBLE_LLS_CLIENT
     CYBLE_SRVI_LLS,
-#endif /**< CYBLE_LLS_CLIENT */
+#endif /* CYBLE_LLS_CLIENT */
 #ifdef CYBLE_LNS_CLIENT
     CYBLE_SRVI_LNS,
-#endif /**< CYBLE_LNS_CLIENT */
+#endif /* CYBLE_LNS_CLIENT */
 #ifdef CYBLE_NDCS_CLIENT
     CYBLE_SRVI_NDCS,
-#endif /**< CYBLE_NDCS_CLIENT */
+#endif /* CYBLE_NDCS_CLIENT */
 #ifdef CYBLE_IPSS_CLIENT
     CYBLE_SRVI_IPSS,
-#endif /**< CYBLE_IPSS_CLIENT */
+#endif /* CYBLE_IPSS_CLIENT */
 #ifdef CYBLE_PASS_CLIENT
     CYBLE_SRVI_PASS,
-#endif /**< CYBLE_PASS_CLIENT */
+#endif /* CYBLE_PASS_CLIENT */
+#ifdef CYBLE_PLXS_CLIENT
+    CYBLE_SRVI_PLXS,
+#endif /* CYBLE_PLXS_CLIENT */
 #ifdef CYBLE_RSCS_CLIENT
     CYBLE_SRVI_RSCS,
-#endif /**< CYBLE_RSCS_CLIENT */
+#endif /* CYBLE_RSCS_CLIENT */
 #ifdef CYBLE_RTUS_CLIENT
     CYBLE_SRVI_RTUS,
-#endif /**< CYBLE_RTUS_CLIENT */
+#endif /* CYBLE_RTUS_CLIENT */
 #ifdef CYBLE_SCPS_CLIENT
     CYBLE_SRVI_SCPS,
-#endif /**< CYBLE_SCPS_CLIENT */
+#endif /* CYBLE_SCPS_CLIENT */
 #ifdef CYBLE_TPS_CLIENT
     CYBLE_SRVI_TPS,
-#endif /**< CYBLE_TPS_CLIENT */
+#endif /* CYBLE_TPS_CLIENT */
 #ifdef CYBLE_UDS_CLIENT
     CYBLE_SRVI_UDS,
-#endif /**< CYBLE_UDS_CLIENT */
+#endif /* CYBLE_UDS_CLIENT */
 #ifdef CYBLE_WPTS_CLIENT
     CYBLE_SRVI_WPTS,
-#endif /**< CYBLE_WPTS_CLIENT */
+#endif /* CYBLE_WPTS_CLIENT */
 #ifdef CYBLE_WSS_CLIENT
     CYBLE_SRVI_WSS,
-#endif /**< CYBLE_WSS_CLIENT */
+#endif /* CYBLE_WSS_CLIENT */
     CYBLE_SRVI_COUNT /**< Total count of services */
 }CYBLE_SRVI_T;
 
@@ -2157,66 +2309,70 @@ typedef enum
 {
     CYBLE_SCDI_GATT_SERVICE_CHANGED,                        /**< Service Changed characteristic */
 
+#ifdef CYBLE_AIOS_CLIENT
+    CYBLE_SCDI_AIOS_DIGITAL,                                     /**< AIOS Digital characteristic*/
+    CYBLE_SCDI_AIOS_END_CHAR = CYBLE_SCDI_AIOS_DIGITAL + CYBLE_AIO_TOTAL_CHAR_COUNT,
+#endif /* CYBLE_AIOS_CLIENT */
 #ifdef CYBLE_ANCS_CLIENT
     CYBLE_SCDI_ANCS_NS,
     CYBLE_SCDI_ANCS_DS,
-#endif /**< CYBLE_ANCS_CLIENT */
+#endif /* CYBLE_ANCS_CLIENT */
 #ifdef CYBLE_ANS_CLIENT
     CYBLE_SCDI_ANS_SUPPORTED_NEW_ALERT_CAT,                 /**< Supported New Alert Characteristic */
     CYBLE_SCDI_ANS_NEW_ALERT,                               /**< New Alert Characteristic */
     CYBLE_SCDI_ANS_SUPPORTED_UNREAD_ALERT_CAT,              /**< Supported Unread Alert Characteristic */
     CYBLE_SCDI_ANS_UNREAD_ALERT_STATUS,                     /**< Unread Alert Status Characteristic */
     CYBLE_SCDI_ANS_ALERT_NTF_CONTROL_POINT,                 /**< Alert Notification Control Point Characteristic */
-#endif /**< CYBLE_ANS_CLIENT */
+#endif /* CYBLE_ANS_CLIENT */
 #ifdef CYBLE_BAS_CLIENT
     CYBLE_SCDI_BAS_LEVEL,                                   /**< Battery level Characteristic */
     CYBLE_SCDI_BAS_LEVEL_END = CYBLE_SCDI_BAS_LEVEL + CYBLE_BASC_SERVICE_COUNT - 1u,
-#endif /**< CYBLE_BAS_CLIENT */
+#endif /* CYBLE_BAS_CLIENT */
 #ifdef CYBLE_BCS_CLIENT
     CYBLE_SCDI_BCS_BODY_COMPOSITION_FEATURE,                /**< Body Composition Feature Characteristic */
     CYBLE_SCDI_BCS_BODY_COMPOSITION_MEASUREMENT,            /**< Body Composition Measurement Characteristic */
-#endif /**< CYBLE_BCS_CLIENT */
+#endif /* CYBLE_BCS_CLIENT */
 #ifdef CYBLE_BLS_CLIENT
     CYBLE_SCDI_BLS_BPM,                                     /**< Blood Pressure Measurement Characteristic */
     CYBLE_SCDI_BLS_ICP,                                     /**< Intermediate Cuff Pressure Characteristic */
-#endif /**< CYBLE_BLS_CLIENT */
+#endif /* CYBLE_BLS_CLIENT */
 #ifdef CYBLE_BMS_CLIENT
     CYBLE_SCDI_BMS_BMCP,                                    /**< Bond Management Control Point characteristic */
-#endif /**< CYBLE_BMS_CLIENT */
+#endif /* CYBLE_BMS_CLIENT */
 #ifdef CYBLE_CGMS_CLIENT
     CYBLE_SCDI_CGMS_CGMT,                                   /**< CGM Measurement Characteristic */
     CYBLE_SCDI_CGMS_RACP,                                   /**< Record Access Control Point Characteristic */
     CYBLE_SCDI_CGMS_SOCP,                                   /**< CGM Specific Ops Control Point Characteristic */
-#endif /**< CYBLE_CGMS_CLIENT */
+#endif /* CYBLE_CGMS_CLIENT */
 #ifdef CYBLE_CPS_CLIENT
     CYBLE_SCDI_CPS_POWER_MEASURE,                           /**< Cycling Power Measurement characteristic */ 
     CYBLE_SCDI_CPS_POWER_FEATURE,                           /**< Cycling Power Feature characteristic */ 
     CYBLE_SCDI_CPS_SENSOR_LOCATION,                         /**< Sensor Location characteristic */ 
     CYBLE_SCDI_CPS_POWER_VECTOR,                            /**< Cycling Power Vector characteristic */ 
     CYBLE_SCDI_CPS_POWER_CP,                                /**< Cycling Power Control Point characteristic */ 
-#endif /**< CYBLE_CPS_CLIENT */
+#endif /* CYBLE_CPS_CLIENT */
 #ifdef CYBLE_CSCS_CLIENT
     CYBLE_SCDI_CSCS_CSC_MEASUREMENT,                        /**<  Cycling Speed and Cadence Measurement Characteristic */
     CYBLE_SCDI_CSCS_CSC_FEATURE,                            /**<  Cycling Speed and Cadence CSC Feature Characteristic */
     CYBLE_SCDI_CSCS_SENSOR_LOCATION,                        /**<  Cycling Speed and Cadence Sensor Location
                                                                 Characteristic */
     CYBLE_SCDI_CSCS_SC_CONTROL_POINT,                       /**<  SC Control Point Characteristic */
-#endif /**< CYBLE_CSCS_CLIENT */
+#endif /* CYBLE_CSCS_CLIENT */
 #ifdef CYBLE_CTS_CLIENT
     CYBLE_SCDI_CTS_CURRENT_TIME,                            /**< Current Time Characteristic */
-#endif /**< CYBLE_CTS_CLIENT */
+#endif /* CYBLE_CTS_CLIENT */
 #ifdef CYBLE_CUSTOM_CLIENT
     CYBLE_SCDI_CUSTOM_CHARACTERISTICS,                      /**< Custom service characteristics discovery */
-#endif /**< CYBLE_CUSTOM_CLIENT */
+#endif /* CYBLE_CUSTOM_CLIENT */
 #ifdef CYBLE_ESS_CLIENT
     CYBLE_SCDI_ESS_DESCRIPTOR_VALUE_CHANGED,                /**< Descriptor Value Changed Characteristic */
     CYBLE_SCDI_ESS_END_CHAR = CYBLE_SCDI_ESS_DESCRIPTOR_VALUE_CHANGED + CYBLE_ES_TOTAL_CHAR_COUNT,
-#endif /**< CYBLE_ESS_CLIENT */
+#endif /* CYBLE_ESS_CLIENT */
 #ifdef CYBLE_GLS_CLIENT
     CYBLE_SCDI_GLS_GLMT,                                    /**< Glucose Measurement Characteristic */
     CYBLE_SCDI_GLS_GLMC,                                    /**< Glucose Measurement Context Characteristic */
     CYBLE_SCDI_GLS_RACP,                                    /**< Record Access Control Point Characteristic */
-#endif /**< CYBLE_GLS_CLIENT */
+#endif /* CYBLE_GLS_CLIENT */
 #ifdef CYBLE_HIDS_CLIENT
     CYBLE_SCDI_HIDS_REPORT_MAP,                             /**< Report Map Characteristic */
     CYBLE_SCDI_HIDS_BOOT_KYBRD_IN_REP,                      /**< Boot Keyboard Input Report Characteristic */
@@ -2224,68 +2380,98 @@ typedef enum
     CYBLE_SCDI_HIDS_BOOT_MOUSE_IN_REP,                      /**< Boot Mouse Input Report Characteristic */
     CYBLE_SCDI_HIDS_REPORT,                                 /**< Report Characteristic index */
     CYBLE_SCDI_HIDS_REPORT_END = CYBLE_SCDI_HIDS_REPORT + CYBLE_HIDSC_REPORT_COUNT - 1u,
-#endif /**< CYBLE_HIDS_CLIENT */
+#endif /* CYBLE_HIDS_CLIENT */
 #ifdef CYBLE_HPS_CLIENT
     CYBLE_SCDI_HPS_STATUS_CODE,                             /**< Descriptor Status Code Characteristic */
-#endif /**< CYBLE_ESS_CLIENT */
+#endif /* CYBLE_ESS_CLIENT */
 #ifdef CYBLE_HRS_CLIENT
     CYBLE_SCDI_HRS_HRM,                                     /**< Heart Rate Measurement Characteristic */
-#endif /**< CYBLE_HRS_CLIENT */
+#endif /* CYBLE_HRS_CLIENT */
 #ifdef CYBLE_HTS_CLIENT
     CYBLE_SCDI_HTS_TEMP_MEASURE,                            /**< Temperature Measurement characteristic index */
     CYBLE_SCDI_HTS_TEMP_TYPE,                               /**< Temperature Type characteristic index */
     CYBLE_SCDI_HTS_INTERM_TEMP,                             /**< Intermediate Temperature characteristic index*/
     CYBLE_SCDI_HTS_MEASURE_INTERVAL,                        /**< Measurement Interval characteristic index */
-#endif /**< CYBLE_HTS_CLIENT */
+#endif /* CYBLE_HTS_CLIENT */
 #ifdef CYBLE_IPS_CLIENT
-    CYBLE_SCDI_IPS_LATITUDE,                         /**< WGS84 North coordinate of the device.*/
-    CYBLE_SCDI_IPS_LONGITUDE,                        /**< WGS84 East coordinate of the device.*/
-    CYBLE_SCDI_IPS_LOCAL_NORTH_COORDINATE,           /**< North coordinate of the device using local coordinate system. */
-    CYBLE_SCDI_IPS_LOCAL_EAST_COORDINATE,            /**< East coordinate of the device using local coordinate system. */
-    CYBLE_SCDI_IPS_FLOOR_NUMBER,                     /**< Describes in which floor the device is installed in. */
-    CYBLE_SCDI_IPS_ALTITUDE,                         /**< Altitude of the device. */
-    CYBLE_SCDI_IPS_UNCERTSINTY,                      /**< Uncertainty of the location information the device exposes. */
-    CYBLE_SCDI_IPS_LOCATION_NAME,                    /**< Name of the location the device is installed in. */
-#endif /**< CYBLE_IPS_CLIENT */
+    CYBLE_SCDI_IPS_LATITUDE,                                /**< WGS84 North coordinate of the device.*/
+    CYBLE_SCDI_IPS_LONGITUDE,                               /**< WGS84 East coordinate of the device.*/
+    CYBLE_SCDI_IPS_LOCAL_NORTH_COORDINATE,                  /**< North coordinate of the device using local coordinate system. */
+    CYBLE_SCDI_IPS_LOCAL_EAST_COORDINATE,                   /**< East coordinate of the device using local coordinate system. */
+    CYBLE_SCDI_IPS_FLOOR_NUMBER,                            /**< Describes in which floor the device is installed in. */
+    CYBLE_SCDI_IPS_ALTITUDE,                                /**< Altitude of the device. */
+    CYBLE_SCDI_IPS_UNCERTAINTY,                             /**< Uncertainty of the location information the device exposes. */
+    CYBLE_SCDI_IPS_LOCATION_NAME,                           /**< Name of the location the device is installed in. */
+#endif /* CYBLE_IPS_CLIENT */
 
 #ifdef CYBLE_LNS_CLIENT
     CYBLE_SCDI_LNS_LS,                                      /**< Location and Speed characteristic index */
     CYBLE_SCDI_LNS_CP,                                      /**< L&N Control Point characteristic index */
     CYBLE_SCDI_LNS_NV,                                      /**< Navigation characteristic index */
-#endif /**< CYBLE_LNS_CLIENT */
+#endif /* CYBLE_LNS_CLIENT */
 #ifdef CYBLE_PASS_CLIENT
     CYBLE_SCDI_PASS_AS,                                     /**< Alert Status characteristic index */
     CYBLE_SCDI_PASS_RS,                                     /**< Ringer Settings characteristic index */
-#endif /**< CYBLE_PASS_CLIENT */
+#endif /* CYBLE_PASS_CLIENT */
+#ifdef CYBLE_PLXS_CLIENT
+    CYBLE_SCDI_PLXS_SPOT_CHECK_MEASUREMENT,                 /**< Spot-check Measurement characteristic index */
+    CYBLE_SCDI_PLXS_CONTINUOUS_MEASUREMENT,                 /**< Continuous Measurement characteristic index */
+    CYBLE_SCDI_PLXS_FEATURES,                               /**< Features characteristic index */
+    CYBLE_SCDI_PLXS_RECORD_ACCESS_CONTROL_POINT,            /**< Record Access Control Point characteristic index */
+#endif /* CYBLE_PLXS_CLIENT */
 #ifdef CYBLE_RSCS_CLIENT
     CYBLE_SCDI_RSCS_RSC_MEASUREMENT,                        /**<  Running Speed and Cadence Measurement Characteristic */
     CYBLE_SCDI_RSCS_RSC_FEATURE,                            /**<  Running Speed and Cadence RSC Feature Characteristic */
     CYBLE_SCDI_RSCS_SENSOR_LOCATION,                        /**<  Running Speed and Cadence Sensor Location
                                                                 Characteristic */
     CYBLE_SCDI_RSCS_SC_CONTROL_POINT,                       /**<  SC Control Point Characteristic */
-#endif /**< CYBLE_RSCS_CLIENT */
+#endif /* CYBLE_RSCS_CLIENT */
 #ifdef CYBLE_SCPS_CLIENT
     CYBLE_SCDI_SCPS_SCAN_REFRESH,                           /**<  Scan Refresh Characteristic */
-#endif /**< CYBLE_SCPS_CLIENT */
+#endif /* CYBLE_SCPS_CLIENT */
 #ifdef CYBLE_TPS_CLIENT
     CYBLE_SCDI_TPS_TX_PWR_LEVEL,
-#endif /**< CYBLE_TPS_CLIENT */
+#endif /* CYBLE_TPS_CLIENT */
 #ifdef CYBLE_UDS_CLIENT
     CYBLE_SCDI_UDS_DCI,                                     /**<  Database Change Increment Characteristic */
     CYBLE_SCDI_UDS_UCP,                                     /**<  User Control Point Characteristic */
-#endif /**< CYBLE_UDS_CLIENT */
+#endif /* CYBLE_UDS_CLIENT */
 #ifdef CYBLE_WPTS_CLIENT
     CYBLE_SCDI_WPTS_PRU_ALERT,                              /**< PRU Alert Characteristic */
-#endif /**< CYBLE_WPTS_CLIENT */
+#endif /* CYBLE_WPTS_CLIENT */
 #ifdef CYBLE_WSS_CLIENT
     CYBLE_SCDI_WSS_WEIGHT_SCALE_FEATURE,                    /**< Weight Scale Feature Characteristic */
     CYBLE_SCDI_WSS_WEIGHT_WEIGHT_MEASUREMENT,               /**< Weight Measurement Characteristic */
-#endif /**< CYBLE_WSS_CLIENT */
+#endif /* CYBLE_WSS_CLIENT */
     CYBLE_SCDI_COUNT /**< Total count of descriptors */
 }CYBLE_SCDI_T;
 
 #endif /* CYBLE_GATT_ROLE_CLIENT */
 
+/**
+ \addtogroup group_common_api_gap_definitions
+ @{
+*/
+
+/** Server GAP Service attribute handles structure type */
+typedef struct
+{
+    /** Handle of the GAP Service Device Name Characteristic */
+    CYBLE_GATT_DB_ATTR_HANDLE_T gapServiceCharHandle;
+    /** Handle of the GAP Service Device Name Characteristic */
+    CYBLE_GATT_DB_ATTR_HANDLE_T deviceNameCharHandle;
+    /** Handle of the GAP Service Appearance Characteristic */
+    CYBLE_GATT_DB_ATTR_HANDLE_T appearanceCharHandle;
+    /** Handle of the GAP Service Peripheral Preferred Connection Parameters 
+       Characteristic */
+    CYBLE_GATT_DB_ATTR_HANDLE_T prefConnParamCharHandle;
+    /** Handle of the GAPS Central Address Resolution characteristic */
+    CYBLE_GATT_DB_ATTR_HANDLE_T centralAddrResolutionCharHandle;
+    /** Handle of the GAPS Resolvable Private Address Only characteristic */
+    CYBLE_GATT_DB_ATTR_HANDLE_T rpaOnlyCharHandle;
+}CYBLE_GAPS_T;
+
+/** @} */
 
 /***************************************
 * Function Prototypes
@@ -2327,13 +2513,11 @@ void CyBle_NextCharDscrDiscovery(uint8 incrementIndex);
 * Function Name: CyBle_SetState
 ***************************************************************************//**
 * 
-*  Used to set the Event Handler State Machine's state.
+*  Used to set the component state machine's state.
 * 
-*  \param CYBLE_STATE_T state: The desired state that the event handler's state machine
-*                        should be set to.
-* 
-* \return
-*  None
+*  \param CYBLE_STATE_T state: The desired state that the event handler's state 
+*                    machine should be set to. For detailed information refer to 
+*                    CyBle_GetState() API description.
 * 
 ******************************************************************************/
 #define CyBle_SetState(state) (cyBle_state = (state))
@@ -2342,11 +2526,34 @@ void CyBle_NextCharDscrDiscovery(uint8 incrementIndex);
 /******************************************************************************
 * Function Name: CyBle_GetState
 ***************************************************************************//**
-*  This function is used to determine the current state of the Event Handler
+*  This function is used to determine the current state of the component 
 *  state machine.
 * 
+*  The component is in the state CYBLE_STATE_INITIALIZING after CyBle_Start() 
+*  API is called and until CYBLE_EVT_STACK_ON event is not received. After 
+*  successful initialization the state is changed to CYBLE_STATE_DISCONNECTED. 
+*  For GAP Peripheral role if CyBle_GappStartAdvertisement() API is called and 
+*  CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP event received the state is changed 
+*  to the CYBLE_STATE_ADVERTISING. For GAP Central role if CyBle_GapcStartScan() 
+*  API is called and CYBLE_EVT_GAPC_SCAN_START_STOP event received the state is 
+*  changed to the CYBLE_STATE_SCANNING. When CyBle_GapcConnectDevice() API is 
+*  called the state is changed to CYBLE_STATE_CONNECTING. After successfully 
+*  connection indicated by CYBLE_EVT_GAP_DEVICE_CONNECTED or 
+*  CYBLE_EVT_GAP_ENHANCE_CONN_COMPLETE event the state is changed to 
+*  CYBLE_STATE_CONNECTED. If CyBle_GapDisconnect() API is called and 
+*  EVT_GAP_DEVICE_DISCONNECTED event received the state is changed to the 
+*  CYBLE_STATE_DISCONNECTED. If CyBle_Stop() API is called state of component 
+*  is changed to the CYBLE_STATE_STOPPED.
+*
 * \return
-*  CYBLE_STATE_T state - The current state.
+*  CYBLE_STATE_T: The current state.
+*   * CYBLE_STATE_STOPPED       - BLE is turned off
+*   * CYBLE_STATE_INITIALIZING, - Initializing state
+*   * CYBLE_STATE_CONNECTED     - Peer device is connected
+*   * CYBLE_STATE_ADVERTISING   - Advertising process 
+*   * CYBLE_STATE_SCANNING      - Scanning process
+*   * CYBLE_STATE_CONNECTING    - Connecting
+*   * CYBLE_STATE_DISCONNECTED  - Essentially idle state 
 * 
 ******************************************************************************/
 #define CyBle_GetState() (cyBle_state)
@@ -2522,6 +2729,7 @@ uint8 CyBle_IsDeviceAddressValid(const CYBLE_GAP_BD_ADDR_T *deviceAddress);
 extern CYBLE_STATE_T            cyBle_state;
 extern CYBLE_CONN_HANDLE_T      cyBle_connHandle;
 extern volatile uint8           cyBle_busyStatus;
+extern const CYBLE_GAPS_T       cyBle_gaps;
 
 #if(CYBLE_GAP_ROLE_PERIPHERAL || CYBLE_GAP_ROLE_BROADCASTER) 
     extern uint8 cyBle_advertisingIntervalType;

@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file CYBLE_hts.c
-* \version 3.10
+* \version 3.30
 * 
 * \brief
 *  Contains the source code for Health Thermometer Service.
@@ -88,9 +88,6 @@ static CYBLE_GATT_DB_ATTR_HANDLE_T cyBle_htscReqHandle;
 * 
 *  This function initializes HTS Service.
 * 
-* \return
-*  None
-* 
 ******************************************************************************/
 void CyBle_HtsInit(void)
 {
@@ -133,12 +130,6 @@ void CyBle_HtsInit(void)
 *                       structure that contains details of the characteristic 
 *                       for which notification enabled event was triggered).
 * 
-* \return
-*  None
-*
-* \events
-*  None
-*
 ******************************************************************************/
 void CyBle_HtsRegisterAttrCallback(CYBLE_CALLBACK_T callbackFunc)
 {
@@ -163,9 +154,6 @@ void CyBle_HtsRegisterAttrCallback(CYBLE_CALLBACK_T callbackFunc)
 *  Return value is of type CYBLE_API_RESULT_T.
 *  * CYBLE_ERROR_OK - The request handled successfully
 *  * CYBLE_ERROR_INVALID_PARAMETER - Validation of the input parameter failed
-*
-* \events
-*  None
 *
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_HtssSetCharacteristicValue(CYBLE_HTS_CHAR_INDEX_T charIndex,
@@ -211,9 +199,6 @@ CYBLE_API_RESULT_T CyBle_HtssSetCharacteristicValue(CYBLE_HTS_CHAR_INDEX_T charI
 *  * CYBLE_ERROR_OK - The request handled successfully
 *  * CYBLE_ERROR_INVALID_PARAMETER - Validation of the input parameter failed
 *
-* \events
-*  None
-*
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_HtssGetCharacteristicValue(CYBLE_HTS_CHAR_INDEX_T charIndex,
     uint8 attrSize, uint8 *attrValue)
@@ -257,9 +242,6 @@ CYBLE_API_RESULT_T CyBle_HtssGetCharacteristicValue(CYBLE_HTS_CHAR_INDEX_T charI
 *  Return value is of type CYBLE_API_RESULT_T.
 *  * CYBLE_ERROR_OK - The request handled successfully
 *  * CYBLE_ERROR_INVALID_PARAMETER - Validation of the input parameter failed
-*
-* \events
-*  None
 *
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_HtssSetCharacteristicDescriptor(CYBLE_HTS_CHAR_INDEX_T charIndex,
@@ -311,9 +293,6 @@ CYBLE_API_RESULT_T CyBle_HtssSetCharacteristicDescriptor(CYBLE_HTS_CHAR_INDEX_T 
 *  * CYBLE_ERROR_OK - The request handled successfully
 *  * CYBLE_ERROR_INVALID_PARAMETER - Validation of the input parameter failed
 *
-* \events
-*  None
-*
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_HtssGetCharacteristicDescriptor(CYBLE_HTS_CHAR_INDEX_T charIndex,
     CYBLE_HTS_DESCR_INDEX_T descrIndex, uint8 attrSize, uint8 *attrValue)
@@ -355,10 +334,6 @@ CYBLE_API_RESULT_T CyBle_HtssGetCharacteristicDescriptor(CYBLE_HTS_CHAR_INDEX_T 
 * 
 *  \param void *eventParam: The pointer to the data structure specified by the event.
 * 
-* \return
-*  Return value is of type CYBLE_GATT_ERR_CODE_T.
-*   * CYBLE_GATT_ERR_NONE - Write is successful
-* 
 ******************************************************************************/
 CYBLE_GATT_ERR_CODE_T CyBle_HtssWriteEventHandler(CYBLE_GATTS_WRITE_REQ_PARAM_T *eventParam)
 {
@@ -393,8 +368,8 @@ CYBLE_GATT_ERR_CODE_T CyBle_HtssWriteEventHandler(CYBLE_GATTS_WRITE_REQ_PARAM_T 
                         if(requestValue != 0u) /* 0 is valid interval value for no periodic measurement */
                         {
                             /* Check Valid range for Measure Interval characteristic value */
-                            if(CYBLE_ERROR_OK == CyBle_HtssGetCharacteristicDescriptor(locCharIndex, CYBLE_HTS_VRD, 
-                                                    CYBLE_HTS_VRD_LEN, locAttrValue))
+                            if(CyBle_HtssGetCharacteristicDescriptor(locCharIndex, CYBLE_HTS_VRD, 
+                                                    CYBLE_HTS_VRD_LEN, locAttrValue) == CYBLE_ERROR_OK)
                             {
                                 uint16 lowerValue;
                                 uint16 upperValue;
@@ -409,11 +384,11 @@ CYBLE_GATT_ERR_CODE_T CyBle_HtssWriteEventHandler(CYBLE_GATTS_WRITE_REQ_PARAM_T 
                             }
                         }
                     }
-                    if(CYBLE_GATT_ERR_NONE == gattErr)
+                    if(gattErr == CYBLE_GATT_ERR_NONE)
                     {   /* Store value to database */
                         gattErr = CyBle_GattsWriteAttributeValue(&eventParam->handleValPair, 0u, 
                                     &eventParam->connHandle, CYBLE_GATT_DB_PEER_INITIATED);
-                        if(CYBLE_GATT_ERR_NONE == gattErr)
+                        if(gattErr == CYBLE_GATT_ERR_NONE)
                         {
                             CyBle_HtsApplCallback((uint32)CYBLE_EVT_HTSS_CHAR_WRITE, &locCharValue);
                         }
@@ -424,7 +399,7 @@ CYBLE_GATT_ERR_CODE_T CyBle_HtssWriteEventHandler(CYBLE_GATTS_WRITE_REQ_PARAM_T 
                     /* Store value to database */
                     gattErr = CyBle_GattsWriteAttributeValue(&eventParam->handleValPair, 0u, 
                                     &eventParam->connHandle, CYBLE_GATT_DB_PEER_INITIATED);
-                    if(CYBLE_GATT_ERR_NONE == gattErr)
+                    if(gattErr == CYBLE_GATT_ERR_NONE)
                     {
                         /* Check characteristic properties for Notification */
                         if(CYBLE_IS_NOTIFICATION_SUPPORTED(cyBle_htss.charInfo[locCharIndex].charHandle))
@@ -477,6 +452,11 @@ CYBLE_GATT_ERR_CODE_T CyBle_HtssWriteEventHandler(CYBLE_GATTS_WRITE_REQ_PARAM_T 
 *  Sends notification with a characteristic value of the Health Thermometer 
 *  Service, which is a value specified by charIndex, to the Client device.
 * 
+*  On enabling notification successfully for a service characteristic, if the GATT
+*  server has an updated value to be notified to the GATT Client, it sends out a
+*  'Handle Value Notification' which results in CYBLE_EVT_HTSC_NOTIFICATION event
+*  at the GATT Client's end.
+*
 *  \param connHandle: The connection handle.
 *  \param charIndex: The index of the service characteristic.
 *  \param attrSize: The size of the characteristic value attribute.
@@ -491,9 +471,6 @@ CYBLE_GATT_ERR_CODE_T CyBle_HtssWriteEventHandler(CYBLE_GATTS_WRITE_REQ_PARAM_T 
 *   * CYBLE_ERROR_INVALID_STATE - Connection with the client is not established
 *   * CYBLE_ERROR_MEMORY_ALLOCATION_FAILED - Memory allocation failed. 
 *   * CYBLE_ERROR_NTF_DISABLED - Notification is not enabled by the client.
-*
-* \events
-*  None
 *
 ******************************************************************************/
 CYBLE_API_RESULT_T CyBle_HtssSendNotification(CYBLE_CONN_HANDLE_T connHandle,
@@ -534,7 +511,12 @@ CYBLE_API_RESULT_T CyBle_HtssSendNotification(CYBLE_CONN_HANDLE_T connHandle,
 * 
 *  Sends indication with a characteristic value of the Health Thermometer 
 *  Service, which is a value specified by charIndex, to the Client device.
-* 
+*
+*  On enabling indication successfully, if the GATT server has an updated value to be 
+*  indicated to the GATT Client, it sends out a 'Handle Value Indication' which
+*  results in CYBLE_EVT_HTSC_INDICATION or CYBLE_EVT_GATTC_HANDLE_VALUE_IND (if 
+*  service specific callback function is not registered) event at the GATT Client's end.
+*
 *  \param connHandle: The connection handle.
 *  \param charIndex:  The index of the service characteristic.
 *  \param attrSize: The size of the characteristic value attribute.
@@ -606,9 +588,6 @@ CYBLE_API_RESULT_T CyBle_HtssSendIndication(CYBLE_CONN_HANDLE_T connHandle,
 * 
 *  *eventParam - The pointer to a structure of type CYBLE_CONN_HANDLE_T.
 * 
-* \return
-*  None
-* 
 ******************************************************************************/
 void CyBle_HtssConfirmationEventHandler(const CYBLE_CONN_HANDLE_T *eventParam)
 {
@@ -650,9 +629,6 @@ void CyBle_HtssConfirmationEventHandler(const CYBLE_CONN_HANDLE_T *eventParam)
 *  using the data received as part of the callback.
 * 
 *  \param discCharInfo: The pointer to a characteristic information structure.
-* 
-* \return
-*  None
 * 
 ******************************************************************************/
 void CyBle_HtscDiscoverCharacteristicsEventHandler(CYBLE_DISC_CHAR_INFO_T *discCharInfo)
@@ -708,20 +684,17 @@ void CyBle_HtscDiscoverCharacteristicsEventHandler(CYBLE_DISC_CHAR_INFO_T *discC
 *  \param discoveryCharIndex: The characteristic index which is discovered.
 *  \param discDescrInfo: The pointer to a descriptor information structure.
 * 
-* \return
-*  None
-* 
 ******************************************************************************/
 void CyBle_HtscDiscoverCharDescriptorsEventHandler(CYBLE_HTS_CHAR_INDEX_T discoveryCharIndex, 
                                                    CYBLE_DISC_DESCR_INFO_T *discDescrInfo)
 {
     CYBLE_HTS_DESCR_INDEX_T locDescIndex;
 
-    if(CYBLE_UUID_CHAR_CLIENT_CONFIG == discDescrInfo->uuid.uuid16)
+    if(discDescrInfo->uuid.uuid16 == CYBLE_UUID_CHAR_CLIENT_CONFIG)
     {
         locDescIndex = CYBLE_HTS_CCCD;
     }
-    else if(CYBLE_UUID_CHAR_VALID_RANGE == discDescrInfo->uuid.uuid16)
+    else if(discDescrInfo->uuid.uuid16 == CYBLE_UUID_CHAR_VALID_RANGE)
     {
         locDescIndex = CYBLE_HTS_VRD;
     }
@@ -748,8 +721,12 @@ void CyBle_HtscDiscoverCharDescriptorsEventHandler(CYBLE_HTS_CHAR_INDEX_T discov
 * Function Name: CyBle_HtscSetCharacteristicValue
 ***************************************************************************//**
 * 
-*  Sends a request to set a characteristic value of the service, which is a 
-*  value identified by charIndex,to the server device.
+*  This function is used to write the characteristic (which is identified by
+*  charIndex) value attribute in the server. As a result a Write Request is 
+*  sent to the GATT Server and on successful execution of the request on the 
+*  Server side the CYBLE_EVT_HTSS_CHAR_WRITE events is generated.
+*  On successful request execution on the Server side the Write Response is 
+*  sent to the Client.
 * 
 *  \param connHandle: The connection handle.
 *  \param charIndex: The index of the service characteristic.
@@ -906,6 +883,14 @@ CYBLE_API_RESULT_T CyBle_HtscGetCharacteristicValue(CYBLE_CONN_HANDLE_T connHand
 *  This function is used to write the characteristic descriptor to the server,
 *  which is identified by charIndex and descrIndex.
 * 
+*  Internally, Write Request is sent to the GATT Server and on successful 
+*  execution of the request on the Server side the following events can be 
+*  generated: 
+*  * CYBLE_EVT_HTSS_NOTIFICATION_ENABLED 
+*  * CYBLE_EVT_HTSS_NOTIFICATION_ENABLED
+*  * CYBLE_EVT_HTSS_INDICATION_ENABLED 
+*  * CYBLE_EVT_HTSS_INDICATION_DISABLED
+* 
 *  \param connHandle: The connection handle.
 *  \param charIndex: The index of the service characteristic.
 *  \param descrIndex: The index of the service characteristic descriptor.
@@ -1060,9 +1045,6 @@ CYBLE_API_RESULT_T CyBle_HtscGetCharacteristicDescriptor(CYBLE_CONN_HANDLE_T con
 * 
 *  \param eventParam: The pointer to the data structure specified by an event.
 * 
-* \return
-*  None
-* 
 ******************************************************************************/
 void CyBle_HtscNotificationEventHandler(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *eventParam)
 {
@@ -1095,9 +1077,6 @@ void CyBle_HtscNotificationEventHandler(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *ev
 * 
 *  \param eventParam: The pointer to the data structure specified by an event.
 * 
-* \return
-*  None
-* 
 ******************************************************************************/
 void CyBle_HtscIndicationEventHandler(CYBLE_GATTC_HANDLE_VALUE_IND_PARAM_T *eventParam)
 {
@@ -1129,9 +1108,6 @@ void CyBle_HtscIndicationEventHandler(CYBLE_GATTC_HANDLE_VALUE_IND_PARAM_T *even
 *  Handles Read Response Event.
 * 
 *  \param eventParam: The pointer to the data structure specified by an event.
-* 
-* \return
-*  None
 * 
 ******************************************************************************/
 void CyBle_HtscReadResponseEventHandler(CYBLE_GATTC_READ_RSP_PARAM_T *eventParam)
@@ -1193,9 +1169,6 @@ void CyBle_HtscReadResponseEventHandler(CYBLE_GATTC_READ_RSP_PARAM_T *eventParam
 * 
 *  \param eventParam: The pointer to a data structure specified by the event.
 * 
-* \return
-*  None
-* 
 ******************************************************************************/
 void CyBle_HtscWriteResponseEventHandler(const CYBLE_CONN_HANDLE_T *eventParam)
 {
@@ -1249,9 +1222,6 @@ void CyBle_HtscWriteResponseEventHandler(const CYBLE_CONN_HANDLE_T *eventParam)
 *  Handles Error Response Event.
 * 
 *  \param eventParam: The pointer to a data structure specified by an event.
-* 
-* \return
-*  None
 * 
 ******************************************************************************/
 void CyBle_HtscErrorResponseEventHandler(const CYBLE_GATTC_ERR_RSP_PARAM_T *eventParam)

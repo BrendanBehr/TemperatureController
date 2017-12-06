@@ -1,7 +1,9 @@
 /***************************************************************************//**
-* \file CYBLE_StackGattClient.h
-* \version 3.10
+* \file CyBle_GattClient.h
 * 
+* \file CYBLE_StackGattClient.h
+* \version 3.30
+*
 * \brief
 *  This file contains the GATT Client routines
 * 
@@ -17,8 +19,8 @@
 *******************************************************************************/
 
 
-#ifndef CY_BLE_CYBLE_STACK_GATT_CLIENT_H
-#define CY_BLE_CYBLE_STACK_GATT_CLIENT_H
+#ifndef CYBLE_GATT_CLIENT_H_
+#define CYBLE_GATT_CLIENT_H_
 
 
 /***************************************
@@ -150,7 +152,7 @@ typedef CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T CYBLE_GATTC_HANDLE_VALUE_IND_PARAM_
 /** Data Element for Group Response */
 typedef struct
 {
-    /** atribute handle value pair */
+    /** attribute handle value pair */
     uint8              * attrValue;
 
     /** Length of each Attribute Data Element including the Handle Range */
@@ -869,8 +871,6 @@ CYBLE_API_RESULT_T CyBle_GattcWriteWithoutResponse
 );
 
 
-#ifdef ATT_SIGNED_WRITE_SUPPORT
-
 /******************************************************************************
 * Function Name: CyBle_GattcSignedWriteWithoutRsp
 ***************************************************************************//**
@@ -915,8 +915,6 @@ CYBLE_API_RESULT_T CyBle_GattcSignedWriteWithoutRsp
 	CYBLE_GATTC_SIGNED_WRITE_CMD_REQ_T		* signedWriteWithoutRspParam
 );
 
-
-#endif /*ATT_SIGNED_WRITE_SUPPORT*/
 
 
 /******************************************************************************
@@ -1462,7 +1460,7 @@ CYBLE_API_RESULT_T CyBle_GattcDiscoverPrimaryServices
 
 /** @} */
 
-#endif /* CY_BLE_CYBLE_STACK_GATT_CLIENT_H */
+#endif /* CYBLE_GATT_CLIENT_H_ */
 
 
 /* EOF */

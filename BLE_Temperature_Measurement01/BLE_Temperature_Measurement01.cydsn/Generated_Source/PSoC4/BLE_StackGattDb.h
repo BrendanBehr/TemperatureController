@@ -1,7 +1,9 @@
 /***************************************************************************//**
-* \file CYBLE_StackGattDb.h
-* \version 3.10
+* \file CyBle_GattDb.h
 * 
+* \file CYBLE_StackGattDb.h
+* \version 3.30
+*
 * \brief
 *  This file contains the data structure for GATT Database
 * 
@@ -17,8 +19,9 @@
 *******************************************************************************/
 
 
-#ifndef CY_BLE_CYBLE_STACK_GATT_DB_H
-#define CY_BLE_CYBLE_STACK_GATT_DB_H
+#ifndef CYBLE_GATT_DB_H_
+#define CYBLE_GATT_DB_H_
+
 
     
 /***************************************
@@ -27,160 +30,162 @@
 
 #include "cytypes.h"
 #include "BLE_StackGatt.h"
-    
-    
+
 /***************************************
 * Macro Definition
 ***************************************/
 
 /* GATT Defined Attributes */
-#define CYBLE_GATT_PRIMARY_SERVICE                  0x2800u
-#define CYBLE_GATT_SECONDARY_SERVICE                0x2801u
-#define CYBLE_GATT_INCLUDE_SERVICE                  0x2802u
-#define CYBLE_GATT_CHARACTERISTIC                   0x2803u
-#define CYBLE_GATT_EXTENDED_PROPERTIES              0x2900u
-#define CYBLE_GATT_USER_DESCRIPTION                 0x2901u
-#define CYBLE_GATT_CLIENT_CONFIG                    0x2902u
-#define CYBLE_GATT_SERVER_CONFIG                    0x2903u
-#define CYBLE_GATT_PRESENTATION_FORMAT              0x2904u
-#define CYBLE_GATT_AGGREGATE_FORMAT                 0x2905u
+#define CYBLE_GATT_PRIMARY_SERVICE                      (0x2800u)
+#define CYBLE_GATT_SECONDARY_SERVICE                    (0x2801u)
+#define CYBLE_GATT_INCLUDE_SERVICE                      (0x2802u)
+#define CYBLE_GATT_CHARACTERISTIC                       (0x2803u)
+#define CYBLE_GATT_EXTENDED_PROPERTIES                  (0x2900u)
+#define CYBLE_GATT_USER_DESCRIPTION                     (0x2901u)
+#define CYBLE_GATT_CLIENT_CONFIG                        (0x2902u)
+#define CYBLE_GATT_SERVER_CONFIG                        (0x2903u)
+#define CYBLE_GATT_PRESENTATION_FORMAT                  (0x2904u)
+#define CYBLE_GATT_AGGREGATE_FORMAT                     (0x2905u)
 
 
-#define CYBLE_GATT_GAP_SERVICE_UUID                 0x1800u
+#define CYBLE_GATT_GAP_SERVICE_UUID                     (0x1800u)
 
 /* GATT Database Properties Field Description
-    1. Attribute permissions <B0>: Bluetooth Spec Defined
-    2. Characteristic permissions <B1>: Bluetooth Spec Defined
-    3. <B2>, <B3>Implementation Specific */
-
-/* Attribute permissions <B0>: Bluetooth Spec Defined */
-#define CYBLE_GATT_DB_ATTR_PROP_READ                	0x01u
-#define CYBLE_GATT_DB_ATTR_PROP_WRITE               	0x02u
-#define CYBLE_GATT_DB_ATTR_PROP_RD_WR               	0x04u
-#define CYBLE_GATT_DB_ATTR_PROP_SEC_ENCRYPT         	0x08u
-#define CYBLE_GATT_DB_ATTR_PROP_SEC_AUTHENTICATE    	0x10u
-#define CYBLE_GATT_DB_ATTR_PROP_SEC_AUTHORIZE       	0x20u
-#define CYBLE_GATT_DB_ATTR_PROP_SEC_SC_AUTHENTICATE    	0x40u
+    1. Attribute read permissions <B0>: Bluetooth Spec Defined
+	2. Attribute write permissions <B1>: Bluetooth Spec Defined
+    3. Characteristic properties <B2>: Bluetooth Spec Defined
+    4. <B3>Implementation Specific */
     
+/* Attribute Read Permissions <B0>: Bluetooth Spec Defined */
+#define CYBLE_GATT_DB_ATTR_PROP_READ                	(0x00000001u)
+#define CYBLE_GATT_DB_ATTR_PROP_RD_SEC_ENCRYPT         	(0x00000002u)
+#define CYBLE_GATT_DB_ATTR_PROP_RD_SEC_AUTHENTICATE    	(0x00000004u)
+#define CYBLE_GATT_DB_ATTR_PROP_RD_SEC_AUTHORIZE       	(0x00000008u)
+#define CYBLE_GATT_DB_ATTR_PROP_RD_SEC_SC_AUTHENTICATE  (0x00000010u)
     
-#define CYBLE_GATT_DB_ATTR_PROP_MASK                0x000000FFu
+#define CYBLE_GATT_DB_ATTR_PROP_RD_MASK                 (0x0000001Fu)
+#define CYBLE_GATT_DB_ATTR_PROP_RD_BIT_SHIFT            (0x0u)
+#define CYBLE_GATT_DB_ATTR_PROP_RD_SECURITY_MASK        (0x0000001Eu)
+#define CYBLE_GATT_DB_ATTR_PROP_RD_SECURITY_BIT_SHIFT   (0x1u)
     
-#define CYBLE_GATT_DB_ATTR_PROP_BIT_SHIFT           0x0u
+/* Attribute Write Permissions <B1>: Bluetooth Spec Defined */    
+#define CYBLE_GATT_DB_ATTR_PROP_WRITE                	(0x00000100u)
+#define CYBLE_GATT_DB_ATTR_PROP_WR_SEC_ENCRYPT         	(0x00000200u)
+#define CYBLE_GATT_DB_ATTR_PROP_WR_SEC_AUTHENTICATE    	(0x00000400u)
+#define CYBLE_GATT_DB_ATTR_PROP_WR_SEC_AUTHORIZE       	(0x00000800u)
+#define CYBLE_GATT_DB_ATTR_PROP_WR_SEC_SC_AUTHENTICATE  (0x00001000u)
+
+#define CYBLE_GATT_DB_ATTR_PROP_WR_MASK                 (0x00001F00u)
+#define CYBLE_GATT_DB_ATTR_PROP_WR_BIT_SHIFT            (0x8u)
+#define CYBLE_GATT_DB_ATTR_PROP_WR_SECURITY_MASK        (0x00001E00u)
+#define CYBLE_GATT_DB_ATTR_PROP_WR_SECURITY_BIT_SHIFT   (0x9u)
     
-#define CYBLE_GATT_DB_SECURITY_MASK                 0x78u
+/* Characteristic properties <B2>: Bluetooth Spec Defined */
+#define CYBLE_GATT_DB_CH_PROP_BROADCAST                 (0x00010000u)
+#define CYBLE_GATT_DB_CH_PROP_READ                      (0x00020000u)
+#define CYBLE_GATT_DB_CH_PROP_RD_WRITE_WO_RESP          (0x00040000u)
+#define CYBLE_GATT_DB_CH_PROP_WRITE                     (0x00080000u)
+#define CYBLE_GATT_DB_CH_PROP_NOTIFY                    (0x00100000u)
+#define CYBLE_GATT_DB_CH_PROP_INDICATE                  (0x00200000u)
+#define CYBLE_GATT_DB_CH_PROP_SEC_AUTH_SIGNED_WRITE     (0x00400000u)
+#define CYBLE_GATT_DB_CH_PROP_EXT_PROP                  (0x00800000u)
 
-#define CYBLE_GATT_DB_SECURITY_BIT_SHIFT            0x3u
-
-/* Characteristic permissions <B1>: Bluetooth Spec Defined */
-#define CYBLE_GATT_DB_CH_PROP_BROADCAST             0x0100u
-#define CYBLE_GATT_DB_CH_PROP_READ                  0x0200u
-#define CYBLE_GATT_DB_CH_PROP_RD_WRITE_WO_RESP      0x0400u
-#define CYBLE_GATT_DB_CH_PROP_WRITE                 0x0800u
-#define CYBLE_GATT_DB_CH_PROP_NOTIFY                0x1000u
-#define CYBLE_GATT_DB_CH_PROP_INDICATE              0x2000u
-#define CYBLE_GATT_DB_CH_PROP_SEC_AUTH_SIGNED_WRITE 0x4000u
-#define CYBLE_GATT_DB_CH_PROP_EXT_PROP              0x8000u
-
-#define CYBLE_GATT_DB_CHAR_PROP_MASK                0x0000FF00u
-#define CYBLE_GATT_DB_CHAR_PROP_BIT_SHIFT           0x8u
+#define CYBLE_GATT_DB_CHAR_PROP_MASK                    (0x00FF0000u)
+#define CYBLE_GATT_DB_CHAR_PROP_BIT_SHIFT               (0x10u)
 
 /* Extended properties values. Note: These properties are not
    part of permission field. The peer GATT layer or local GATT
    layer needs to read "Characteristic Extended Properties 
    Descriptor" value. */
-#define CYBLE_GATT_DB_CH_PROP_EXT_PROP_RELIABLE_WRITE   0x0001u
-#define CYBLE_GATT_DB_CH_PROP_EXT_PROP_WRITABLE_AUX     0x0002u
-
-/* Implementation permissions <B2>: Implementation specific
+#define CYBLE_GATT_DB_CH_PROP_EXT_PROP_RELIABLE_WRITE   (0x0001u)
+#define CYBLE_GATT_DB_CH_PROP_EXT_PROP_WRITABLE_AUX     (0x0002u)
+    
+/* Implementation permissions <B3>: Implementation specific
    defines to access runtime characteristics. */
 
 /* Bit: */
-#define CYBLE_GATT_DB_ATTR_CHAR_VAL_RD_EVENT        0x010000u
-#define CYBLE_GATT_DB_ATTR_UUID_FMT_32           	0x040000u
-#define CYBLE_GATT_DB_ATTR_UUID_FMT_128            	0x080000u
+#define CYBLE_GATT_DB_ATTR_CHAR_VAL_RD_EVENT            (0x01000000u)
+#define CYBLE_GATT_DB_ATTR_UUID_FMT_32           	    (0x04000000u)
+#define CYBLE_GATT_DB_ATTR_UUID_FMT_128            	    (0x08000000u)
 
 /* Encryption Key Size 7 Needed for the Service */
-#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_7                 0x100000u
+#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_7            (0x10000000u)
 
 /* Encryption Key Size 8 Needed for the Service */
-#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_8                 0x200000u
+#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_8            (0x20000000u)
 
 /* Encryption Key Size 9 Needed for the Service */
-#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_9                 0x300000u
+#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_9            (0x30000000u)
 
 /* Encryption Key Size 10 Needed for the Service */
-#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_10                0x400000u
+#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_10           (0x40000000u)
 
 /* Encryption Key Size 11 Needed for the Service */
-#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_11                0x500000u
+#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_11           (0x50000000u)
 
 /* Encryption Key Size 12 Needed for the Service */
-#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_12                0x600000u
+#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_12           (0x60000000u)
 
 /* Encryption Key Size 13 Needed for the Service */
-#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_13                0x700000u
+#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_13           (0x70000000u)
 
 /* Encryption Key Size 14 Needed for the Service */
-#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_14                0x800000u
+#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_14           (0x80000000u)
 
 /* Encryption Key Size 15 Needed for the Service */
-#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_15                0x900000u
+#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_15           (0x90000000u)
 
 /* Encryption Key Size 16 Needed for the Service */
-#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_16                0xA00000u
+#define CYBLE_GATT_DB_SER_ENCRYPT_KEY_SIZE_16           (0xA0000000u)
 
 /* No Encryption Needed for the Service */
-#define CYBLE_GATT_DB_SER_NO_ENCRYPT_PROPERTY                0x000000u
+#define CYBLE_GATT_DB_SER_NO_ENCRYPT_PROPERTY           (0x00000000u)
 
 /*  Encryption Key Size Mask Needed for the Service */
-#define CYBLE_GATT_DB_ENC_KEY_SIZE_MASK                      0x00F00000u
+#define CYBLE_GATT_DB_ENC_KEY_SIZE_MASK                 (0xF0000000u)
 
 
 /* By default entries in CYBLE_GATT DB is 16-bit UUID
    This mask is defined to decide UUID length */
-#define CYBLE_GATT_DB_ATTR_UUID_FMT_16_MASK       0x030000u
-
-/* Implementation permission <B3>: Table index of runtime 
-   configurable characteristic */
-#define CYBLE_GATT_DB_CONFIGURABLE_LUT_ID_MASK    0xFF000000u
-
+#define CYBLE_GATT_DB_ATTR_UUID_FMT_16_MASK             (0x03000000u)
+    
 
 /* CYBLE_GATT Client Configuration values */
-#define CYBLE_GATT_CLI_CNFG_NOTIFICATION         0x0001u
-#define CYBLE_GATT_CLI_CNFG_INDICATION           0x0002u
-#define CYBLE_GATT_CLI_CNFG_DEFAULT              0x0000u
+#define CYBLE_GATT_CLI_CNFG_NOTIFICATION                (0x0001u)
+#define CYBLE_GATT_CLI_CNFG_INDICATION                  (0x0002u)
+#define CYBLE_GATT_CLI_CNFG_DEFAULT                     (0x0000u)
 
 /* Unit size is with respect to word (16 bit) */
-#define CYBLE_GATT_DB_128_BIT_UUID_SZ                  16u
-#define CYBLE_GATT_DB_32_BIT_UUID_SZ                   4u
-#define CYBLE_GATT_DB_16_BIT_UUID_SZ                   2u
+#define CYBLE_GATT_DB_128_BIT_UUID_SZ                   (0x10u)
+#define CYBLE_GATT_DB_32_BIT_UUID_SZ                    (0x04u)
+#define CYBLE_GATT_DB_16_BIT_UUID_SZ                    (0x02u)
 
-#define CYBLE_GATT_DB_ATTR_16_BIT_UUID           0u
-#define CYBLE_GATT_DB_ATTR_32_BIT_UUID           1u
-#define CYBLE_GATT_DB_ATTR_128_BIT_UUID          2u
+#define CYBLE_GATT_DB_ATTR_16_BIT_UUID                  (0x00u)
+#define CYBLE_GATT_DB_ATTR_32_BIT_UUID                  (0x01u)
+#define CYBLE_GATT_DB_ATTR_128_BIT_UUID                 (0x02u)
 
 
-#define CYBLE_GATT_DB_ATTR_PRPTY_SZ              0x01u
-#define CYBLE_GATT_DB_ATTR_HANDLE_SZ             0x02u
+#define CYBLE_GATT_DB_ATTR_PRPTY_SZ                     (0x01u)
+#define CYBLE_GATT_DB_ATTR_HANDLE_SZ                    (0x02u)
  
 
 /* Locally initiated operation, needed for local updates based on Attribute
     Handles. */
-#define CYBLE_GATT_DB_LOCALLY_INITIATED               0x00u
+#define CYBLE_GATT_DB_LOCALLY_INITIATED                 (0x00u)
 
 /* Peer Initiated GATT DB transaction */
-#define CYBLE_GATT_DB_PEER_INITIATED                  0x40u   
+#define CYBLE_GATT_DB_PEER_INITIATED                    (0x40u)
 
 /* Read operation for Attribute  */
-#define CYBLE_GATT_DB_READ                            CYBLE_GATT_DB_ATTR_PROP_READ
+#define CYBLE_GATT_DB_READ                              (0x01u)
 
 /* Write operation for Attribute */
-#define CYBLE_GATT_DB_WRITE                           CYBLE_GATT_DB_ATTR_PROP_WRITE
+#define CYBLE_GATT_DB_WRITE                             (0x02u)
     
 /** Prepare Write operation for Attribute */
-#define CYBLE_GATT_DB_PREP_WRITE                      0x04u
+#define CYBLE_GATT_DB_PREP_WRITE                        (0x04u)
     
-#define CYBLE_GATT_DB_WRITE_WITHOUT_RSP               0x80u
+#define CYBLE_GATT_DB_WRITE_WITHOUT_RSP                 (0x80u)
 
 /**
  \addtogroup group_common_api_gatt_definitions
@@ -248,9 +253,10 @@ typedef struct
         32-bits can be grouped in to 4 bytes. The lowest significant byte
         is byte 0 (B0) and the most significant byte is byte 3 (B3). The 
         bytes where the permissions have been grouped is as given below.
-	     * Attribute permissions (B0)
-         * Characteristic permissions (B1)
-         * Implementation specific permission (B3, B2)
+	     * Attribute permissions for read (B0)
+	     * Attribute permissions for write (B1)
+         * Characteristic properties (B2)
+         * Implementation specific permission (B3)
 	 */
     uint32 				permission;
 	
@@ -534,7 +540,7 @@ CYBLE_GATT_ERR_CODE_T CyBle_GattDbCheckPermission
         
 /** @} */
 	
-#endif /*CY_BLE_CYBLE_STACK_GATT_DB_H*/
+#endif /*CYBLE_GATT_DB_H_*/
 
 
 /*EOF*/

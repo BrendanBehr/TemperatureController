@@ -1,6 +1,6 @@
 /*******************************************************************************
 * File Name: ADC.h
-* Version 2.40
+* Version 2.50
 *
 * Description:
 *  This file contains the function prototypes and constants used in
@@ -9,7 +9,7 @@
 * Note:
 *
 ********************************************************************************
-* Copyright 2008-2015, Cypress Semiconductor Corporation.  All rights reserved.
+* Copyright 2008-2017, Cypress Semiconductor Corporation.  All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -30,6 +30,7 @@
 typedef struct
 {
     uint8 enableState;
+    uint32 dftRegVal;
 } ADC_BACKUP_STRUCT;
 
 
@@ -122,7 +123,7 @@ typedef struct
 #define ADC_DEFAULT_VREF_MV_VALUE          (1024)
 #define ADC_DEFAULT_BUFFER_GAIN            (0u)
 #define ADC_DEFAULT_AVG_SAMPLES_NUM        (4u)
-#define ADC_DEFAULT_AVG_SAMPLES_DIV        (int16)(0x100u >> (7u - 4u))
+#define ADC_DEFAULT_AVG_SAMPLES_DIV        (4u < 4u) ? (int16)(0x100u >> (7u - 4u)) : (int16)(0x100u >> 4u)
 #define ADC_DEFAULT_AVG_MODE               (1u)
 #define ADC_MAX_RESOLUTION                 (12u)
 #define ADC_DEFAULT_LOW_LIMIT              (0u)
@@ -408,7 +409,7 @@ extern volatile int32 ADC_countsPer10Volt[ADC_TOTAL_CHANNELS_NUM];
 #define ADC_NEG_VSSA                   (0x00000200Lu)
 #define ADC_NEG_VREF                   (0x00000E00Lu)
 #if(ADC_TOTAL_CHANNELS_NUM > 1u)
-    #define ADC_NEG_OTHER              (uint16)((uint16)ADC_cy_psoc4_sarmux_8__VNEG << 9u)
+    #define ADC_NEG_OTHER              (uint16)((uint16)ADC_cy_psoc4_sarmux_8__VNEG0 << 9u)
 #else
     #define ADC_NEG_OTHER              (0)
 #endif /* ADC_TOTAL_CHANNELS_NUM > 1u */

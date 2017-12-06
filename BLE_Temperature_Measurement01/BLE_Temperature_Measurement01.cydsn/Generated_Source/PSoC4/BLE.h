@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file CYBLE.h
-* \version 3.10
+* \version 3.30
 * 
 * \brief
 *  Contains the function prototypes and constants available to the BLE component.
@@ -64,6 +64,10 @@
 #define CYBLE_MODE_PROFILE                          (CYBLE_MODE == CYBLE_PROFILE)
 #define CYBLE_MODE_HCI                              (CYBLE_MODE == CYBLE_HCI)
 
+#define CYBLE_HCI_TYPE                              (0u)
+#define CYBLE_HCI_OVER_UART                         (0u)
+#define CYBLE_HCI_OVER_SW                           (1u)
+
 #define CYBLE_STACK_MODE                            (3u)
 #define CYBLE_STACK_DEBUG                           (2u)
 #define CYBLE_STACK_RELEASE                         (3u)
@@ -72,7 +76,12 @@
     
 #define CYBLE_M0S8BLESS_VERSION                     (CYIPBLOCK_m0s8bless_VERSION)
 #define CYBLE_M0S8BLESS_VERSION_2                   (CYBLE_M0S8BLESS_VERSION > 1u)
+#define CYBLE_M0S8BLESS_VERSION_3                   (CYBLE_M0S8BLESS_VERSION > 2u)
     
+#define CYBLE_EXT_PA_ENABLED                        (0x00u)
+#define CYBLE_GAP_SECURITY_LEVEL_SECURE_CONN        (3u)
+
+
 #if(CYBLE_MODE_PROFILE)
     #define CYBLE_AUTO_POPULATE_WHITELIST           (0x01u)
     #if(CYBLE_M0S8BLESS_VERSION_2)
@@ -106,8 +115,6 @@
 
 /* Align buffer size value to 4 */
 #define CYBLE_ALIGN_TO_4(x)                         ((((x) & 3u) == 0u) ? (x) : (((x) - ((x) & 3u)) + 4u))
-
-#if(CYBLE_MODE_PROFILE)
     
 #define CYBLE_GAP_ROLE                              (0x01u)
 #define CYBLE_GAP_HCI                               (0x00u)
@@ -122,11 +129,13 @@
 #define CYBLE_GAP_ROLE_OBSERVER                     (0u != (CYBLE_GAP_ROLE & CYBLE_GAP_OBSERVER))
 #define CYBLE_GAP_ROLE_BROADCASTER                  (0u != (CYBLE_GAP_ROLE & CYBLE_GAP_BROADCASTER))
 
+#if(CYBLE_MODE_PROFILE)
+    
 #if(CYBLE_GAP_ROLE_PERIPHERAL || CYBLE_GAP_ROLE_BROADCASTER)
     #define CYBLE_FAST_ADV_INT_MIN                  (0x0020u)
     #define CYBLE_FAST_ADV_INT_MAX                  (0x0030u)
-    #define CYBLE_FAST_ADV_TIMEOUT                  (0x001Eu)
-    #define CYBLE_SLOW_ADV_ENABLED                  (0x01u)
+    #define CYBLE_FAST_ADV_TIMEOUT                  (0x0000u)
+    #define CYBLE_SLOW_ADV_ENABLED                  (0x00u)
     #define CYBLE_SLOW_ADV_INT_MIN                  (0x0640u)
     #define CYBLE_SLOW_ADV_INT_MAX                  (0x0FA0u)
     #define CYBLE_SLOW_ADV_TIMEOUT                  (0x001Eu)
@@ -137,13 +146,13 @@
 #endif /* CYBLE_GAP_ROLE_PERIPHERAL */
 
 #if(CYBLE_GAP_ROLE_CENTRAL || CYBLE_GAP_ROLE_OBSERVER)
-    #define CYBLE_FAST_SCAN_INTERVAL                ()
-    #define CYBLE_FAST_SCAN_WINDOW                  ()
-    #define CYBLE_FAST_SCAN_TIMEOUT                 ()
-    #define CYBLE_SLOW_SCAN_ENABLED                 ()
-    #define CYBLE_SLOW_SCAN_INTERVAL                ()
-    #define CYBLE_SLOW_SCAN_WINDOW                  ()
-    #define CYBLE_SLOW_SCAN_TIMEOUT                 ()
+    #define CYBLE_FAST_SCAN_INTERVAL                (0x00u)
+    #define CYBLE_FAST_SCAN_WINDOW                  (0x00u)
+    #define CYBLE_FAST_SCAN_TIMEOUT                 (0x00u)
+    #define CYBLE_SLOW_SCAN_ENABLED                 (0x00u)
+    #define CYBLE_SLOW_SCAN_INTERVAL                (0x00u)
+    #define CYBLE_SLOW_SCAN_WINDOW                  (0x00u)
+    #define CYBLE_SLOW_SCAN_TIMEOUT                 (0x00u)
     #define CYBLE_GAPC_CONNECTION_INTERVAL_MIN      (0x0006u)
     #define CYBLE_GAPC_CONNECTION_INTERVAL_MAX      (0x0C80u)
     #define CYBLE_GAPC_CONNECTION_SLAVE_LATENCY     (0x0000u)
@@ -168,15 +177,34 @@
 #define CYBLE_TX_POWER_LEVEL_CONN                   (CYBLE_LL_PWR_LVL_0_DBM)
 
 #define CYBLE_ADV_PKT_INDEX_FLAGS   (0x00u)
-#define CYBLE_ADV_PKT_INDEX_LOCAL_NAME   (0x03u)
-#define CYBLE_ADV_PKT_INDEX_SERVICE_UUID_16   (0x10u)
+#define CYBLE_ADV_PKT_INDEX_SERVICE_UUID_128   (0x03u)
 
 
 
+
+/* Strict pairing option */
+#define CYBLE_STRICT_PAIRING                        (0x00u)
+#define CYBLE_STRICT_PAIRING_ON                     (1)
+#define CYBLE_STRICT_PAIRING_OFF                    (0)
+#define CYBLE_STRICT_PAIRING_ENABLED                (CYBLE_STRICT_PAIRING == CYBLE_STRICT_PAIRING_ON)
+
+/* Security options from the customizer */
+#define CYBLE_SECURITY_MODE                         (0x00u)
+#define CYBLE_SECURITY_LEVEL                        (0x01u)
+#define CYBLE_SECURITY_ENC_KEY_SIZE                 (0x10u)
+
+#if (CYBLE_STRICT_PAIRING_ENABLED)
+    #define CYBLE_STRICT_PAIRING_REQ_VALUE  \
+        ((CYBLE_SECURITY_MODE == CYBLE_GAP_SEC_MODE_1) ? ((CYBLE_SECURITY_LEVEL == CYBLE_GAP_SEC_LEVEL_1) ? \
+        (CYBLE_GAP_NO_SECURITY_REQUIREMENTS) : ((CYBLE_SECURITY_LEVEL == CYBLE_GAP_SEC_LEVEL_2) ? \
+        (CYBLE_GAP_SEC_UNAUTH_PAIRING) : ((CYBLE_SECURITY_LEVEL == CYBLE_GAP_SEC_LEVEL_3) ? \
+        (CYBLE_GAP_SEC_AUTH_PAIRING) : (CYBLE_GAP_SEC_SC_PAIRING_WITH_NO_MITM | CYBLE_GAP_SEC_SC_PAIRING_WITH_MITM)))) : \
+        (CYBLE_GAP_NO_SECURITY_REQUIREMENTS))
+#endif /* (CYBLE_STRICT_PAIRING_ENABLED) */
 
 /* Stack buffers count */
 #define CYBLE_GATT_MTU_BUFF_COUNT            (CYBLE_GATT_MIN_NO_OF_ATT_MTU_BUFF)
-/* Additional buffers provided from customiser with default value equal to 1 */
+/* Additional buffers provided from customizer with default value equal to 1 */
 #define CYBLE_GATT_MAX_ATTR_BUFF_COUNT       ((1 > 0u) ? (1 - 1u) : 0u)
 
 /* GATT MTU Size */
@@ -184,7 +212,7 @@
 #define CYBLE_GATT_MTU_PLUS_L2CAP_MEM_EXT   (CYBLE_ALIGN_TO_4(CYBLE_GATT_MTU + CYBLE_MEM_EXT_SZ + CYBLE_L2CAP_HDR_SZ))
 
 /* GATT Maximum attribute length */
-#define CYBLE_GATT_MAX_ATTR_LEN             ((0x0015u == 0u) ? (1u) : (0x0015u))
+#define CYBLE_GATT_MAX_ATTR_LEN             ((0x0012u == 0u) ? (1u) : (0x0012u))
 #define CYBLE_GATT_MAX_ATTR_LEN_PLUS_L2CAP_MEM_EXT \
                                     (CYBLE_ALIGN_TO_4(CYBLE_GATT_MAX_ATTR_LEN + CYBLE_MEM_EXT_SZ + CYBLE_L2CAP_HDR_SZ))
 
@@ -305,13 +333,13 @@
     #define CYBLE_LL_PRIVACY_HEAP_SZ                    (0u)
 #endif /* CYBLE_MAX_RESOLVABLE_DEVICES > 0u */
 
-#if(CYBLE_GAP_SECURITY_LEVEL == 0x03u)
+#if(CYBLE_GAP_SECURITY_LEVEL == CYBLE_GAP_SECURITY_LEVEL_SECURE_CONN)
     #define CYBLE_SECURE_CONN_FEATURE                   (CYBLE_SECURE_CONN_FEATURE_MASK)
     #define CYBLE_RAM_SECURE_CONNECTIONS_SZ             (CYBLE_RAM_SIZE_SECURE_CONNECTIONS)
 #else
     #define CYBLE_SECURE_CONN_FEATURE                   (0u)
     #define CYBLE_RAM_SECURE_CONNECTIONS_SZ             (0u)
-#endif /* CYBLE_GAP_SECURITY_LEVEL == 0x03u */
+#endif /* CYBLE_GAP_SECURITY_LEVEL == CYBLE_GAP_SECURITY_LEVEL_SECURE_CONN */
 
 #define CYBLE_DLE_FEATURE_ENABLED                       (CYBLE_DLE_FEATURE != 0u)
 #define CYBLE_LL_PRIVACY_FEATURE_ENABLED                (CYBLE_LL_PRIVACY_FEATURE != 0u)
@@ -332,16 +360,16 @@
                                         ))
 
 
-#define CYBLE_LL_CONTROLLER_HEAP_REQ    ((CYBLE_LL_PRIVACY_HEAP_SZ * CYBLE_MAX_RESOLVABLE_DEVICES) + \
-                                            CYBLE_LL_DLE_HEAP_SZ +    \
-                                            CYBLE_LL_ACL_TX_HEAP_SZ + \
-                                            CYBLE_LL_ACL_RX_HEAP_SZ + \
-                                            CYBLE_RAM_SECURE_CONNECTIONS_SZ)
+#define CYBLE_LL_CONTROLLER_HEAP_REQ_COMP    ((CYBLE_LL_PRIVACY_HEAP_SZ * CYBLE_MAX_RESOLVABLE_DEVICES) + \
+                                                CYBLE_LL_DLE_HEAP_SZ +    \
+                                                CYBLE_LL_ACL_TX_HEAP_SZ + \
+                                                CYBLE_LL_ACL_RX_HEAP_SZ + \
+                                                CYBLE_RAM_SECURE_CONNECTIONS_SZ)
 
 
 /* RAM memory size required for stack */
 #if(CYBLE_MODE_PROFILE)
-    #define CYBLE_STACK_RAM_SIZE   (CYBLE_ALIGN_TO_4(CYBLE_DEFAULT_RAM_SIZE_SOC + CYBLE_LL_CONTROLLER_HEAP_REQ + \
+    #define CYBLE_STACK_RAM_SIZE   (CYBLE_ALIGN_TO_4(CYBLE_DEFAULT_RAM_SIZE_SOC + CYBLE_LL_CONTROLLER_HEAP_REQ_COMP + \
               (CYBLE_GATT_MTU_PLUS_L2CAP_MEM_EXT * (CYBLE_GATT_MTU_BUFF_COUNT + CYBLE_GATT_MAX_ATTR_BUFF_COUNT)) +\
               (CYBLE_L2CAP_PSM_PLUS_L2CAP_MEM_EXT * CYBLE_L2CAP_PSM_COUNT) +\
               (CYBLE_L2CAP_CBFC_PLUS_L2CAP_MEM_EXT * 2 * CYBLE_L2CAP_LOGICAL_CHANNEL_COUNT) +\
@@ -351,7 +379,7 @@
               (CYBLE_STACK_BUFFER_MGR_UTIL_RAM_SZ * CYBLE_STACK_APP_MIN_POOL) +\
               (CYBLE_GATT_PREPARE_WRITE_BUFF_LEN)))   /* This buffer must always be the latest */
 #else
-    #define CYBLE_STACK_RAM_SIZE     (CYBLE_DEFAULT_RAM_SIZE_HCI + CYBLE_LL_CONTROLLER_HEAP_REQ)
+    #define CYBLE_STACK_RAM_SIZE     (CYBLE_DEFAULT_RAM_SIZE_HCI + CYBLE_LL_CONTROLLER_HEAP_REQ_COMP)
 #endif /* CYBLE_MODE_PROFILE */  
 
 #if(CYBLE_MODE_PROFILE)

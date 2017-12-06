@@ -1,0 +1,24 @@
+(DELAYFILE
+ (SDFVERSION "IEEE 1497 4.0")
+ (DATE "2017-12-06T18:35:06Z")
+ (DESIGN "BLE_Temperature_Measurement01")
+ (VENDOR "Cypress Semiconductor")
+ (PROGRAM "PSoC Creator")
+ (VERSION " 4.1 Update 1")
+ (DIVIDER .)
+ (TIMESCALE 1 ns)
+ (CELL
+  (CELLTYPE "BLE_Temperature_Measurement01")
+  (INSTANCE *)
+  (DELAY
+   (ABSOLUTE
+    (INTERCONNECT ClockBlock.hfclk \\BLE\:bless_isr\\.clock (0.000:0.000:0.000))
+    (INTERCONNECT \\BLE\:cy_m0s8_ble\\.interrupt \\BLE\:bless_isr\\.interrupt (1.000:1.000:1.000))
+    (INTERCONNECT Disconnect_LED\(0\)_PAD Disconnect_LED\(0\).pad_in (0.000:0.000:0.000))
+    (INTERCONNECT Advertising_LED\(0\)_PAD Advertising_LED\(0\).pad_in (0.000:0.000:0.000))
+    (INTERCONNECT LowPower_LED\(0\)_PAD LowPower_LED\(0\).pad_in (0.000:0.000:0.000))
+    (INTERCONNECT Pin_1\(0\)_PAD Pin_1\(0\).pad_in (0.000:0.000:0.000))
+   )
+  )
+ )
+)
