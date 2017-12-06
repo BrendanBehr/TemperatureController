@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">TemperatureController</string>
+    <string name="app_name">Temperature Controller</string>
+    <string name="setButton">Set Temperature</string>
+    <string name="dispActualTemp"></string>
+    <string name="dispDesiredTemp"></string>
+    <string name="desiredTempName">Desired Temperature</string>
+    <string name="actualTempName">Actual Temperature</string>
+    <string name="refreshText">Swipe Down To Refresh</string>
+    <string name="no_ble">BLE not supported</string>
 </resources>
